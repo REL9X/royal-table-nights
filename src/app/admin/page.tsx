@@ -13,7 +13,7 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 export default async function AdminPage({
     searchParams
 }: {
-    searchParams: { tab?: string }
+    searchParams: Promise<{ tab?: string }>
 }) {
     const activeTab = (await searchParams).tab || 'events'
     const supabase = await createClient()
