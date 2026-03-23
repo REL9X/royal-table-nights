@@ -135,3 +135,24 @@ export async function sendBroadcast(title: string, message: string) {
 
     return { success: true }
 }
+
+export async function promoteToAdmin(playerId: string) {
+    const supabase = await createClient()
+
+    // Verify current user is admin
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Not authorized' }
+
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'admin') return { error: 'Admin access required' }
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ role: 'admin' })
+        .eq('id', playerId)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/admin')
+    return { success: true }
+}

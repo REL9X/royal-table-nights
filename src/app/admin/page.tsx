@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit3, ChevronLeft, Crown, Shield, Zap, ChevronRight } from 'lucide-react'
-import { approvePlayer, addAllowedPhone, removeAllowedPhone } from './actions'
+import { Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit3, ChevronLeft, Crown, Shield, Zap, ChevronRight, Bell, UserPlus, ShieldPlus, ArrowUpCircle } from 'lucide-react'
+import { approvePlayer, addAllowedPhone, removeAllowedPhone, promoteToAdmin } from './actions'
 import { startSession } from './events/actions'
 import { finishSeason } from './seasons/actions'
 import Link from 'next/link'
@@ -11,7 +11,6 @@ import BattleRegistry from './BattleRegistry'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import SystemTesting from './SystemTesting'
 import NotificationSettings from '../profile/NotificationSettings'
-import { Bell } from 'lucide-react'
 
 export default async function AdminPage({
     searchParams
@@ -27,7 +26,7 @@ export default async function AdminPage({
     if (profile?.role !== 'admin') redirect('/dashboard')
 
     const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).neq('role', 'admin').order('created_at', { ascending: false })
-    const { data: approvedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).neq('role', 'admin').order('created_at', { ascending: false })
+    const { data: allApprovedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).order('name', { ascending: true })
     const { data: events } = await supabase.from('events').select('*, event_responses(id)').order('date', { ascending: false }).order('created_at', { ascending: false })
     const { data: allowedPhones } = await supabase.from('allowed_phones').select('*').order('created_at', { ascending: false })
     const { data: allSeasons } = await supabase.from('seasons').select('*').order('created_at', { ascending: false })
@@ -70,13 +69,13 @@ export default async function AdminPage({
                         Events
                     </Link>
                     <Link
-                        href="/admin?tab=invites"
-                        className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'invites'
+                        href="/admin?tab=players"
+                        className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'players'
                             ? 'text-violet-400 bg-violet-400/10 border border-violet-400/20 shadow-lg'
                             : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
                             }`}
                     >
-                        Invites
+                        Players
                     </Link>
                     <Link
                         href="/admin?tab=notifications"
@@ -90,7 +89,7 @@ export default async function AdminPage({
                 </div>
 
                 {/* ── CONTENT AREA ── */}
-                {activeTab === 'invites' ? (
+                {activeTab === 'players' ? (
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                         {/* Pending Approvals */}
                         <div className="mb-10">
@@ -132,31 +131,40 @@ export default async function AdminPage({
                         {/* Registered Players */}
                         <div className="mb-10">
                             <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-1 px-1 flex items-center gap-2">
-                                Platform Members
-                                <span className="bg-emerald-500/20 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">{approvedPlayers?.length || 0}</span>
+                                Battle-Ready Players
+                                <span className="bg-emerald-500/20 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">{allApprovedPlayers?.length || 0}</span>
                             </h3>
-                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">Players who successfully registered and are active on the platform.</p>
+                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">Manage roles and details for the active squadron.</p>
                             
-                            {approvedPlayers && approvedPlayers.length > 0 ? (
-                                <details className="group">
-                                    <summary className="p-3 rounded-xl border border-white/5 bg-white/5 text-[10px] font-black uppercase tracking-widest text-[#a1a1aa] cursor-pointer list-none hover:bg-white/10 transition-colors flex items-center justify-between">
-                                        <span>View all registered players</span>
-                                        <ChevronRight size={14} className="group-open:rotate-90 transition-transform" />
-                                    </summary>
-                                    <div className="space-y-2 mt-2 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
-                                        {approvedPlayers.map((player) => (
-                                            <div key={player.id} className="flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-black/20">
-                                                <div className="w-8 h-8 rounded-lg bg-[var(--background-raised)] flex items-center justify-center font-black text-sm text-[var(--foreground)] shrink-0 overflow-hidden">
-                                                    {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{player.name}</p>
-                                                    <p className="text-[9px] text-emerald-400/80 font-bold uppercase tracking-widest mt-0.5">Active</p>
-                                                </div>
+                            {allApprovedPlayers && allApprovedPlayers.length > 0 ? (
+                                <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
+                                    {allApprovedPlayers.map((player) => (
+                                        <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-white/5 bg-black/20 group hover:border-violet-500/30 transition-all">
+                                            <div className="w-10 h-10 rounded-xl bg-[var(--background-raised)] flex items-center justify-center font-black text-xs text-[var(--foreground)] shrink-0 overflow-hidden border border-white/5">
+                                                {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
                                             </div>
-                                        ))}
-                                    </div>
-                                </details>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-black text-sm text-[var(--foreground)] tracking-tight truncate uppercase">{player.name}</p>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                                                    {player.role === 'admin' ? (
+                                                        <span className="text-amber-500 flex items-center gap-1"><ShieldPlus size={10} /> Grand Master</span>
+                                                    ) : (
+                                                        <span className="text-emerald-400/80">Active Warrior</span>
+                                                    )}
+                                                </p>
+                                            </div>
+                                            
+                                            {player.role !== 'admin' && (
+                                                <form action={async () => { 'use server'; await promoteToAdmin(player.id) }}>
+                                                    <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
+                                                        <ShieldPlus size={16} />
+                                                        <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-black text-[8px] font-black uppercase text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/10">Make Admin</span>
+                                                    </button>
+                                                </form>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             ) : (
                                 <div className="rounded-xl border border-dashed border-white/5 p-6 text-center bg-black/10">
                                     <p className="text-[10px] text-[var(--foreground-muted)] font-black uppercase tracking-[0.3em]">No registered players yet</p>
