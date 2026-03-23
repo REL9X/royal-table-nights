@@ -11,6 +11,7 @@ import ConfirmActionForm from '@/components/ConfirmActionForm'
 import SeasonCard from './SeasonCard'
 import { getPlayerRank, PLAYER_RANKS } from '@/lib/playerRanks'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import RsvpButton from './RsvpButton'
 import fs from 'fs'
 
 const log = (msg: string) => {
@@ -530,18 +531,12 @@ async function EventsList({ userId, userRole }: { userId: string, userRole?: str
                                                 </button>
                                             </form>
                                         )}
-                                        {!isAttending ? (
-                                            <form action={async () => { 'use server'; await submitRsvp(event.id, 'accepted') }} className="flex-1">
-                                                <button type="submit" className="w-full py-2.5 text-sm font-black rounded-xl text-white flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md"
-                                                    style={{ background: 'linear-gradient(135deg, #059669, #065f46)' }}>
-                                                    <CheckCircle size={15} /> Accept
-                                                </button>
-                                            </form>
-                                        ) : (
-                                            <Link href={`/session/${event.id}`} className="flex-1 py-2.5 rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-95 border border-amber-500/30 text-amber-500 hover:bg-amber-500/10">
-                                                <Crown size={15} /> View Session
-                                            </Link>
-                                        )}
+                                        <RsvpButton 
+                                            eventId={event.id}
+                                            eventTitle={event.title}
+                                            eventDate={event.date}
+                                            isAttending={isAttending}
+                                        />
                                     </>
                                 )}
                                 <Link href={`/api/calendar?id=${event.id}`} className="px-3 py-2.5 bg-[var(--background-raised)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors flex items-center justify-center">
