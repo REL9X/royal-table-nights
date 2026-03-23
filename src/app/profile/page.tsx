@@ -6,7 +6,6 @@ import { ProfileForm } from './ProfileForm'
 import PlayerName from '@/components/PlayerName'
 import AchievementBadges from '@/components/AchievementBadges'
 import { getPlayerRank, PLAYER_RANKS } from '@/lib/playerRanks'
-import NotificationSettings from './NotificationSettings'
 
 export default async function ProfilePage() {
     const supabase = await createClient()
@@ -112,18 +111,6 @@ export default async function ProfilePage() {
                 {/* Achievements */}
                 <AchievementBadges wins={profile.championship_wins} className="mb-6" />
 
-                {/* Notification Settings */}
-                <div className="mb-8">
-                    <NotificationSettings 
-                        initialPrefs={profile.notification_preferences || {
-                            all_enabled: true,
-                            new_games: true,
-                            season_results: true,
-                            rank_ups: true,
-                            reminders: true
-                        }} 
-                    />
-                </div>
 
                 {/* Stats */}
                 <div>

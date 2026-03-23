@@ -244,9 +244,14 @@ export default async function Dashboard() {
                         </div>
                         <div className="flex items-center gap-2">
                             <ThemeToggle />
-                            <Link href={profile.role === 'admin' ? '/admin' : '/settings'} className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-colors">
+                            <Link href="/settings" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-colors shadow-sm">
                                 <Settings size={16} />
                             </Link>
+                            {profile.role === 'admin' && (
+                                <Link href="/admin" className="p-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-amber-500 hover:bg-amber-500/10 transition-all shadow-sm active:scale-95">
+                                    <Shield size={16} />
+                                </Link>
+                            )}
                             <form action={async () => { 'use server'; const s = await createClient(); await s.auth.signOut(); redirect('/login') }}>
                                 <button type="submit" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">
                                     <LogOut size={16} />
