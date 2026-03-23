@@ -219,8 +219,8 @@ export default async function AdminPage({
                 ) : (
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                         {/* Quick Action Header */}
-                        <div className="flex gap-3 mb-8">
-                            <Link href="/admin/seasons/new" className="flex-1 p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+                            <Link href="/admin/seasons/new" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-amber-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.3)] shrink-0">
                                         <Crown size={20} />
@@ -231,7 +231,7 @@ export default async function AdminPage({
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/admin/seasons" className="flex-1 p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
+                            <Link href="/admin/seasons" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-amber-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.3)] shrink-0">
                                         <Shield size={20} />
@@ -242,7 +242,7 @@ export default async function AdminPage({
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/admin/events/new" className="flex-1 p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group shadow-lg">
+                            <Link href="/admin/events/new" className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group shadow-lg">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-emerald-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.3)] shrink-0">
                                         <Plus size={20} />
