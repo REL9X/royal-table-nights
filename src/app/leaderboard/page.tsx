@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import LeaderboardView from './LeaderboardView'
-
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 export default async function LeaderboardPage(props: { searchParams: Promise<{ season?: string }> }) {
     const searchParams = await props.searchParams
     const selectedSeasonId = searchParams.season
@@ -18,7 +19,14 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
         .order('total_points', { ascending: false })
 
     if (!rawProfiles || rawProfiles.length === 0) {
-        return <div className="p-10 text-[var(--foreground)]">No players found</div>
+        return (
+            <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
+                <div className="text-[var(--foreground)] text-center mb-6 font-black uppercase tracking-widest">No players found</div>
+                <Link href="/dashboard" className="px-6 py-3 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+                    <ChevronLeft size={16} /> Go to Dashboard
+                </Link>
+            </div>
+        )
     }
 
     // Initialize all-time timing agg objects
