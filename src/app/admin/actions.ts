@@ -113,3 +113,25 @@ export async function removeAllowedPhone(phone: string) {
     revalidatePath('/admin')
     return { success: true }
 }
+
+export async function sendBroadcast(title: string, message: string) {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Not authorized' }
+
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'admin') return { error: 'Admin access required' }
+
+    const { error } = await supabase
+        .from('broadcasts')
+        .insert({
+            title,
+            message,
+            created_by: user.id
+        })
+
+    if (error) return { error: error.message }
+
+    return { success: true }
+}

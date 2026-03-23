@@ -57,6 +57,21 @@ export default function EventRealtimeNotifier({ preferences }: EventRealtimeNoti
                     }
                 }
             )
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'broadcasts'
+                },
+                (payload) => {
+                    const broadcast = payload.new
+                    NotificationService.notifyAchievement(
+                        broadcast.title || 'GM Announcement 📣',
+                        broadcast.message
+                    )
+                }
+            )
             .subscribe()
 
         return () => {
