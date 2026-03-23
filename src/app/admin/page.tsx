@@ -417,7 +417,7 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             FINISH
                         </Link>
                     ) : event.status === 'upcoming' ? (
-                        <form action={async () => { 'use server'; await startSession(event.id) }}>
+                        <form action={async () => { await startSession(event.id) }}>
                             <button type="submit" className="px-3 h-7 rounded-lg bg-sky-500 text-black font-black text-[8px] uppercase tracking-widest flex items-center justify-center transition-all shadow-[0_2px_0_rgb(14,165,233)] hover:scale-105 active:scale-95">
                                 START
                             </button>
@@ -456,7 +456,7 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             FINISH
                         </Link>
                     ) : event.status === 'upcoming' ? (
-                        <form action={async () => { 'use server'; await startSession(event.id) }}>
+                        <form action={async () => { await startSession(event.id) }}>
                             <button type="submit" className="px-4 h-8 rounded-lg bg-sky-500 text-black font-black text-[9px] uppercase tracking-widest flex items-center justify-center transition-all shadow-[0_3px_0_rgb(14,165,233)] hover:scale-105 active:scale-95">
                                 START
                             </button>
