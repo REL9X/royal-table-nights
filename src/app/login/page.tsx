@@ -187,23 +187,22 @@ function LoginContent() {
                         </div>
 
                         <SubmitButton pendingText={isLogin ? 'CONNECTING...' : 'REGISTERING...'} text={isLogin ? 'ENTER BATTLE' : 'JOIN TABLE'} />
+                        <Link href="/download" className="w-full inline-flex items-center justify-center gap-3 py-4 mt-6 rounded-[1.5rem] bg-white/5 border border-white/5 hover:bg-white/10 hover:text-[var(--foreground)] transition-all group relative z-30">
+                            <Smartphone size={16} className="text-amber-500 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)] group-hover:text-white">Download Mobile App</span>
+                        </Link>
                     </form>
                 </div>
 
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: 0.4 }}
                     transition={{ delay: 1 }}
-                    className="flex flex-col items-center gap-6 mt-10 relative z-20"
+                    className="flex flex-col items-center gap-6 mt-10"
                 >
                     <p className="text-center text-[var(--foreground-subtle)] text-[10px] font-bold uppercase tracking-widest px-8 leading-relaxed italic">
                         "The card player must learn that once he has made a bet, it is no longer his."
                     </p>
-                    
-                    <Link href="/download" className="inline-flex items-center gap-2 py-2 px-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:text-[var(--foreground)] transition-all group">
-                        <Smartphone size={14} className="text-amber-500 group-hover:scale-110 transition-transform" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--foreground-muted)] group-hover:text-[var(--foreground)]">Download Mobile App</span>
-                    </Link>
                 </motion.div>
             </motion.div>
         </div>
