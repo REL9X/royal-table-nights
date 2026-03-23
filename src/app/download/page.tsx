@@ -4,7 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Crown, Smartphone, Apple, Download, ChevronLeft, ShieldCheck, Zap, Bell } from 'lucide-react'
 import Link from 'next/link'
-import ThemeToggle from '@/components/ThemeToggle'
+
 
 export default function DownloadPage() {
     const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null)
@@ -62,9 +62,7 @@ export default function DownloadPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <div className="flex justify-center mb-10">
-                        <ThemeToggle />
-                    </div>
+
                     <Link href="/login" className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors mb-8 group">
                         <div className="w-8 h-8 rounded-lg bg-[var(--background-raised)] flex items-center justify-center border border-[var(--border)] group-hover:bg-[var(--border)] transition-all">
                             <ChevronLeft size={16} />
