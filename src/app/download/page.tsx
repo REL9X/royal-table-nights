@@ -1,10 +1,51 @@
 'use client'
+import React from 'react'
 
 import { motion } from 'framer-motion'
 import { Crown, Smartphone, Apple, Download, ChevronLeft, ShieldCheck, Zap, Bell } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DownloadPage() {
+    const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null)
+    const [isInstalled, setIsInstalled] = React.useState(false)
+
+    React.useEffect(() => {
+        const handler = (e: any) => {
+            e.preventDefault()
+            setDeferredPrompt(e)
+        }
+        window.addEventListener('beforeinstallprompt', handler)
+
+        const appInstalledHandler = () => {
+            setIsInstalled(true)
+            setDeferredPrompt(null)
+        }
+        window.addEventListener('appinstalled', appInstalledHandler)
+
+        // Check if already in standalone mode
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            setIsInstalled(true)
+        }
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handler)
+            window.removeEventListener('appinstalled', appInstalledHandler)
+        }
+    }, [])
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) {
+            // If prompt is not available, just navigate home or show a message
+            window.location.href = '/'
+            return
+        }
+        deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        if (outcome === 'accepted') {
+            setDeferredPrompt(null)
+        }
+    }
+
     return (
         <div className="min-h-screen text-[var(--foreground)] font-sans relative overflow-hidden flex flex-col items-center justify-center p-4" style={{ background: 'var(--background)' }}>
             {/* Background orbs */}
@@ -64,18 +105,30 @@ export default function DownloadPage() {
                         <div className="bg-black/20 p-4 rounded-2xl mb-6 border border-white/5">
                             <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.1em] mb-2">Instructions:</p>
                             <ol className="space-y-3 text-[10px] text-white/80 font-medium tracking-tight list-decimal list-inside">
-                                <li>Open this site in <span className="text-emerald-400">Chrome</span></li>
-                                <li>Tap the <span className="font-bold underline">Three Dots</span> ⋮</li>
-                                <li>Select <span className="font-bold border border-white/20 px-1 rounded">Install App</span> or <span className="font-bold border border-white/20 px-1 rounded">Add to Home Screen</span></li>
+                                {isInstalled ? (
+                                    <li className="text-emerald-400 font-black italic underline decoration-emerald-400/30">APP IS ALREADY INSTALLED! 🤘</li>
+                                ) : (
+                                    <>
+                                        <li>Tap <span className="text-emerald-400 font-bold italic">LAUNCH INSTANT APP</span> below</li>
+                                        <li>Or open <span className="text-emerald-400">Chrome</span> Settings ⋮</li>
+                                        <li>Select <span className="font-bold border border-white/20 px-1 rounded text-white">Install App</span></li>
+                                    </>
+                                )}
                             </ol>
                         </div>
 
-                        <Link 
-                            href="/"
-                            className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_4px_0_rgb(5,150,105)]"
+                        <button 
+                            onClick={handleInstallClick}
+                            disabled={isInstalled}
+                            className={`w-full py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_4px_0_rgb(5,150,105)] ${isInstalled ? 'bg-emerald-500/20 text-emerald-500/50 cursor-not-allowed shadow-none' : 'bg-emerald-500 hover:bg-emerald-400 text-black'}`}
                         >
-                            <Zap size={14} /> Launch Instant App
-                        </Link>
+                            {isInstalled ? (
+                                <ShieldCheck size={14} />
+                            ) : (
+                                <Zap size={14} />
+                            )}
+                            {isInstalled ? 'Installed & Ready' : 'Launch Instant App'}
+                        </button>
                     </motion.div>
 
                     {/* iOS Card */}
@@ -98,9 +151,9 @@ export default function DownloadPage() {
                         <div className="bg-black/20 p-4 rounded-2xl mb-6 border border-white/5">
                             <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.1em] mb-2">Instructions:</p>
                             <ol className="space-y-3 text-[10px] text-white/80 font-medium tracking-tight list-decimal list-inside">
-                                <li>Open this site in <span className="text-sky-400">Safari</span></li>
+                                <li>Open this site in <span className="text-sky-400 italic">Safari</span></li>
                                 <li>Tap the <span className="font-bold underline">Share Icon</span> at the bottom</li>
-                                <li>Select <span className="font-bold border border-white/20 px-1 rounded">Add to Home Screen</span></li>
+                                <li>Select <span className="font-bold border border-white/20 px-1 rounded text-white italic">Add to Home Screen</span></li>
                             </ol>
                         </div>
 
