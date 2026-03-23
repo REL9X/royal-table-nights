@@ -10,6 +10,8 @@ import PlayerName from '@/components/PlayerName'
 import BattleRegistry from './BattleRegistry'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import SystemTesting from './SystemTesting'
+import NotificationSettings from '../profile/NotificationSettings'
+import { Bell } from 'lucide-react'
 
 export default async function AdminPage({
     searchParams
@@ -75,6 +77,15 @@ export default async function AdminPage({
                             }`}
                     >
                         Invites
+                    </Link>
+                    <Link
+                        href="/admin?tab=notifications"
+                        className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'notifications'
+                            ? 'text-sky-400 bg-sky-400/10 border border-sky-400/20 shadow-lg'
+                            : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
+                            }`}
+                    >
+                        Logic
                     </Link>
                 </div>
 
@@ -217,9 +228,25 @@ export default async function AdminPage({
                             </div>
                         </div>
                     </div>
+                ) : activeTab === 'notifications' ? (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-8">
+                        {/* GM Notification Tools */}
+                        <SystemTesting />
+
+                        {/* Admin's Personal Preferences */}
+                        <div className="pt-4 border-t border-white/5">
+                            <NotificationSettings 
+                                initialPrefs={profile.notification_preferences || {
+                                    new_games: true,
+                                    season_results: true,
+                                    rank_ups: true,
+                                    reminders: true
+                                }} 
+                            />
+                        </div>
+                    </div>
                 ) : (
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                        <SystemTesting />
 
                         {/* Quick Action Header */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
