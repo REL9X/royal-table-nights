@@ -47,7 +47,7 @@ export default function AchievementBadges({ wins = [], className = "" }: Achieve
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <p className="font-black text-white italic uppercase tracking-tighter leading-none mb-1">
+                                <p className="font-black text-[var(--foreground)] italic uppercase tracking-tighter leading-none mb-1">
                                     {win.seasonName || 'Season Champion'}
                                 </p>
                                 <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest leading-none">

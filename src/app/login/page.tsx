@@ -187,9 +187,9 @@ function LoginContent() {
                         </div>
 
                         <SubmitButton pendingText={isLogin ? 'CONNECTING...' : 'REGISTERING...'} text={isLogin ? 'ENTER BATTLE' : 'JOIN TABLE'} />
-                        <Link href="/download" className="w-full inline-flex items-center justify-center gap-3 py-4 mt-6 rounded-[1.5rem] bg-white/5 border border-white/5 hover:bg-white/10 hover:text-[var(--foreground)] transition-all group relative z-30">
+                        <Link href="/download" className="w-full inline-flex items-center justify-center gap-3 py-4 mt-6 rounded-[1.5rem] bg-[var(--background-raised)] border border-[var(--border)] hover:bg-[var(--border)] transition-all group relative z-30">
                             <Smartphone size={16} className="text-amber-500 group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)] group-hover:text-white">Download Mobile App</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]">Download Mobile App</span>
                         </Link>
                     </form>
                 </div>

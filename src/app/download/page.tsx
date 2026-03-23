@@ -61,8 +61,8 @@ export default function DownloadPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <Link href="/login" className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-white transition-colors mb-8 group">
-                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/5 group-hover:bg-white/10">
+                    <Link href="/login" className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors mb-8 group">
+                        <div className="w-8 h-8 rounded-lg bg-[var(--background-raised)] flex items-center justify-center border border-[var(--border)] group-hover:bg-[var(--border)] transition-all">
                             <ChevronLeft size={16} />
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-widest">Back to Login</span>
@@ -75,10 +75,10 @@ export default function DownloadPage() {
                         </div>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4 uppercase leading-none">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-[var(--foreground)] mb-4 uppercase leading-none">
                         GET THE <span className="text-amber-500">EXPERIENCE</span>
                     </h1>
-                    <p className="text-[var(--foreground-muted)] text-xs font-bold uppercase tracking-[0.2em] opacity-60 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-[var(--foreground-muted)] text-xs font-bold uppercase tracking-[0.2em] opacity-80 max-w-xs mx-auto leading-relaxed">
                         Transform your mobile device into a high-stakes tracking station.
                     </p>
                 </motion.div>
@@ -93,25 +93,25 @@ export default function DownloadPage() {
                         className="rounded-[2.5rem] p-8 bg-[var(--background-card)] border border-white/5 backdrop-blur-md relative overflow-hidden group shadow-2xl"
                     >
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+                            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/20">
                                 <Smartphone size={24} />
                             </div>
                             <div>
-                                <h3 className="font-black text-xl text-white uppercase tracking-tight">Android</h3>
-                                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Instant App / PWA</p>
+                                <h3 className="font-black text-xl text-[var(--foreground)] uppercase tracking-tight">Android</h3>
+                                <p className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Instant App / PWA</p>
                             </div>
                         </div>
 
-                        <div className="bg-black/20 p-4 rounded-2xl mb-6 border border-white/5">
-                            <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.1em] mb-2">Instructions:</p>
-                            <ol className="space-y-3 text-[10px] text-white/80 font-medium tracking-tight list-decimal list-inside">
+                        <div className="bg-[var(--background-raised)]/50 p-4 rounded-2xl mb-6 border border-[var(--border)]">
+                            <p className="text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-[0.1em] mb-2">Instructions:</p>
+                            <ol className="space-y-3 text-[10px] text-[var(--foreground)] font-medium tracking-tight list-decimal list-inside">
                                 {isInstalled ? (
-                                    <li className="text-emerald-400 font-black italic underline decoration-emerald-400/30">APP IS ALREADY INSTALLED! 🤘</li>
+                                    <li className="text-emerald-600 dark:text-emerald-400 font-black italic underline decoration-emerald-500/30">APP IS ALREADY INSTALLED! 🤘</li>
                                 ) : (
                                     <>
-                                        <li>Tap <span className="text-emerald-400 font-bold italic">LAUNCH INSTANT APP</span> below</li>
-                                        <li>Or open <span className="text-emerald-400">Chrome</span> Settings ⋮</li>
-                                        <li>Select <span className="font-bold border border-white/20 px-1 rounded text-white">Install App</span></li>
+                                        <li>Tap <span className="text-emerald-600 dark:text-emerald-400 font-bold italic">LAUNCH INSTANT APP</span> below</li>
+                                        <li>Or open <span className="text-emerald-600 dark:text-emerald-400">Chrome</span> Settings ⋮</li>
+                                        <li>Select <span className="font-bold border border-[var(--border)] px-1 rounded">Install App</span></li>
                                     </>
                                 )}
                             </ol>
@@ -139,27 +139,27 @@ export default function DownloadPage() {
                         className="rounded-[2.5rem] p-8 bg-[var(--background-card)] border border-white/5 backdrop-blur-md relative overflow-hidden group shadow-2xl"
                     >
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center border border-sky-500/20">
+                            <div className="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400 flex items-center justify-center border border-sky-500/20">
                                 <Apple size={24} />
                             </div>
                             <div>
-                                <h3 className="font-black text-xl text-white uppercase tracking-tight">iPhone</h3>
-                                <p className="text-[9px] font-black text-sky-400 uppercase tracking-widest">PWA / Web App</p>
+                                <h3 className="font-black text-xl text-[var(--foreground)] uppercase tracking-tight">iPhone</h3>
+                                <p className="text-[9px] font-black text-sky-600 dark:text-sky-400 uppercase tracking-widest">PWA / Web App</p>
                             </div>
                         </div>
 
-                        <div className="bg-black/20 p-4 rounded-2xl mb-6 border border-white/5">
-                            <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.1em] mb-2">Instructions:</p>
-                            <ol className="space-y-3 text-[10px] text-white/80 font-medium tracking-tight list-decimal list-inside">
-                                <li>Open this site in <span className="text-sky-400 italic">Safari</span></li>
-                                <li>Tap the <span className="font-bold underline">Share Icon</span> at the bottom</li>
-                                <li>Select <span className="font-bold border border-white/20 px-1 rounded text-white italic">Add to Home Screen</span></li>
+                        <div className="bg-[var(--background-raised)]/50 p-4 rounded-2xl mb-6 border border-[var(--border)]">
+                            <p className="text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-[0.1em] mb-2">Instructions:</p>
+                            <ol className="space-y-3 text-[10px] text-[var(--foreground)] font-medium tracking-tight list-decimal list-inside">
+                                <li>Open this site in <span className="text-sky-600 dark:text-sky-400 italic font-bold">Safari</span></li>
+                                <li>Tap the <span className="font-bold underline text-sky-600 dark:text-sky-400">Share Icon</span> at the bottom</li>
+                                <li>Select <span className="font-bold border border-[var(--border)] px-1 rounded italic">Add to Home Screen</span></li>
                             </ol>
                         </div>
 
                         <Link 
                             href="/"
-                            className="w-full py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 border border-white/10 shadow-lg"
+                            className="w-full py-4 bg-[var(--background-raised)] hover:bg-[var(--border)] text-[var(--foreground)] rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 border border-[var(--border)] shadow-lg"
                         >
                             <Zap size={14} className="text-amber-500" /> Launch Mobile Site
                         </Link>
