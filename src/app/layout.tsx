@@ -28,8 +28,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${outfit.variable} dark`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg?v=1" type="image/svg+xml" />
-        <link rel="icon" href="/splash-icon.png?v=1" type="image/png" />
-        <link rel="apple-touch-icon" href="/maskable-icon.png?v=1" />
+        <link rel="apple-touch-icon" href="/logo.png?v=1" />
 
         {/* Prevent flash — respects saved preference, falls back to system */}
         <script
