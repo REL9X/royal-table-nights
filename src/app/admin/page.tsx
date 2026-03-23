@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit3, ChevronLeft, Crown, Shield, Zap, ChevronRight, Bell, UserPlus, ShieldPlus, ArrowUpCircle } from 'lucide-react'
+import { 
+    Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit3, 
+    ChevronLeft, Crown, Shield, Zap, ChevronRight, Bell, UserPlus, ShieldPlus, ArrowUpCircle 
+} from 'lucide-react'
 import { approvePlayer, addAllowedPhone, removeAllowedPhone, promoteToAdmin } from './actions'
 import { startSession } from './events/actions'
 import { finishSeason } from './seasons/actions'
@@ -12,6 +15,15 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 import SystemTesting from './SystemTesting'
 import NotificationSettings from '../profile/NotificationSettings'
 
+interface Profile {
+    id: string
+    name: string
+    avatar_url: string | null
+    role: string
+    is_approved: boolean
+    notification_preferences?: any
+}
+
 export default async function AdminPage({
     searchParams
 }: {
@@ -22,11 +34,11 @@ export default async function AdminPage({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) redirect('/login')
 
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single() as { data: Profile | null }
     if (profile?.role !== 'admin') redirect('/dashboard')
 
-    const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).neq('role', 'admin').order('created_at', { ascending: false })
-    const { data: allApprovedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).order('name', { ascending: true })
+    const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).neq('role', 'admin').order('created_at', { ascending: false }) as { data: Profile[] | null }
+    const { data: allApprovedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).order('name', { ascending: true }) as { data: Profile[] | null }
     const { data: events } = await supabase.from('events').select('*, event_responses(id)').order('date', { ascending: false }).order('created_at', { ascending: false })
     const { data: allowedPhones } = await supabase.from('allowed_phones').select('*').order('created_at', { ascending: false })
     const { data: allSeasons } = await supabase.from('seasons').select('*').order('created_at', { ascending: false })
@@ -138,7 +150,7 @@ export default async function AdminPage({
                             
                             {allApprovedPlayers && allApprovedPlayers.length > 0 ? (
                                 <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
-                                    {allApprovedPlayers.map((player) => (
+                                    {allApprovedPlayers.map((player: Profile) => (
                                         <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-white/5 bg-black/20 group hover:border-violet-500/30 transition-all">
                                             <div className="w-10 h-10 rounded-xl bg-[var(--background-raised)] flex items-center justify-center font-black text-xs text-[var(--foreground)] shrink-0 overflow-hidden border border-white/5">
                                                 {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
