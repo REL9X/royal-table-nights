@@ -8,10 +8,16 @@
   "theme_color": "#0b0e1a",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/splash-icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "orientation": "portrait",
