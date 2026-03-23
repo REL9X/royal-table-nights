@@ -3812,3 +3812,16 @@
 [2026-03-23T13:02:58.943Z] EventsList Start
 [2026-03-23T13:02:58.952Z] EventsList: Client created
 [2026-03-23T13:02:59.065Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:18:33.119Z] --- Dashboard Start ---
+[2026-03-23T13:18:33.196Z] Supabase client created
+[2026-03-23T13:18:33.314Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:18:33.314Z] Fetching profile...
+[2026-03-23T13:18:33.442Z] Profile fetched: Berna
+[2026-03-23T13:18:33.442Z] Starting parallel fetch...
+[2026-03-23T13:18:33.742Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:18:33.743Z] Active season: undefined
+[2026-03-23T13:18:33.743Z] Calculating champions...
+[2026-03-23T13:18:33.743Z] Champions calc done. Count: 0
+[2026-03-23T13:18:33.879Z] EventsList Start
+[2026-03-23T13:18:33.888Z] EventsList: Client created
+[2026-03-23T13:18:34.135Z] EventsList: Events fetched. Count: 0

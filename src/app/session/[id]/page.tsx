@@ -21,7 +21,16 @@ export default async function SessionPage(props: { params: Promise<{ id: string 
     const isAdmin = profile?.role === 'admin'
 
     const { data: event } = await supabase.from('events').select('*').eq('id', eventId).single()
-    if (!event) return <div className="p-10 text-[var(--foreground)]">Event not found</div>
+    if (!event) {
+        return (
+            <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
+                <div className="text-[var(--foreground)] text-center mb-6 font-black uppercase tracking-widest">Event not found</div>
+                <Link href="/dashboard" className="px-6 py-3 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+                    <ChevronLeft size={16} /> Go Back
+                </Link>
+            </div>
+        )
+    }
 
     const { data: sessionPlayers } = await supabase
         .from('session_players')

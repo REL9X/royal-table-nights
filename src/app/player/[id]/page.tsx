@@ -19,7 +19,16 @@ export default async function PublicProfilePage(props: { params: Promise<{ id: s
         .eq('id', playerId)
         .single()
 
-    if (!profile) return <div className="p-10 text-[var(--foreground)] text-center">Player not found</div>
+    if (!profile) {
+        return (
+            <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
+                <div className="text-[var(--foreground)] text-center mb-6 font-black uppercase tracking-widest">Player not found</div>
+                <Link href="/leaderboard" className="px-6 py-3 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+                    <ArrowLeft size={16} /> Go Back
+                </Link>
+            </div>
+        )
+    }
 
     // 2. Fetch all completed sessions for this player - Sorted "Latest First"
     const { data: sessions } = await supabase

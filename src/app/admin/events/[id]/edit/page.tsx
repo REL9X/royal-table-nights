@@ -26,7 +26,16 @@ export default async function AdminEditEventPage(props: { params: Promise<{ id: 
         .eq('id', eventId)
         .single()
 
-    if (!event) return <div className="p-10 text-[var(--foreground)]">Event not found</div>
+    if (!event) {
+        return (
+            <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
+                <div className="text-[var(--foreground)] text-center mb-6 font-black uppercase tracking-widest">Event not found</div>
+                <Link href="/admin" className="px-6 py-3 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+                    <ArrowLeft size={16} /> Go Back to Admin
+                </Link>
+            </div>
+        )
+    }
 
     const seasons = await getActiveSeasons()
 
