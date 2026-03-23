@@ -3,8 +3,9 @@
 import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { loginWithPin, signupWithPin } from './actions'
-import { Crown, AlertCircle, Spade, Heart, Club, Diamond } from 'lucide-react'
+import { Crown, AlertCircle, Spade, Heart, Club, Diamond, Smartphone } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { useFormStatus } from 'react-dom'
 
 function SubmitButton({ pendingText, text }: { pendingText: string, text: string }) {
@@ -189,14 +190,21 @@ function LoginContent() {
                     </form>
                 </div>
 
-                <motion.p
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.4 }}
                     transition={{ delay: 1 }}
-                    className="text-center text-[var(--foreground-subtle)] text-[10px] mt-10 font-bold uppercase tracking-widest px-8 leading-relaxed"
+                    className="flex flex-col items-center gap-6 mt-10"
                 >
-                    "The card player must learn that once he has made a bet, it is no longer his."
-                </motion.p>
+                    <p className="text-center text-[var(--foreground-subtle)] text-[10px] font-bold uppercase tracking-widest px-8 leading-relaxed italic">
+                        "The card player must learn that once he has made a bet, it is no longer his."
+                    </p>
+                    
+                    <Link href="/download" className="inline-flex items-center gap-2 py-2 px-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:text-[var(--foreground)] transition-all group">
+                        <Smartphone size={14} className="text-amber-500 group-hover:scale-110 transition-transform" />
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--foreground-muted)] group-hover:text-[var(--foreground)]">Download Mobile App</span>
+                    </Link>
+                </motion.div>
             </motion.div>
         </div>
     )
