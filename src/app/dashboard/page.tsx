@@ -13,6 +13,7 @@ import { getPlayerRank, PLAYER_RANKS } from '@/lib/playerRanks'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import RsvpButton from './RsvpButton'
 import RankUpNotifier from './RankUpNotifier'
+import EventRealtimeNotifier from './EventRealtimeNotifier'
 import fs from 'fs'
 
 const log = (msg: string) => {
@@ -239,6 +240,7 @@ export default async function Dashboard() {
                     <RealtimeRefresher table="events" />
                     <RealtimeRefresher table="profiles" filter={`id=eq.${user.id}`} />
                     <RankUpNotifier currentPoints={profile.total_points || 0} />
+                    <EventRealtimeNotifier />
 
                     {/* ── TOP NAV ── */}
                     <div className="flex justify-between items-center mb-6">
