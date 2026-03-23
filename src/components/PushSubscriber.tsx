@@ -9,26 +9,37 @@ export default function PushSubscriber({ userId }: { userId: string }) {
         if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) return
 
         async function subscribe() {
+            window.console.log('Push: subscribe starting...')
             try {
+                if (!navigator.serviceWorker.controller) {
+                    window.console.log('Push: No SW controller yet, waiting for registration...')
+                }
                 const registration = await navigator.serviceWorker.ready
+                window.console.log('Push: SW ready at scope:', registration.scope)
+                
                 const existing = await registration.pushManager.getSubscription()
                 if (existing) {
-                    // Already subscribed — ensure it's saved in DB
+                    window.console.log('Push: Existing subscription found, ensuring DB is synced...')
                     await saveSubscription(existing, userId)
                     return
                 }
 
+                window.console.log('Push: No subscription found, requesting permission...')
                 const permission = await Notification.requestPermission()
+                window.console.log('Push: Permission result:', permission)
                 if (permission !== 'granted') return
 
+                window.console.log('Push: Subscribing with VAPID key...')
                 const sub = await registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
                 })
 
+                window.console.log('Push: Subscription successful, saving to DB...')
                 await saveSubscription(sub, userId)
+                window.console.log('Push: Subscription saved successfully.')
             } catch (e) {
-                console.warn('Push subscription failed:', e)
+                window.console.error('Push subscription failed:', e)
             }
         }
 

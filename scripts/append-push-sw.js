@@ -5,7 +5,7 @@ const path = require('path')
 const swPath = path.join(__dirname, '..', 'public', 'sw.js')
 const pushHandler = `
 
-// ── Web Push handler (appended by postbuild) ──
+// ── Web Push handler (v1.0.3 - appended by postbuild) ──
 self.addEventListener('push', function(event) {
     if (!event.data) return;
     var data = {};

@@ -28,26 +28,47 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
 }
 
 async function registerPush(userId: string) {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return
-    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) return
+    window.console.log('Push Settings: registerPush starting...')
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        window.console.warn('Push Settings: Browser does not support push.')
+        return
+    }
+    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+        window.console.warn('Push Settings: Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY.')
+        return
+    }
     try {
         const reg = await navigator.serviceWorker.ready
+        window.console.log('Push Settings: SW ready at scope:', reg.scope)
         const existing = await reg.pushManager.getSubscription()
+        
         const sub = existing ?? await reg.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY)
         })
-        if (!sub) return
+        
+        if (!sub) {
+            window.console.warn('Push Settings: Failed to get subscription object.')
+            return
+        }
+        
         const json = sub.toJSON()
+        window.console.log('Push Settings: Subscribed, saving to Supabase...')
         const supabase = createClient()
-        await supabase.from('push_subscriptions').upsert({
+        const { error } = await supabase.from('push_subscriptions').upsert({
             user_id: userId,
             endpoint: sub.endpoint,
             p256dh: json.keys?.p256dh ?? '',
             auth: json.keys?.auth ?? ''
         }, { onConflict: 'user_id,endpoint' })
+        
+        if (error) {
+            window.console.error('Push Settings: Supabase error:', error)
+        } else {
+            window.console.log('Push Settings: Registration successful.')
+        }
     } catch (e) {
-        console.warn('Push registration failed:', e)
+        window.console.error('Push Settings: registration failed:', e)
     }
 }
 
