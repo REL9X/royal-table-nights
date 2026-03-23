@@ -96,7 +96,7 @@ export default async function AdminPage({
                             : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
                             }`}
                     >
-                        Logic
+                        Notification
                     </Link>
                 </div>
 
@@ -118,7 +118,7 @@ export default async function AdminPage({
                                     {pendingPlayers.map((player) => (
                                         <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-[var(--border)] bg-[var(--background-card)] shadow-md transition-all hover:border-violet-500/30">
                                             <div className="w-12 h-12 rounded-2xl border-2 border-white/5 bg-[var(--background-raised)] flex items-center justify-center font-black text-xl text-violet-400 shrink-0">
-                                                {player.name?.[0]?.toUpperCase()}
+                                                {(player.name || '?')[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <PlayerName user={player} isClickable={true} className="font-black text-base text-[var(--foreground)] truncate block" />
@@ -156,7 +156,7 @@ export default async function AdminPage({
                                                 {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-black text-sm text-[var(--foreground)] tracking-tight truncate uppercase">{player.name}</p>
+                                                <p className="font-black text-sm text-[var(--foreground)] tracking-tight truncate uppercase">{player.name || 'Unknown Player'}</p>
                                                 <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5 flex items-center gap-1">
                                                     {player.role === 'admin' ? (
                                                         <span className="text-amber-500 flex items-center gap-1"><ShieldPlus size={10} /> Grand Master</span>
