@@ -192,7 +192,7 @@ export default async function AdminPage({
                             </h3>
                             <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they will show up in your pending list for final approval.</p>
                             <div className="rounded-2xl border border-white/5 p-5 mb-6 bg-black/20 backdrop-blur-sm">
-                                <form action={addAllowedPhone} className="space-y-4">
+                                <form action={async (fd: FormData) => { await addAllowedPhone(fd) }} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input name="name" type="text" required placeholder="Agent Name"
                                             className="w-full bg-black/40 border border-white/5 focus:border-violet-500/50 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none transition-all font-bold" />
