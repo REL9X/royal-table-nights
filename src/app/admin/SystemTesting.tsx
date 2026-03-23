@@ -47,13 +47,19 @@ export default function SystemTesting() {
         if (!title || !message) { alert('Please fill in both title and message.'); return }
         setSending(true)
         const res = await sendBroadcast(title, message)
-        setSending(false)
         if (res.success) {
+            // Also fire real Web Push to all subscribed devices (background notifications)
+            await fetch('/api/send-push', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, message })
+            })
             setTitle('')
             setMessage('')
         } else {
             alert('Error: ' + res.error)
         }
+        setSending(false)
     }
 
     return (

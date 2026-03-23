@@ -14,6 +14,7 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 import RsvpButton from './RsvpButton'
 import RankUpNotifier from './RankUpNotifier'
 import EventRealtimeNotifier from './EventRealtimeNotifier'
+import PushSubscriber from '@/components/PushSubscriber'
 
 export const dynamic = 'force-dynamic'
 
@@ -231,6 +232,7 @@ export default async function Dashboard() {
                         enabled={(profile.notification_preferences?.all_enabled ?? true) && (profile.notification_preferences?.rank_ups ?? true)}
                     />
                     <EventRealtimeNotifier preferences={profile.notification_preferences} />
+                    <PushSubscriber userId={user.id} />
 
                     {/* ── TOP NAV ── */}
                     <div className="flex justify-between items-center mb-6">
