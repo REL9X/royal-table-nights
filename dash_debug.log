@@ -3825,3 +3825,731 @@
 [2026-03-23T13:18:33.879Z] EventsList Start
 [2026-03-23T13:18:33.888Z] EventsList: Client created
 [2026-03-23T13:18:34.135Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:19:46.771Z] --- Dashboard Start ---
+[2026-03-23T13:19:46.788Z] Supabase client created
+[2026-03-23T13:19:46.889Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:19:46.890Z] Fetching profile...
+[2026-03-23T13:19:46.983Z] Profile fetched: Berna
+[2026-03-23T13:19:46.983Z] Starting parallel fetch...
+[2026-03-23T13:19:47.211Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:19:47.212Z] Active season: undefined
+[2026-03-23T13:19:47.212Z] Calculating champions...
+[2026-03-23T13:19:47.213Z] Champions calc done. Count: 0
+[2026-03-23T13:19:47.315Z] EventsList Start
+[2026-03-23T13:19:47.321Z] EventsList: Client created
+[2026-03-23T13:19:47.431Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:21:55.726Z] --- Dashboard Start ---
+[2026-03-23T13:21:55.736Z] Supabase client created
+[2026-03-23T13:21:55.847Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:21:55.847Z] Fetching profile...
+[2026-03-23T13:21:56.229Z] Profile fetched: Berna
+[2026-03-23T13:21:56.229Z] Starting parallel fetch...
+[2026-03-23T13:21:56.367Z] --- Dashboard Start ---
+[2026-03-23T13:21:56.379Z] Supabase client created
+[2026-03-23T13:21:56.481Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:21:56.482Z] Fetching profile...
+[2026-03-23T13:21:56.493Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:21:56.494Z] Active season: undefined
+[2026-03-23T13:21:56.494Z] Calculating champions...
+[2026-03-23T13:21:56.494Z] Champions calc done. Count: 0
+[2026-03-23T13:21:56.590Z] Profile fetched: Berna
+[2026-03-23T13:21:56.590Z] Starting parallel fetch...
+[2026-03-23T13:21:56.643Z] EventsList Start
+[2026-03-23T13:21:56.651Z] EventsList: Client created
+[2026-03-23T13:21:56.738Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:21:56.739Z] Active season: undefined
+[2026-03-23T13:21:56.739Z] Calculating champions...
+[2026-03-23T13:21:56.739Z] Champions calc done. Count: 0
+[2026-03-23T13:21:56.763Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:21:56.885Z] EventsList Start
+[2026-03-23T13:21:56.894Z] EventsList: Client created
+[2026-03-23T13:21:57.000Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:22:01.894Z] --- Dashboard Start ---
+[2026-03-23T13:22:01.904Z] Supabase client created
+[2026-03-23T13:22:02.011Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:22:02.011Z] Fetching profile...
+[2026-03-23T13:22:02.127Z] Profile fetched: Berna
+[2026-03-23T13:22:02.127Z] Starting parallel fetch...
+[2026-03-23T13:22:02.280Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:22:02.281Z] Active season: undefined
+[2026-03-23T13:22:02.281Z] Calculating champions...
+[2026-03-23T13:22:02.282Z] Champions calc done. Count: 0
+[2026-03-23T13:22:02.387Z] EventsList Start
+[2026-03-23T13:22:02.393Z] EventsList: Client created
+[2026-03-23T13:22:02.492Z] EventsList: Events fetched. Count: 0
+[2026-03-23T13:22:06.000Z] --- Dashboard Start ---
+[2026-03-23T13:22:06.013Z] Supabase client created
+[2026-03-23T13:22:06.126Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T13:22:06.127Z] Fetching profile...
+[2026-03-23T13:22:06.235Z] Profile fetched: Berna
+[2026-03-23T13:22:06.236Z] Starting parallel fetch...
+[2026-03-23T13:22:06.383Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T13:22:06.383Z] Active season: undefined
+[2026-03-23T13:22:06.384Z] Calculating champions...
+[2026-03-23T13:22:06.384Z] Champions calc done. Count: 0
+[2026-03-23T13:22:06.502Z] EventsList Start
+[2026-03-23T13:22:06.511Z] EventsList: Client created
+[2026-03-23T13:22:06.620Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:40:26.543Z] --- Dashboard Start ---
+[2026-03-23T14:40:26.559Z] Supabase client created
+[2026-03-23T14:40:26.688Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:40:26.688Z] Fetching profile...
+[2026-03-23T14:40:26.822Z] Profile fetched: Berna
+[2026-03-23T14:40:26.822Z] Starting parallel fetch...
+[2026-03-23T14:40:27.098Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:40:27.099Z] Active season: undefined
+[2026-03-23T14:40:27.099Z] Calculating champions...
+[2026-03-23T14:40:27.100Z] Champions calc done. Count: 0
+[2026-03-23T14:40:27.236Z] EventsList Start
+[2026-03-23T14:40:27.244Z] EventsList: Client created
+[2026-03-23T14:40:27.357Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:40:33.278Z] --- Dashboard Start ---
+[2026-03-23T14:40:33.290Z] Supabase client created
+[2026-03-23T14:40:33.387Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:40:33.387Z] Fetching profile...
+[2026-03-23T14:40:33.527Z] Profile fetched: Berna
+[2026-03-23T14:40:33.527Z] Starting parallel fetch...
+[2026-03-23T14:40:33.714Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:40:33.714Z] Active season: undefined
+[2026-03-23T14:40:33.715Z] Calculating champions...
+[2026-03-23T14:40:33.715Z] Champions calc done. Count: 0
+[2026-03-23T14:40:33.867Z] EventsList Start
+[2026-03-23T14:40:33.873Z] EventsList: Client created
+[2026-03-23T14:40:33.996Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:40:36.917Z] --- Dashboard Start ---
+[2026-03-23T14:40:36.927Z] Supabase client created
+[2026-03-23T14:40:37.033Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:40:37.034Z] Fetching profile...
+[2026-03-23T14:40:37.132Z] Profile fetched: Berna
+[2026-03-23T14:40:37.132Z] Starting parallel fetch...
+[2026-03-23T14:40:37.279Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:40:37.279Z] Active season: undefined
+[2026-03-23T14:40:37.280Z] Calculating champions...
+[2026-03-23T14:40:37.280Z] Champions calc done. Count: 0
+[2026-03-23T14:40:37.385Z] EventsList Start
+[2026-03-23T14:40:37.392Z] EventsList: Client created
+[2026-03-23T14:40:37.507Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:46:58.527Z] --- Dashboard Start ---
+[2026-03-23T14:46:58.540Z] Supabase client created
+[2026-03-23T14:46:58.545Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:46:58.546Z] Fetching profile...
+[2026-03-23T14:46:58.549Z] Profile fetched: Berna
+[2026-03-23T14:46:58.549Z] Starting parallel fetch...
+[2026-03-23T14:46:58.557Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:46:58.558Z] Active season: undefined
+[2026-03-23T14:46:58.558Z] Calculating champions...
+[2026-03-23T14:46:58.558Z] Champions calc done. Count: 0
+[2026-03-23T14:46:58.567Z] EventsList Start
+[2026-03-23T14:46:58.574Z] EventsList: Client created
+[2026-03-23T14:46:58.579Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:47:45.859Z] --- Dashboard Start ---
+[2026-03-23T14:47:45.873Z] Supabase client created
+[2026-03-23T14:47:45.965Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:47:45.966Z] Fetching profile...
+[2026-03-23T14:47:46.061Z] Profile fetched: Berna
+[2026-03-23T14:47:46.062Z] Starting parallel fetch...
+[2026-03-23T14:47:46.204Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:47:46.204Z] Active season: undefined
+[2026-03-23T14:47:46.204Z] Calculating champions...
+[2026-03-23T14:47:46.205Z] Champions calc done. Count: 0
+[2026-03-23T14:47:46.302Z] EventsList Start
+[2026-03-23T14:47:46.310Z] EventsList: Client created
+[2026-03-23T14:47:46.412Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:49:14.286Z] --- Dashboard Start ---
+[2026-03-23T14:49:14.297Z] Supabase client created
+[2026-03-23T14:49:14.303Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:49:14.303Z] Fetching profile...
+[2026-03-23T14:49:14.306Z] Profile fetched: Berna
+[2026-03-23T14:49:14.306Z] Starting parallel fetch...
+[2026-03-23T14:49:14.314Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:49:14.314Z] Active season: undefined
+[2026-03-23T14:49:14.314Z] Calculating champions...
+[2026-03-23T14:49:14.315Z] Champions calc done. Count: 0
+[2026-03-23T14:49:14.323Z] EventsList Start
+[2026-03-23T14:49:14.328Z] EventsList: Client created
+[2026-03-23T14:49:14.334Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:49:50.813Z] --- Dashboard Start ---
+[2026-03-23T14:49:50.826Z] Supabase client created
+[2026-03-23T14:49:50.919Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:49:50.919Z] Fetching profile...
+[2026-03-23T14:49:51.013Z] Profile fetched: Berna
+[2026-03-23T14:49:51.014Z] Starting parallel fetch...
+[2026-03-23T14:49:51.185Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:49:51.186Z] Active season: undefined
+[2026-03-23T14:49:51.186Z] Calculating champions...
+[2026-03-23T14:49:51.186Z] Champions calc done. Count: 0
+[2026-03-23T14:49:51.305Z] EventsList Start
+[2026-03-23T14:49:51.314Z] EventsList: Client created
+[2026-03-23T14:49:51.414Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:04.391Z] --- Dashboard Start ---
+[2026-03-23T14:58:04.420Z] Supabase client created
+[2026-03-23T14:58:04.450Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:04.451Z] Fetching profile...
+[2026-03-23T14:58:04.455Z] Profile fetched: Berna
+[2026-03-23T14:58:04.455Z] Starting parallel fetch...
+[2026-03-23T14:58:04.462Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:04.462Z] Active season: undefined
+[2026-03-23T14:58:04.463Z] Calculating champions...
+[2026-03-23T14:58:04.463Z] Champions calc done. Count: 0
+[2026-03-23T14:58:04.475Z] EventsList Start
+[2026-03-23T14:58:04.481Z] EventsList: Client created
+[2026-03-23T14:58:04.486Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:04.601Z] --- Dashboard Start ---
+[2026-03-23T14:58:04.612Z] Supabase client created
+[2026-03-23T14:58:04.618Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:04.618Z] Fetching profile...
+[2026-03-23T14:58:04.621Z] Profile fetched: Berna
+[2026-03-23T14:58:04.622Z] Starting parallel fetch...
+[2026-03-23T14:58:04.629Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:04.630Z] Active season: undefined
+[2026-03-23T14:58:04.630Z] Calculating champions...
+[2026-03-23T14:58:04.631Z] Champions calc done. Count: 0
+[2026-03-23T14:58:04.643Z] EventsList Start
+[2026-03-23T14:58:04.649Z] EventsList: Client created
+[2026-03-23T14:58:04.656Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:04.764Z] --- Dashboard Start ---
+[2026-03-23T14:58:04.775Z] Supabase client created
+[2026-03-23T14:58:04.780Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:04.780Z] Fetching profile...
+[2026-03-23T14:58:04.783Z] Profile fetched: Berna
+[2026-03-23T14:58:04.783Z] Starting parallel fetch...
+[2026-03-23T14:58:04.791Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:04.791Z] Active season: undefined
+[2026-03-23T14:58:04.791Z] Calculating champions...
+[2026-03-23T14:58:04.792Z] Champions calc done. Count: 0
+[2026-03-23T14:58:04.805Z] EventsList Start
+[2026-03-23T14:58:04.811Z] EventsList: Client created
+[2026-03-23T14:58:04.817Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:04.949Z] --- Dashboard Start ---
+[2026-03-23T14:58:04.965Z] Supabase client created
+[2026-03-23T14:58:04.970Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:04.970Z] Fetching profile...
+[2026-03-23T14:58:04.973Z] Profile fetched: Berna
+[2026-03-23T14:58:04.974Z] Starting parallel fetch...
+[2026-03-23T14:58:04.980Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:04.981Z] Active season: undefined
+[2026-03-23T14:58:04.981Z] Calculating champions...
+[2026-03-23T14:58:04.981Z] Champions calc done. Count: 0
+[2026-03-23T14:58:04.990Z] EventsList Start
+[2026-03-23T14:58:04.996Z] EventsList: Client created
+[2026-03-23T14:58:05.002Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:05.348Z] --- Dashboard Start ---
+[2026-03-23T14:58:05.360Z] Supabase client created
+[2026-03-23T14:58:05.365Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:05.365Z] Fetching profile...
+[2026-03-23T14:58:05.368Z] Profile fetched: Berna
+[2026-03-23T14:58:05.368Z] Starting parallel fetch...
+[2026-03-23T14:58:05.376Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:05.376Z] Active season: undefined
+[2026-03-23T14:58:05.376Z] Calculating champions...
+[2026-03-23T14:58:05.376Z] Champions calc done. Count: 0
+[2026-03-23T14:58:05.386Z] EventsList Start
+[2026-03-23T14:58:05.391Z] EventsList: Client created
+[2026-03-23T14:58:05.396Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:05.511Z] --- Dashboard Start ---
+[2026-03-23T14:58:05.521Z] Supabase client created
+[2026-03-23T14:58:05.526Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:05.526Z] Fetching profile...
+[2026-03-23T14:58:05.529Z] Profile fetched: Berna
+[2026-03-23T14:58:05.529Z] Starting parallel fetch...
+[2026-03-23T14:58:05.536Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:05.536Z] Active season: undefined
+[2026-03-23T14:58:05.536Z] Calculating champions...
+[2026-03-23T14:58:05.537Z] Champions calc done. Count: 0
+[2026-03-23T14:58:05.545Z] EventsList Start
+[2026-03-23T14:58:05.551Z] EventsList: Client created
+[2026-03-23T14:58:05.556Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:05.665Z] --- Dashboard Start ---
+[2026-03-23T14:58:05.678Z] Supabase client created
+[2026-03-23T14:58:05.684Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:05.684Z] Fetching profile...
+[2026-03-23T14:58:05.687Z] Profile fetched: Berna
+[2026-03-23T14:58:05.688Z] Starting parallel fetch...
+[2026-03-23T14:58:05.695Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:05.695Z] Active season: undefined
+[2026-03-23T14:58:05.696Z] Calculating champions...
+[2026-03-23T14:58:05.696Z] Champions calc done. Count: 0
+[2026-03-23T14:58:05.706Z] EventsList Start
+[2026-03-23T14:58:05.711Z] EventsList: Client created
+[2026-03-23T14:58:05.717Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:05.831Z] --- Dashboard Start ---
+[2026-03-23T14:58:05.842Z] Supabase client created
+[2026-03-23T14:58:05.848Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:05.848Z] Fetching profile...
+[2026-03-23T14:58:05.851Z] Profile fetched: Berna
+[2026-03-23T14:58:05.851Z] Starting parallel fetch...
+[2026-03-23T14:58:05.861Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:05.861Z] Active season: undefined
+[2026-03-23T14:58:05.861Z] Calculating champions...
+[2026-03-23T14:58:05.861Z] Champions calc done. Count: 0
+[2026-03-23T14:58:05.870Z] EventsList Start
+[2026-03-23T14:58:05.876Z] EventsList: Client created
+[2026-03-23T14:58:05.880Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:05.985Z] --- Dashboard Start ---
+[2026-03-23T14:58:05.996Z] Supabase client created
+[2026-03-23T14:58:06.000Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.001Z] Fetching profile...
+[2026-03-23T14:58:06.003Z] Profile fetched: Berna
+[2026-03-23T14:58:06.004Z] Starting parallel fetch...
+[2026-03-23T14:58:06.010Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.011Z] Active season: undefined
+[2026-03-23T14:58:06.011Z] Calculating champions...
+[2026-03-23T14:58:06.011Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.020Z] EventsList Start
+[2026-03-23T14:58:06.026Z] EventsList: Client created
+[2026-03-23T14:58:06.030Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.140Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.151Z] Supabase client created
+[2026-03-23T14:58:06.156Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.156Z] Fetching profile...
+[2026-03-23T14:58:06.159Z] Profile fetched: Berna
+[2026-03-23T14:58:06.159Z] Starting parallel fetch...
+[2026-03-23T14:58:06.166Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.166Z] Active season: undefined
+[2026-03-23T14:58:06.167Z] Calculating champions...
+[2026-03-23T14:58:06.167Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.176Z] EventsList Start
+[2026-03-23T14:58:06.181Z] EventsList: Client created
+[2026-03-23T14:58:06.186Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.306Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.317Z] Supabase client created
+[2026-03-23T14:58:06.322Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.323Z] Fetching profile...
+[2026-03-23T14:58:06.325Z] Profile fetched: Berna
+[2026-03-23T14:58:06.326Z] Starting parallel fetch...
+[2026-03-23T14:58:06.333Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.333Z] Active season: undefined
+[2026-03-23T14:58:06.333Z] Calculating champions...
+[2026-03-23T14:58:06.334Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.343Z] EventsList Start
+[2026-03-23T14:58:06.349Z] EventsList: Client created
+[2026-03-23T14:58:06.354Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.462Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.473Z] Supabase client created
+[2026-03-23T14:58:06.478Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.478Z] Fetching profile...
+[2026-03-23T14:58:06.481Z] Profile fetched: Berna
+[2026-03-23T14:58:06.482Z] Starting parallel fetch...
+[2026-03-23T14:58:06.489Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.489Z] Active season: undefined
+[2026-03-23T14:58:06.489Z] Calculating champions...
+[2026-03-23T14:58:06.489Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.502Z] EventsList Start
+[2026-03-23T14:58:06.507Z] EventsList: Client created
+[2026-03-23T14:58:06.512Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.614Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.624Z] Supabase client created
+[2026-03-23T14:58:06.629Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.629Z] Fetching profile...
+[2026-03-23T14:58:06.632Z] Profile fetched: Berna
+[2026-03-23T14:58:06.632Z] Starting parallel fetch...
+[2026-03-23T14:58:06.639Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.639Z] Active season: undefined
+[2026-03-23T14:58:06.639Z] Calculating champions...
+[2026-03-23T14:58:06.640Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.649Z] EventsList Start
+[2026-03-23T14:58:06.655Z] EventsList: Client created
+[2026-03-23T14:58:06.660Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.765Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.776Z] Supabase client created
+[2026-03-23T14:58:06.781Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.781Z] Fetching profile...
+[2026-03-23T14:58:06.784Z] Profile fetched: Berna
+[2026-03-23T14:58:06.784Z] Starting parallel fetch...
+[2026-03-23T14:58:06.791Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.791Z] Active season: undefined
+[2026-03-23T14:58:06.791Z] Calculating champions...
+[2026-03-23T14:58:06.792Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.805Z] EventsList Start
+[2026-03-23T14:58:06.810Z] EventsList: Client created
+[2026-03-23T14:58:06.815Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:06.929Z] --- Dashboard Start ---
+[2026-03-23T14:58:06.940Z] Supabase client created
+[2026-03-23T14:58:06.945Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:06.945Z] Fetching profile...
+[2026-03-23T14:58:06.948Z] Profile fetched: Berna
+[2026-03-23T14:58:06.948Z] Starting parallel fetch...
+[2026-03-23T14:58:06.955Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:06.955Z] Active season: undefined
+[2026-03-23T14:58:06.956Z] Calculating champions...
+[2026-03-23T14:58:06.956Z] Champions calc done. Count: 0
+[2026-03-23T14:58:06.965Z] EventsList Start
+[2026-03-23T14:58:06.970Z] EventsList: Client created
+[2026-03-23T14:58:06.975Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.084Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.095Z] Supabase client created
+[2026-03-23T14:58:07.100Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.100Z] Fetching profile...
+[2026-03-23T14:58:07.103Z] Profile fetched: Berna
+[2026-03-23T14:58:07.103Z] Starting parallel fetch...
+[2026-03-23T14:58:07.111Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.111Z] Active season: undefined
+[2026-03-23T14:58:07.111Z] Calculating champions...
+[2026-03-23T14:58:07.112Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.121Z] EventsList Start
+[2026-03-23T14:58:07.127Z] EventsList: Client created
+[2026-03-23T14:58:07.135Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.240Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.252Z] Supabase client created
+[2026-03-23T14:58:07.258Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.258Z] Fetching profile...
+[2026-03-23T14:58:07.261Z] Profile fetched: Berna
+[2026-03-23T14:58:07.261Z] Starting parallel fetch...
+[2026-03-23T14:58:07.268Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.268Z] Active season: undefined
+[2026-03-23T14:58:07.268Z] Calculating champions...
+[2026-03-23T14:58:07.269Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.278Z] EventsList Start
+[2026-03-23T14:58:07.284Z] EventsList: Client created
+[2026-03-23T14:58:07.289Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.395Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.407Z] Supabase client created
+[2026-03-23T14:58:07.413Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.413Z] Fetching profile...
+[2026-03-23T14:58:07.416Z] Profile fetched: Berna
+[2026-03-23T14:58:07.416Z] Starting parallel fetch...
+[2026-03-23T14:58:07.424Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.425Z] Active season: undefined
+[2026-03-23T14:58:07.425Z] Calculating champions...
+[2026-03-23T14:58:07.425Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.436Z] EventsList Start
+[2026-03-23T14:58:07.442Z] EventsList: Client created
+[2026-03-23T14:58:07.448Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.559Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.574Z] Supabase client created
+[2026-03-23T14:58:07.582Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.583Z] Fetching profile...
+[2026-03-23T14:58:07.586Z] Profile fetched: Berna
+[2026-03-23T14:58:07.587Z] Starting parallel fetch...
+[2026-03-23T14:58:07.597Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.597Z] Active season: undefined
+[2026-03-23T14:58:07.597Z] Calculating champions...
+[2026-03-23T14:58:07.597Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.614Z] EventsList Start
+[2026-03-23T14:58:07.619Z] EventsList: Client created
+[2026-03-23T14:58:07.624Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.741Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.752Z] Supabase client created
+[2026-03-23T14:58:07.757Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.757Z] Fetching profile...
+[2026-03-23T14:58:07.760Z] Profile fetched: Berna
+[2026-03-23T14:58:07.760Z] Starting parallel fetch...
+[2026-03-23T14:58:07.767Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.767Z] Active season: undefined
+[2026-03-23T14:58:07.767Z] Calculating champions...
+[2026-03-23T14:58:07.767Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.776Z] EventsList Start
+[2026-03-23T14:58:07.782Z] EventsList: Client created
+[2026-03-23T14:58:07.786Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:07.895Z] --- Dashboard Start ---
+[2026-03-23T14:58:07.906Z] Supabase client created
+[2026-03-23T14:58:07.912Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:07.912Z] Fetching profile...
+[2026-03-23T14:58:07.915Z] Profile fetched: Berna
+[2026-03-23T14:58:07.916Z] Starting parallel fetch...
+[2026-03-23T14:58:07.923Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:07.923Z] Active season: undefined
+[2026-03-23T14:58:07.924Z] Calculating champions...
+[2026-03-23T14:58:07.924Z] Champions calc done. Count: 0
+[2026-03-23T14:58:07.934Z] EventsList Start
+[2026-03-23T14:58:07.940Z] EventsList: Client created
+[2026-03-23T14:58:07.946Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.072Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.083Z] Supabase client created
+[2026-03-23T14:58:08.088Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.089Z] Fetching profile...
+[2026-03-23T14:58:08.091Z] Profile fetched: Berna
+[2026-03-23T14:58:08.092Z] Starting parallel fetch...
+[2026-03-23T14:58:08.099Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.099Z] Active season: undefined
+[2026-03-23T14:58:08.099Z] Calculating champions...
+[2026-03-23T14:58:08.100Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.109Z] EventsList Start
+[2026-03-23T14:58:08.115Z] EventsList: Client created
+[2026-03-23T14:58:08.120Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.226Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.237Z] Supabase client created
+[2026-03-23T14:58:08.243Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.243Z] Fetching profile...
+[2026-03-23T14:58:08.246Z] Profile fetched: Berna
+[2026-03-23T14:58:08.247Z] Starting parallel fetch...
+[2026-03-23T14:58:08.255Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.256Z] Active season: undefined
+[2026-03-23T14:58:08.256Z] Calculating champions...
+[2026-03-23T14:58:08.256Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.266Z] EventsList Start
+[2026-03-23T14:58:08.272Z] EventsList: Client created
+[2026-03-23T14:58:08.277Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.382Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.394Z] Supabase client created
+[2026-03-23T14:58:08.399Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.400Z] Fetching profile...
+[2026-03-23T14:58:08.403Z] Profile fetched: Berna
+[2026-03-23T14:58:08.403Z] Starting parallel fetch...
+[2026-03-23T14:58:08.411Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.411Z] Active season: undefined
+[2026-03-23T14:58:08.411Z] Calculating champions...
+[2026-03-23T14:58:08.412Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.422Z] EventsList Start
+[2026-03-23T14:58:08.428Z] EventsList: Client created
+[2026-03-23T14:58:08.433Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.543Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.554Z] Supabase client created
+[2026-03-23T14:58:08.558Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.559Z] Fetching profile...
+[2026-03-23T14:58:08.561Z] Profile fetched: Berna
+[2026-03-23T14:58:08.562Z] Starting parallel fetch...
+[2026-03-23T14:58:08.568Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.569Z] Active season: undefined
+[2026-03-23T14:58:08.569Z] Calculating champions...
+[2026-03-23T14:58:08.569Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.579Z] EventsList Start
+[2026-03-23T14:58:08.584Z] EventsList: Client created
+[2026-03-23T14:58:08.589Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.688Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.698Z] Supabase client created
+[2026-03-23T14:58:08.703Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.704Z] Fetching profile...
+[2026-03-23T14:58:08.706Z] Profile fetched: Berna
+[2026-03-23T14:58:08.707Z] Starting parallel fetch...
+[2026-03-23T14:58:08.713Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.714Z] Active season: undefined
+[2026-03-23T14:58:08.714Z] Calculating champions...
+[2026-03-23T14:58:08.714Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.723Z] EventsList Start
+[2026-03-23T14:58:08.728Z] EventsList: Client created
+[2026-03-23T14:58:08.733Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.835Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.845Z] Supabase client created
+[2026-03-23T14:58:08.850Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:08.850Z] Fetching profile...
+[2026-03-23T14:58:08.853Z] Profile fetched: Berna
+[2026-03-23T14:58:08.853Z] Starting parallel fetch...
+[2026-03-23T14:58:08.860Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:08.861Z] Active season: undefined
+[2026-03-23T14:58:08.861Z] Calculating champions...
+[2026-03-23T14:58:08.861Z] Champions calc done. Count: 0
+[2026-03-23T14:58:08.871Z] EventsList Start
+[2026-03-23T14:58:08.876Z] EventsList: Client created
+[2026-03-23T14:58:08.881Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:08.987Z] --- Dashboard Start ---
+[2026-03-23T14:58:08.997Z] Supabase client created
+[2026-03-23T14:58:09.202Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:09.203Z] Fetching profile...
+[2026-03-23T14:58:09.274Z] --- Dashboard Start ---
+[2026-03-23T14:58:09.285Z] Supabase client created
+[2026-03-23T14:58:09.388Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:09.388Z] Fetching profile...
+[2026-03-23T14:58:09.527Z] --- Dashboard Start ---
+[2026-03-23T14:58:09.538Z] Supabase client created
+[2026-03-23T14:58:09.565Z] Profile fetched: Berna
+[2026-03-23T14:58:09.565Z] Starting parallel fetch...
+[2026-03-23T14:58:09.577Z] Profile fetched: Berna
+[2026-03-23T14:58:09.577Z] Starting parallel fetch...
+[2026-03-23T14:58:09.655Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:09.655Z] Fetching profile...
+[2026-03-23T14:58:09.757Z] Profile fetched: Berna
+[2026-03-23T14:58:09.757Z] Starting parallel fetch...
+[2026-03-23T14:58:09.815Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:09.815Z] Active season: undefined
+[2026-03-23T14:58:09.815Z] Calculating champions...
+[2026-03-23T14:58:09.815Z] Champions calc done. Count: 0
+[2026-03-23T14:58:09.839Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:09.840Z] Active season: undefined
+[2026-03-23T14:58:09.840Z] Calculating champions...
+[2026-03-23T14:58:09.840Z] Champions calc done. Count: 0
+[2026-03-23T14:58:09.887Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:09.888Z] Active season: undefined
+[2026-03-23T14:58:09.888Z] Calculating champions...
+[2026-03-23T14:58:09.888Z] Champions calc done. Count: 0
+[2026-03-23T14:58:09.917Z] EventsList Start
+[2026-03-23T14:58:09.923Z] EventsList: Client created
+[2026-03-23T14:58:09.946Z] --- Dashboard Start ---
+[2026-03-23T14:58:09.959Z] Supabase client created
+[2026-03-23T14:58:09.982Z] EventsList Start
+[2026-03-23T14:58:09.987Z] EventsList: Client created
+[2026-03-23T14:58:10.019Z] EventsList Start
+[2026-03-23T14:58:10.026Z] EventsList: Client created
+[2026-03-23T14:58:10.037Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:10.060Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:10.060Z] Fetching profile...
+[2026-03-23T14:58:10.102Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:10.149Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:10.178Z] Profile fetched: Berna
+[2026-03-23T14:58:10.178Z] Starting parallel fetch...
+[2026-03-23T14:58:10.238Z] --- Dashboard Start ---
+[2026-03-23T14:58:10.255Z] Supabase client created
+[2026-03-23T14:58:10.307Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:10.307Z] Active season: undefined
+[2026-03-23T14:58:10.307Z] Calculating champions...
+[2026-03-23T14:58:10.307Z] Champions calc done. Count: 0
+[2026-03-23T14:58:10.364Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:10.365Z] Fetching profile...
+[2026-03-23T14:58:10.417Z] EventsList Start
+[2026-03-23T14:58:10.424Z] EventsList: Client created
+[2026-03-23T14:58:10.476Z] Profile fetched: Berna
+[2026-03-23T14:58:10.477Z] Starting parallel fetch...
+[2026-03-23T14:58:10.498Z] --- Dashboard Start ---
+[2026-03-23T14:58:10.511Z] Supabase client created
+[2026-03-23T14:58:10.532Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:10.609Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:10.609Z] Fetching profile...
+[2026-03-23T14:58:10.650Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:10.650Z] Active season: undefined
+[2026-03-23T14:58:10.650Z] Calculating champions...
+[2026-03-23T14:58:10.651Z] Champions calc done. Count: 0
+[2026-03-23T14:58:10.714Z] Profile fetched: Berna
+[2026-03-23T14:58:10.714Z] Starting parallel fetch...
+[2026-03-23T14:58:10.736Z] --- Dashboard Start ---
+[2026-03-23T14:58:10.747Z] Supabase client created
+[2026-03-23T14:58:10.771Z] EventsList Start
+[2026-03-23T14:58:10.777Z] EventsList: Client created
+[2026-03-23T14:58:10.840Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:10.841Z] Fetching profile...
+[2026-03-23T14:58:10.849Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:10.850Z] Active season: undefined
+[2026-03-23T14:58:10.850Z] Calculating champions...
+[2026-03-23T14:58:10.850Z] Champions calc done. Count: 0
+[2026-03-23T14:58:10.886Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:10.937Z] Profile fetched: Berna
+[2026-03-23T14:58:10.938Z] Starting parallel fetch...
+[2026-03-23T14:58:10.957Z] EventsList Start
+[2026-03-23T14:58:10.963Z] EventsList: Client created
+[2026-03-23T14:58:11.004Z] --- Dashboard Start ---
+[2026-03-23T14:58:11.016Z] Supabase client created
+[2026-03-23T14:58:11.051Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:11.051Z] Active season: undefined
+[2026-03-23T14:58:11.052Z] Calculating champions...
+[2026-03-23T14:58:11.052Z] Champions calc done. Count: 0
+[2026-03-23T14:58:11.060Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:11.134Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:11.134Z] Fetching profile...
+[2026-03-23T14:58:11.155Z] EventsList Start
+[2026-03-23T14:58:11.161Z] EventsList: Client created
+[2026-03-23T14:58:11.230Z] Profile fetched: Berna
+[2026-03-23T14:58:11.230Z] Starting parallel fetch...
+[2026-03-23T14:58:11.276Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:11.310Z] --- Dashboard Start ---
+[2026-03-23T14:58:11.322Z] Supabase client created
+[2026-03-23T14:58:11.351Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:11.352Z] Active season: undefined
+[2026-03-23T14:58:11.352Z] Calculating champions...
+[2026-03-23T14:58:11.353Z] Champions calc done. Count: 0
+[2026-03-23T14:58:11.421Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:11.421Z] Fetching profile...
+[2026-03-23T14:58:11.486Z] EventsList Start
+[2026-03-23T14:58:11.493Z] EventsList: Client created
+[2026-03-23T14:58:11.516Z] Profile fetched: Berna
+[2026-03-23T14:58:11.517Z] Starting parallel fetch...
+[2026-03-23T14:58:11.540Z] --- Dashboard Start ---
+[2026-03-23T14:58:11.551Z] Supabase client created
+[2026-03-23T14:58:11.597Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:11.626Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:11.627Z] Active season: undefined
+[2026-03-23T14:58:11.627Z] Calculating champions...
+[2026-03-23T14:58:11.627Z] Champions calc done. Count: 0
+[2026-03-23T14:58:11.640Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:11.640Z] Fetching profile...
+[2026-03-23T14:58:11.735Z] EventsList Start
+[2026-03-23T14:58:11.741Z] EventsList: Client created
+[2026-03-23T14:58:11.754Z] Profile fetched: Berna
+[2026-03-23T14:58:11.755Z] Starting parallel fetch...
+[2026-03-23T14:58:11.786Z] --- Dashboard Start ---
+[2026-03-23T14:58:11.798Z] Supabase client created
+[2026-03-23T14:58:11.836Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:11.866Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:11.866Z] Active season: undefined
+[2026-03-23T14:58:11.867Z] Calculating champions...
+[2026-03-23T14:58:11.867Z] Champions calc done. Count: 0
+[2026-03-23T14:58:11.891Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:11.891Z] Fetching profile...
+[2026-03-23T14:58:11.958Z] EventsList Start
+[2026-03-23T14:58:11.965Z] EventsList: Client created
+[2026-03-23T14:58:11.987Z] Profile fetched: Berna
+[2026-03-23T14:58:11.987Z] Starting parallel fetch...
+[2026-03-23T14:58:12.028Z] --- Dashboard Start ---
+[2026-03-23T14:58:12.039Z] Supabase client created
+[2026-03-23T14:58:12.065Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:12.098Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:12.099Z] Active season: undefined
+[2026-03-23T14:58:12.099Z] Calculating champions...
+[2026-03-23T14:58:12.099Z] Champions calc done. Count: 0
+[2026-03-23T14:58:12.155Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:12.155Z] Fetching profile...
+[2026-03-23T14:58:12.204Z] EventsList Start
+[2026-03-23T14:58:12.210Z] EventsList: Client created
+[2026-03-23T14:58:12.236Z] --- Dashboard Start ---
+[2026-03-23T14:58:12.248Z] Supabase client created
+[2026-03-23T14:58:12.267Z] Profile fetched: Berna
+[2026-03-23T14:58:12.268Z] Starting parallel fetch...
+[2026-03-23T14:58:12.306Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:12.345Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:12.345Z] Fetching profile...
+[2026-03-23T14:58:12.390Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:12.390Z] Active season: undefined
+[2026-03-23T14:58:12.390Z] Calculating champions...
+[2026-03-23T14:58:12.391Z] Champions calc done. Count: 0
+[2026-03-23T14:58:12.442Z] Profile fetched: Berna
+[2026-03-23T14:58:12.443Z] Starting parallel fetch...
+[2026-03-23T14:58:12.467Z] --- Dashboard Start ---
+[2026-03-23T14:58:12.479Z] Supabase client created
+[2026-03-23T14:58:12.502Z] EventsList Start
+[2026-03-23T14:58:12.508Z] EventsList: Client created
+[2026-03-23T14:58:12.555Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:12.556Z] Active season: undefined
+[2026-03-23T14:58:12.556Z] Calculating champions...
+[2026-03-23T14:58:12.556Z] Champions calc done. Count: 0
+[2026-03-23T14:58:12.575Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:12.575Z] Fetching profile...
+[2026-03-23T14:58:12.599Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:12.649Z] EventsList Start
+[2026-03-23T14:58:12.655Z] EventsList: Client created
+[2026-03-23T14:58:12.674Z] Profile fetched: Berna
+[2026-03-23T14:58:12.674Z] Starting parallel fetch...
+[2026-03-23T14:58:12.701Z] --- Dashboard Start ---
+[2026-03-23T14:58:12.712Z] Supabase client created
+[2026-03-23T14:58:12.755Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:12.787Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:12.787Z] Active season: undefined
+[2026-03-23T14:58:12.787Z] Calculating champions...
+[2026-03-23T14:58:12.787Z] Champions calc done. Count: 0
+[2026-03-23T14:58:12.823Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:58:12.823Z] Fetching profile...
+[2026-03-23T14:58:12.904Z] EventsList Start
+[2026-03-23T14:58:12.911Z] EventsList: Client created
+[2026-03-23T14:58:12.937Z] Profile fetched: Berna
+[2026-03-23T14:58:12.937Z] Starting parallel fetch...
+[2026-03-23T14:58:13.053Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:58:13.059Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:58:13.059Z] Active season: undefined
+[2026-03-23T14:58:13.060Z] Calculating champions...
+[2026-03-23T14:58:13.060Z] Champions calc done. Count: 0
+[2026-03-23T14:58:13.157Z] EventsList Start
+[2026-03-23T14:58:13.164Z] EventsList: Client created
+[2026-03-23T14:58:13.256Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:59:29.176Z] --- Dashboard Start ---
+[2026-03-23T14:59:29.207Z] Supabase client created
+[2026-03-23T14:59:29.217Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:59:29.218Z] Fetching profile...
+[2026-03-23T14:59:29.222Z] Profile fetched: Berna
+[2026-03-23T14:59:29.222Z] Starting parallel fetch...
+[2026-03-23T14:59:29.232Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:59:29.232Z] Active season: undefined
+[2026-03-23T14:59:29.233Z] Calculating champions...
+[2026-03-23T14:59:29.233Z] Champions calc done. Count: 0
+[2026-03-23T14:59:29.244Z] EventsList Start
+[2026-03-23T14:59:29.250Z] EventsList: Client created
+[2026-03-23T14:59:29.256Z] EventsList: Events fetched. Count: 0
+[2026-03-23T14:59:39.117Z] --- Dashboard Start ---
+[2026-03-23T14:59:39.137Z] Supabase client created
+[2026-03-23T14:59:39.146Z] User fetch: 15e53fd9-b8fa-4c4e-a6ad-c883c2ecc50f
+[2026-03-23T14:59:39.146Z] Fetching profile...
+[2026-03-23T14:59:39.149Z] Profile fetched: Berna
+[2026-03-23T14:59:39.149Z] Starting parallel fetch...
+[2026-03-23T14:59:39.156Z] Parallel fetch done. Seasons: 0, Profiles: 0
+[2026-03-23T14:59:39.157Z] Active season: undefined
+[2026-03-23T14:59:39.157Z] Calculating champions...
+[2026-03-23T14:59:39.157Z] Champions calc done. Count: 0
+[2026-03-23T14:59:39.168Z] EventsList Start
+[2026-03-23T14:59:39.175Z] EventsList: Client created
+[2026-03-23T14:59:39.180Z] EventsList: Events fetched. Count: 0

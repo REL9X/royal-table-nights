@@ -57,28 +57,25 @@ export default function DownloadPage() {
                             </div>
                             <div>
                                 <h3 className="font-black text-xl text-white uppercase tracking-tight">Android</h3>
-                                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Native APK</p>
+                                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Instant App / PWA</p>
                             </div>
                         </div>
 
-                        <ul className="space-y-3 mb-8">
-                            <li className="flex items-center gap-2 text-[10px] text-white/60 font-medium tracking-tight">
-                                <ShieldCheck size={14} className="text-emerald-500" /> Fast & Optimized Performance
-                            </li>
-                            <li className="flex items-center gap-2 text-[10px] text-white/60 font-medium tracking-tight">
-                                <Bell size={14} className="text-emerald-500" /> Native Push Notifications
-                            </li>
-                            <li className="flex items-center gap-2 text-[10px] text-white/60 font-medium tracking-tight">
-                                <Zap size={14} className="text-emerald-500" /> Sideload Directly from Site
-                            </li>
-                        </ul>
+                        <div className="bg-black/20 p-4 rounded-2xl mb-6 border border-white/5">
+                            <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.1em] mb-2">Instructions:</p>
+                            <ol className="space-y-3 text-[10px] text-white/80 font-medium tracking-tight list-decimal list-inside">
+                                <li>Open this site in <span className="text-emerald-400">Chrome</span></li>
+                                <li>Tap the <span className="font-bold underline">Three Dots</span> ⋮</li>
+                                <li>Select <span className="font-bold border border-white/20 px-1 rounded">Install App</span> or <span className="font-bold border border-white/20 px-1 rounded">Add to Home Screen</span></li>
+                            </ol>
+                        </div>
 
-                        <button 
-                            onClick={() => alert('Development build coming soon! In the browser context, you should provide the direct .apk link here.')}
+                        <Link 
+                            href="/"
                             className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_4px_0_rgb(5,150,105)]"
                         >
-                            <Download size={14} /> Download APK
-                        </button>
+                            <Zap size={14} /> Launch Instant App
+                        </Link>
                     </motion.div>
 
                     {/* iOS Card */}

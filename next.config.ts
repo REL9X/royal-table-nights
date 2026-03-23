@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_VALUE === 'development'
+})
 
 const nextConfig: NextConfig = {
   images: {
@@ -7,4 +13,4 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

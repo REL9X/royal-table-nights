@@ -1,0 +1,19 @@
+{
+  "name": "Royal Table Nights",
+  "short_name": "Royal Table",
+  "description": "Exclusive Poker Tracker App",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0e1a",
+  "theme_color": "#0b0e1a",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "scope": "/"
+}
