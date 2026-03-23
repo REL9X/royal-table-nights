@@ -37,7 +37,7 @@ export default async function AdminPage({
     const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single() as { data: Profile | null }
     if (profile?.role !== 'admin') redirect('/dashboard')
 
-    const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).neq('role', 'admin').order('created_at', { ascending: false }) as { data: Profile[] | null }
+    const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).order('created_at', { ascending: false }) as { data: Profile[] | null }
     const { data: allApprovedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).order('name', { ascending: true }) as { data: Profile[] | null }
     const { data: events } = await supabase.from('events').select('*, event_responses(id)').order('date', { ascending: false }).order('created_at', { ascending: false })
     const { data: allowedPhones } = await supabase.from('allowed_phones').select('*').order('created_at', { ascending: false })
