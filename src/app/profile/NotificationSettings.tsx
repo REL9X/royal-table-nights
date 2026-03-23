@@ -27,20 +27,21 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     return output
 }
 
-async function registerPush(userId: string) {
-    window.console.log('Push Settings: registerPush starting...')
+async function registerPush(userId: string, addLog: (m: string) => void) {
+    addLog('registerPush started...')
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        window.console.warn('Push Settings: Browser does not support push.')
+        addLog('Error: SW or PushManager missing.')
         return
     }
     if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-        window.console.warn('Push Settings: Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY.')
+        addLog('Error: Missing VAPID public key.')
         return
     }
     try {
         const reg = await navigator.serviceWorker.ready
-        window.console.log('Push Settings: SW ready at scope:', reg.scope)
+        addLog(`SW Ready: ${reg.scope}`)
         const existing = await reg.pushManager.getSubscription()
+        if (existing) addLog('Existing sub found.')
         
         const sub = existing ?? await reg.pushManager.subscribe({
             userVisibleOnly: true,
@@ -48,12 +49,12 @@ async function registerPush(userId: string) {
         })
         
         if (!sub) {
-            window.console.warn('Push Settings: Failed to get subscription object.')
+            addLog('Error: Null subscription object.')
             return
         }
         
         const json = sub.toJSON()
-        window.console.log('Push Settings: Subscribed, saving to Supabase...')
+        addLog('Subscribed. Syncing with server...')
         const supabase = createClient()
         const { error } = await supabase.from('push_subscriptions').upsert({
             user_id: userId,
@@ -63,12 +64,12 @@ async function registerPush(userId: string) {
         }, { onConflict: 'user_id,endpoint' })
         
         if (error) {
-            window.console.error('Push Settings: Supabase error:', error)
+            addLog(`Server Error: ${error.message}`)
         } else {
-            window.console.log('Push Settings: Registration successful.')
+            addLog('SUCCESS: Registered!')
         }
-    } catch (e) {
-        window.console.error('Push Settings: registration failed:', e)
+    } catch (e: any) {
+        addLog(`FAILED: ${e.message || e}`)
     }
 }
 
@@ -76,12 +77,22 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
     const [prefs, setPrefs] = useState(initialPrefs)
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
+    const [debugLogs, setDebugLogs] = useState<string[]>([])
+
+    const addLog = (msg: string) => {
+        console.log('RTN-PUSH:', msg)
+        setDebugLogs(prev => [msg, ...prev].slice(0, 5))
+    }
 
     // Register for push on mount if notifications are already enabled
     useEffect(() => {
+        if (typeof window !== 'undefined' && !window.Notification) {
+            addLog('Error: window.Notification is missing. On iOS, you MUST use "Add to Home Screen".')
+        }
         if (userId && prefs.all_enabled) {
             Notification.requestPermission().then(permission => {
-                if (permission === 'granted') registerPush(userId)
+                addLog(`Mount Check Permission: ${permission}`)
+                if (permission === 'granted') registerPush(userId, addLog)
             })
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -94,8 +105,14 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
 
         // If user just turned notifications ON, register for push
         if (key === 'all_enabled' && nextPrefs.all_enabled && userId) {
+            if (!window.Notification) {
+                addLog('Error: Notification API blocked. Are you on iOS Safari (not PWA)?')
+                return
+            }
+            addLog('Requesting permission...')
             const permission = await Notification.requestPermission()
-            if (permission === 'granted') registerPush(userId)
+            addLog(`Permission result: ${permission}`)
+            if (permission === 'granted') registerPush(userId, addLog)
         }
 
         const res = await updateNotificationPrefs(nextPrefs)
@@ -200,6 +217,22 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
             <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] text-center pt-2 italic">
                 Settings are synced across all your PWA devices.
             </p>
+
+            {/* Debug Console */}
+            <div className="mt-8 p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-[10px]">
+                <h5 className="text-[9px] font-black text-white/30 uppercase tracking-widest mb-2 flex justify-between">
+                    Push Debug Console
+                    <button onClick={() => setDebugLogs([])} className="hover:text-white transition-colors">Clear</button>
+                </h5>
+                <div className="space-y-1">
+                    {debugLogs.length === 0 && <span className="text-white/10 italic">No activity yet...</span>}
+                    {debugLogs.map((log, i) => (
+                        <div key={i} className={`truncate ${log.startsWith('Error') || log.startsWith('FAILED') ? 'text-red-400' : log.startsWith('SUCCESS') ? 'text-emerald-400' : 'text-white/40'}`}>
+                            {`> ${log}`}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }
