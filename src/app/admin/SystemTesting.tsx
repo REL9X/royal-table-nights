@@ -1,3 +1,5 @@
+'use client'
+
 import { Zap, Bell, Send, Loader2 } from 'lucide-react'
 import { NotificationService } from '@/lib/notifications'
 import { useState } from 'react'
