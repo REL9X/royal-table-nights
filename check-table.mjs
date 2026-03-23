@@ -9,11 +9,11 @@ const supabase = createClient(
 )
 
 async function checkTable() {
-    const { data, error } = await supabase.from('broadcasts').select('count', { count: 'exact', head: true })
+    const { count, error } = await supabase.from('broadcasts').select('*', { count: 'exact', head: true })
     if (error) {
-        console.error('Broadcasts table error:', error)
+        console.error('Broadcasts table error:', JSON.stringify(error, null, 2))
     } else {
-        console.log('Broadcasts table exists, count:', data)
+        console.log('Broadcasts table exists, count:', count)
     }
 }
 
