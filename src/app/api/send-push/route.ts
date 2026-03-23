@@ -2,13 +2,17 @@ import webpush from 'web-push'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-webpush.setVapidDetails(
-    process.env.VAPID_SUBJECT!,
-    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-    process.env.VAPID_PRIVATE_KEY!
-)
-
 export async function POST(req: Request) {
+    // Set VAPID details at request time — not module level — so build doesn't throw
+    if (!process.env.VAPID_SUBJECT || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+        return NextResponse.json({ error: 'Push not configured' }, { status: 500 })
+    }
+    webpush.setVapidDetails(
+        process.env.VAPID_SUBJECT,
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY
+    )
+
     const supabase = await createClient()
 
     // Auth check — only admins can send pushes
@@ -19,7 +23,6 @@ export async function POST(req: Request) {
 
     const { title, message } = await req.json()
 
-    // Get all subscriptions
     const { data: subs } = await supabase.from('push_subscriptions').select('*')
     if (!subs || subs.length === 0) return NextResponse.json({ sent: 0 })
 
@@ -36,12 +39,11 @@ export async function POST(req: Request) {
             sent++
         } catch (err: any) {
             if (err.statusCode === 410 || err.statusCode === 404) {
-                dead.push(sub.id) // Subscription expired — clean it up
+                dead.push(sub.id)
             }
         }
     }))
 
-    // Remove expired subscriptions
     if (dead.length > 0) {
         await supabase.from('push_subscriptions').delete().in('id', dead)
     }
