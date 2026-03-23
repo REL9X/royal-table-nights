@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bell, Shield, Trophy, Zap, Clock, Check } from 'lucide-react'
 import { updateNotificationPrefs } from './actions'
 import { motion } from 'framer-motion'
+import { createClient } from '@/lib/supabase/client'
 
 interface NotificationSettingsProps {
     initialPrefs: {
@@ -13,18 +14,68 @@ interface NotificationSettingsProps {
         rank_ups: boolean
         reminders: boolean
     }
+    userId?: string
 }
 
-export default function NotificationSettings({ initialPrefs }: NotificationSettingsProps) {
+function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+    const rawData = atob(base64)
+    const output = new ArrayBuffer(rawData.length)
+    const bytes = new Uint8Array(output)
+    for (let i = 0; i < rawData.length; i++) bytes[i] = rawData.charCodeAt(i)
+    return output
+}
+
+async function registerPush(userId: string) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return
+    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) return
+    try {
+        const reg = await navigator.serviceWorker.ready
+        const existing = await reg.pushManager.getSubscription()
+        const sub = existing ?? await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY)
+        })
+        if (!sub) return
+        const json = sub.toJSON()
+        const supabase = createClient()
+        await supabase.from('push_subscriptions').upsert({
+            user_id: userId,
+            endpoint: sub.endpoint,
+            p256dh: json.keys?.p256dh ?? '',
+            auth: json.keys?.auth ?? ''
+        }, { onConflict: 'user_id,endpoint' })
+    } catch (e) {
+        console.warn('Push registration failed:', e)
+    }
+}
+
+export default function NotificationSettings({ initialPrefs, userId }: NotificationSettingsProps) {
     const [prefs, setPrefs] = useState(initialPrefs)
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
+
+    // Register for push on mount if notifications are already enabled
+    useEffect(() => {
+        if (userId && prefs.all_enabled) {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') registerPush(userId)
+            })
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     async function handleToggle(key: keyof typeof initialPrefs) {
         const nextPrefs = { ...prefs, [key]: !prefs[key] }
         setPrefs(nextPrefs)
         setSaving(true)
         setSaved(false)
+
+        // If user just turned notifications ON, register for push
+        if (key === 'all_enabled' && nextPrefs.all_enabled && userId) {
+            const permission = await Notification.requestPermission()
+            if (permission === 'granted') registerPush(userId)
+        }
 
         const res = await updateNotificationPrefs(nextPrefs)
         setSaving(false)

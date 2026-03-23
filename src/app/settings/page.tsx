@@ -40,7 +40,8 @@ export default async function SettingsPage() {
                             season_results: true,
                             rank_ups: true,
                             reminders: true
-                        }} 
+                        }}
+                        userId={user.id}
                     />
                 </div>
             </div>
