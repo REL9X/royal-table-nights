@@ -1,5 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
+import { Trophy } from 'lucide-react'
+import { getPlayerRank } from '@/lib/playerRanks'
 
 interface PlayerNameProps {
     user: {
@@ -7,11 +9,27 @@ interface PlayerNameProps {
         name?: string
         role?: string
     } | null | undefined
+    totalPoints?: number | null
     className?: string
     isClickable?: boolean
+    showRankIcon?: boolean
+    showRankTitle?: boolean
+    isChampion?: boolean
+    championshipWins?: any[] | null
+    showBadges?: boolean
 }
 
-export default function PlayerName({ user, className = "", isClickable = false }: PlayerNameProps) {
+export default function PlayerName({
+    user,
+    totalPoints,
+    className = "",
+    isClickable = false,
+    showRankIcon = false,
+    showRankTitle = false,
+    isChampion = false,
+    championshipWins = [],
+    showBadges = false
+}: PlayerNameProps) {
     if (!user || (!user.name && user.name !== '')) {
         return <span className={className}>-</span>
     }
@@ -24,21 +42,62 @@ export default function PlayerName({ user, className = "", isClickable = false }
         baseName = baseName.substring(3).trim()
     }
 
+    const rank = getPlayerRank(totalPoints)
+
+    const titleElement = showRankTitle && totalPoints !== undefined ? (
+        <span className="text-xs text-[var(--foreground-muted)] ml-1 font-normal opacity-70">
+            ({rank.title})
+        </span>
+    ) : null;
+
+    const iconElement = showRankIcon && totalPoints !== undefined ? (
+        <span className="mr-1" title={rank.title}>{rank.icon}</span>
+    ) : null;
+
+    // Render individual season badges if available, otherwise fallback to the generic champion badge
+    const winsToRender = showBadges ? (Array.isArray(championshipWins) && championshipWins.length > 0
+        ? championshipWins
+        : (isChampion ? [{ seasonName: 'Season Champion' }] : [])) : [];
+
+    const championBadges = winsToRender.map((win, idx) => {
+        const sMatch = win.seasonName?.match(/Season\s+(?:#)?(\d+)/i);
+        const shortName = sMatch ? `S${sMatch[1]}` : '🏆';
+
+        return (
+            <div key={idx} className="inline-flex items-center justify-center min-w-[1.25rem] h-5 ml-1 px-1 bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 rounded-md shadow-[0_0_8px_rgba(245,158,11,0.4)] border border-amber-200/30"
+                title={win.seasonName || "Season Champion"}>
+                {sMatch ? (
+                    <span className="text-[9px] font-black text-white italic drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{shortName}</span>
+                ) : (
+                    <Trophy size={11} className="text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]" />
+                )}
+            </div>
+        );
+    });
+
     const content = role === 'admin' ? (
-        <>
-            <span className="text-sky-400">GM</span> {baseName}
-        </>
+        <span className="inline-flex items-center">
+            {iconElement}
+            <span className="text-sky-400 font-semibold mr-1">GM</span> {baseName}
+            {championBadges}
+            {titleElement}
+        </span>
     ) : (
-        <>{baseName}</>
+        <span className="inline-flex items-center">
+            {iconElement}
+            {baseName}
+            {championBadges}
+            {titleElement}
+        </span>
     )
 
     if (isClickable && id) {
         return (
-            <Link href={`/player/${id}`} className={`hover:underline cursor-pointer ${className}`}>
+            <Link href={`/player/${id}`} className={`hover:underline cursor-pointer inline-flex items-center ${className}`}>
                 {content}
             </Link>
         )
     }
 
-    return <span className={className}>{content}</span>
+    return <span className={`inline-flex items-center ${className}`}>{content}</span>
 }

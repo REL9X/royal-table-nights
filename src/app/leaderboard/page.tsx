@@ -1,146 +1,231 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Crown, ArrowLeft, TrendingUp, TrendingDown, Target, Skull, Flame, RefreshCcw, Trophy, Zap, ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
-import PlayerName from '@/components/PlayerName'
+import LeaderboardView from './LeaderboardView'
 
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage(props: { searchParams: Promise<{ season?: string }> }) {
+    const searchParams = await props.searchParams
+    const selectedSeasonId = searchParams.season
+
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) redirect('/login')
 
-    const { data: profiles } = await supabase
+    // Fetch all approved profiles (for All-Time leaderboard)
+    const { data: rawProfiles } = await supabase
         .from('profiles')
         .select('*')
         .eq('is_approved', true)
         .order('total_points', { ascending: false })
 
-    if (!profiles || profiles.length === 0) {
+    if (!rawProfiles || rawProfiles.length === 0) {
         return <div className="p-10 text-[var(--foreground)]">No players found</div>
     }
 
-    const biggestWinPlayer = [...profiles].sort((a, b) => Number(b.biggest_win) - Number(a.biggest_win))[0]
-    const biggestLossPlayer = [...profiles].sort((a, b) => Number(b.biggest_loss) - Number(a.biggest_loss))[0]
-    const atmPlayer = [...profiles].sort((a, b) => Number(a.total_profit) - Number(b.total_profit))[0]
-    const rebuyKing = [...profiles].sort((a, b) => (b.total_rebuys || 0) - (a.total_rebuys || 0))[0]
-    const grinder = [...profiles].sort((a, b) => (b.total_sessions_played || 0) - (a.total_sessions_played || 0))[0]
-    const getROI = (p: any) => p.total_invested > 0 ? (Number(p.total_profit) / Number(p.total_invested)) * 100 : 0
-    const sharkPlayer = [...profiles].sort((a, b) => getROI(b) - getROI(a))[0]
-    const maxPoints = profiles[0]?.total_points || 1
+    // Initialize all-time timing agg objects
+    const allTimeAgg: Record<string, any> = {}
+    rawProfiles.forEach(p => {
+        allTimeAgg[p.id] = { fastest_bust_min: Infinity, fastest_rebuy_min: Infinity }
+    })
 
-    const trophyCards = [
-        { label: 'Biggest Win 💰', player: biggestWinPlayer, value: `+${biggestWinPlayer?.biggest_win}€`, color: 'from-emerald-600/30', border: 'border-emerald-500/30', text: 'text-emerald-400', icon: TrendingUp },
-        { label: 'Biggest Loss 💀', player: biggestLossPlayer, value: `-${biggestLossPlayer?.biggest_loss}€`, color: 'from-red-600/30', border: 'border-red-500/30', text: 'text-red-400', icon: TrendingDown },
-        { label: 'Rebuy King 👑', player: rebuyKing, value: `${rebuyKing?.total_rebuys || 0} rebuys`, color: 'from-violet-600/30', border: 'border-violet-500/30', text: 'text-violet-400', icon: RefreshCcw },
-        { label: 'The Shark 🦈', player: sharkPlayer, value: `${getROI(sharkPlayer).toFixed(1)}% ROI`, color: 'from-sky-600/30', border: 'border-sky-500/30', text: 'text-sky-400', icon: Target },
-        { label: 'Grinder 🔥', player: grinder, value: `${grinder?.total_sessions_played || 0} games`, color: 'from-amber-600/30', border: 'border-amber-500/30', text: 'text-amber-400', icon: Flame },
-        { label: 'The ATM 💸', player: atmPlayer, value: `${atmPlayer?.total_profit}€`, color: 'from-zinc-600/20', border: 'border-[var(--border)]', text: 'text-[var(--foreground-muted)]', icon: Skull },
-    ]
+    // Fetch all session players from ALL completed events to find all-time speed records
+    const { data: allSessions } = await supabase
+        .from('session_players')
+        .select('player_id, cash_out, eliminated_at, first_rebuy_at, events!inner(status, started_at)')
+        .eq('events.status', 'completed')
 
-    const medals = ['🥇', '🥈', '🥉']
+    allSessions?.forEach((sp: any) => {
+        const pid = sp.player_id
+        if (!allTimeAgg[pid]) return
+
+        const startMs = sp.events?.started_at ? new Date(sp.events.started_at).getTime() : null
+        if (startMs) {
+            // Fastest Bust (cash_out = 0)
+            if (Number(sp.cash_out) === 0 && sp.eliminated_at) {
+                const diffMins = (new Date(sp.eliminated_at).getTime() - startMs) / 60000
+                if (diffMins > 0 && diffMins < allTimeAgg[pid].fastest_bust_min) allTimeAgg[pid].fastest_bust_min = diffMins
+            }
+            // Fastest Rebuy
+            if (sp.first_rebuy_at) {
+                const diffMins = (new Date(sp.first_rebuy_at).getTime() - startMs) / 60000
+                if (diffMins > 0 && diffMins < allTimeAgg[pid].fastest_rebuy_min) allTimeAgg[pid].fastest_rebuy_min = diffMins
+            }
+        }
+    })
+
+    const profiles = rawProfiles.map(p => ({ ...p, ...allTimeAgg[p.id] }))
+
+
+    // Fetch all seasons, most recent first
+    const { data: seasons } = await supabase
+        .from('seasons')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    const hasAnySeason = (seasons?.length || 0) > 0
+
+    // Determine the current display season
+    const activeSeason = seasons?.find(s => s.status === 'active') || null
+    const displaySeason = selectedSeasonId
+        ? seasons?.find(s => s.id === selectedSeasonId) || seasons?.[0] || null
+        : activeSeason || seasons?.[0] || null
+
+    // Identify all previous champions
+    const completedSeasons = seasons?.filter(s => s.status === 'completed') || []
+    const championIds = new Set<string>()
+
+    for (const s of completedSeasons) {
+        const { data: sPointsData } = await supabase
+            .from('session_players')
+            .select('player_id, points_earned, events!inner(season_id, status)')
+            .eq('events.season_id', s.id)
+            .eq('events.status', 'completed')
+
+        const sMap: Record<string, number> = {}
+        sPointsData?.forEach((sp: any) => {
+            sMap[sp.player_id] = (sMap[sp.player_id] || 0) + (sp.points_earned || 0)
+        })
+
+        const winner = Object.entries(sMap).sort((a, b) => b[1] - a[1])[0]
+        if (winner) championIds.add(winner[0])
+    }
+
+    const profilesWithChampion = profiles.map(p => ({
+        ...p,
+        isChampion: championIds.has(p.id)
+    }))
+
+    // Compute season standings + awards for the displaySeason
+    let seasonStandings: any[] = []
+    let seasonAwardProfiles: any[] = []
+
+    let seasonGamesPlayed = 0
+    if (displaySeason) {
+        const { count: sCount } = await supabase
+            .from('events')
+            .select('id', { count: 'exact', head: true })
+            .eq('season_id', displaySeason.id)
+            .eq('status', 'completed')
+        seasonGamesPlayed = sCount || 0
+
+        // --- Standings ---
+        const { data: sessionData } = await supabase
+            .from('session_players')
+            .select('player_id, points_earned, events!inner(season_id, status)')
+            .eq('events.season_id', displaySeason.id)
+            .eq('events.status', 'completed')
+
+        const pointsByPlayer: Record<string, number> = {}
+        sessionData?.forEach((sp: any) => {
+            const pid = sp.player_id
+            pointsByPlayer[pid] = (pointsByPlayer[pid] || 0) + (sp.points_earned || 0)
+        })
+
+        seasonStandings = profiles
+            .map(p => ({ ...p, season_points: pointsByPlayer[p.id] || 0 }))
+            .filter(p => p.season_points > 0)
+            .sort((a, b) => b.season_points - a.season_points)
+
+        if (seasonStandings.length === 0) {
+            // Season exists but no events played yet — show everyone at 0
+            seasonStandings = profiles.map(p => ({ ...p, season_points: 0 }))
+        }
+
+        // --- Awards ---
+        const { data: seasonSessions } = await supabase
+            .from('session_players')
+            .select('player_id, profit, total_invested, rebuys, cash_out, eliminated_at, first_rebuy_at, events!inner(season_id, status, started_at)')
+            .eq('events.season_id', displaySeason.id)
+            .eq('events.status', 'completed')
+
+        const agg: Record<string, any> = {}
+        seasonSessions?.forEach((sp: any) => {
+            const pid = sp.player_id
+            if (!agg[pid]) {
+                agg[pid] = {
+                    player_id: pid, total_profit: 0, total_invested: 0, biggest_win: 0, biggest_loss: 0,
+                    total_rebuys: 0, total_sessions_played: 0,
+                    fastest_bust_min: Infinity, fastest_rebuy_min: Infinity
+                }
+            }
+            const profit = Math.round(Number(sp.profit) * 100) / 100
+            const invested = Math.round(Number(sp.total_invested) * 100) / 100
+            agg[pid].total_profit = Math.round((agg[pid].total_profit + profit) * 100) / 100
+            agg[pid].total_invested = Math.round((agg[pid].total_invested + invested) * 100) / 100
+            agg[pid].total_rebuys += sp.rebuys || 0
+            agg[pid].total_sessions_played += 1
+            if (profit > agg[pid].biggest_win) agg[pid].biggest_win = profit
+            if (profit < 0 && Math.abs(profit) > agg[pid].biggest_loss) agg[pid].biggest_loss = Math.abs(profit)
+
+            // Timing diffs
+            const startMs = sp.events?.started_at ? new Date(sp.events.started_at).getTime() : null
+            if (startMs) {
+                // Fastest Bust (cash_out = 0)
+                if (Number(sp.cash_out) === 0 && sp.eliminated_at) {
+                    const diffMins = (new Date(sp.eliminated_at).getTime() - startMs) / 60000
+                    if (diffMins > 0 && diffMins < agg[pid].fastest_bust_min) agg[pid].fastest_bust_min = diffMins
+                }
+                // Fastest Rebuy
+                if (sp.first_rebuy_at) {
+                    const diffMins = (new Date(sp.first_rebuy_at).getTime() - startMs) / 60000
+                    if (diffMins > 0 && diffMins < agg[pid].fastest_rebuy_min) agg[pid].fastest_rebuy_min = diffMins
+                }
+            }
+        })
+
+        seasonAwardProfiles = profiles
+            .filter(p => agg[p.id])
+            .map(p => ({ ...p, ...agg[p.id] }))
+    }
+
+    // --- Timing Awards calculations ---
+    // Get all events that have a start and end time
+    const { data: timingEvents } = await supabase
+        .from('events')
+        .select('id, title, date, started_at, ended_at, season_id')
+        .not('started_at', 'is', null)
+        .not('ended_at', 'is', null)
+
+    let longestMatchAllTime = null
+    let longestMatchSeason = null
+
+    if (timingEvents && timingEvents.length > 0) {
+        // Calculate duration for all events
+        const eventsWithDuration = timingEvents.map(e => ({
+            ...e,
+            durationMs: new Date(e.ended_at!).getTime() - new Date(e.started_at!).getTime(),
+            durationMinutes: Math.round((new Date(e.ended_at!).getTime() - new Date(e.started_at!).getTime()) / 60000)
+        }))
+
+        // Match sorting
+        const sortedEventsAllTimeDesc = [...eventsWithDuration].sort((a, b) => b.durationMs - a.durationMs)
+
+        longestMatchAllTime = sortedEventsAllTimeDesc[0]
+
+        // Season specific match sorting
+        if (displaySeason) {
+            const seasonEvents = eventsWithDuration.filter(e => e.season_id === displaySeason.id)
+            if (seasonEvents.length > 0) {
+                const sortedSeasonEventsDesc = [...seasonEvents].sort((a, b) => b.durationMs - a.durationMs)
+
+                longestMatchSeason = sortedSeasonEventsDesc[0]
+            }
+        }
+    }
+
 
     return (
-        <div className="min-h-screen text-[var(--foreground)] font-sans pb-28 relative overflow-hidden" style={{ background: 'var(--background)' }}>
-            {/* Background orbs */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-25" style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
-                <div className="absolute bottom-[5%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[100px] opacity-20" style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
-            </div>
-
-            <div className="max-w-2xl mx-auto px-4 pt-6 relative z-10">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <Link href="/dashboard" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">
-                            <ChevronLeft size={18} />
-                        </Link>
-                        <div>
-                            <h1 className="font-black text-2xl text-[var(--foreground)] uppercase tracking-wider">Rankings</h1>
-                            <p className="text-[var(--foreground-muted)] text-xs font-medium">Season 1 · {profiles.length} Players</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-1 bg-[var(--background-card)] border border-[var(--border)] rounded-full p-1">
-                        <button className="bg-amber-500 text-black text-xs font-black px-4 py-1.5 rounded-full">Season</button>
-                        <button className="text-[var(--foreground-subtle)] text-xs font-bold px-4 py-1.5 hover:text-[var(--foreground)] transition-colors">All-Time</button>
-                    </div>
-                </div>
-
-                {/* Trophy Cards */}
-                <div className="mb-6">
-                    <h2 className="font-black text-xs uppercase tracking-widest text-[var(--foreground-muted)] mb-3 flex items-center gap-2">
-                        <Zap size={12} className="text-amber-500" /> Special Awards
-                    </h2>
-                    <div className="grid grid-cols-2 gap-3">
-                        {trophyCards.map(({ label, player, value, color, border, text, icon: Icon }) => (
-                            <div key={label} className={`bg-gradient-to-br ${color} to-transparent border ${border} p-4 rounded-2xl relative overflow-hidden`}>
-                                <Icon className={`absolute top-2 right-2 opacity-20 ${text}`} size={36} />
-                                <p className={`text-[10px] uppercase font-black tracking-widest mb-1 ${text}`}>{label}</p>
-                                <PlayerName user={player} isClickable={true} className="font-black text-sm text-[var(--foreground)] truncate block" />
-                                <p className={`font-mono text-xs font-bold mt-0.5 ${text}`}>{value}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Points explainer */}
-                <div className="bg-amber-500/5 border border-amber-500/15 rounded-2xl px-4 py-3 mb-4 flex items-center gap-3">
-                    <Trophy size={16} className="text-amber-500 shrink-0" />
-                    <p className="text-xs text-[var(--foreground-muted)]">
-                        <strong className="text-amber-500">+10 pts</strong> per game · <strong className="text-amber-500">+1 pt</strong>/€ profit · <strong className="text-amber-500">+10/+5</strong> bonus for 1st/2nd place
-                    </p>
-                </div>
-
-                {/* Rankings table */}
-                <div className="rounded-2xl border border-[var(--border)] overflow-hidden shadow-2xl" style={{ background: 'var(--background-card)' }}>
-                    <div className="px-4 py-3 border-b border-[var(--border)] flex text-[10px] font-black text-[var(--foreground-subtle)] uppercase tracking-wider">
-                        <div className="w-10 text-center">Rank</div>
-                        <div className="flex-1 ml-3">Player</div>
-                        <div className="w-20 text-right">Profit</div>
-                        <div className="w-16 text-right text-amber-500">PTS</div>
-                    </div>
-
-                    {profiles.map((player, index) => {
-                        const isMe = player.id === user.id
-                        const profit = Number(player.total_profit)
-                        const points = player.total_points || 0
-                        const isFirst = index === 0
-                        const barW = Math.round((points / maxPoints) * 100)
-
-                        return (
-                            <div key={player.id} className={`px-4 py-3.5 flex items-center border-b border-[var(--border)] last:border-0 transition-colors ${isMe ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : 'hover:bg-[var(--background-raised)]'} ${isFirst ? 'bg-amber-500/3' : ''}`}>
-                                <div className="w-10 text-center shrink-0 text-base">
-                                    {index < 3 ? medals[index] : <span className="text-sm font-black text-[var(--foreground-subtle)]">{index + 1}</span>}
-                                </div>
-
-                                <div className="flex-1 flex items-center gap-3 ml-3 min-w-0">
-                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black overflow-hidden shrink-0 border ${isFirst ? 'border-amber-500/50' : 'border-[var(--border)]'}`}
-                                        style={{ background: isFirst ? 'rgba(245,158,11,0.15)' : 'var(--background-raised)' }}>
-                                        {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : <span className={isFirst ? 'text-amber-500' : 'text-[var(--foreground-muted)]'}>{player.name?.[0]?.toUpperCase()}</span>}
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center gap-1.5">
-                                            <PlayerName user={player} isClickable={true} className={`font-black text-sm truncate ${isFirst ? 'text-amber-500' : 'text-[var(--foreground)]'}`} />
-                                            {isMe && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded-full font-black shrink-0">YOU</span>}
-                                        </div>
-                                        <div className="mt-0.5 h-1 rounded-full bg-[var(--border)] overflow-hidden w-full">
-                                            <div className="h-full rounded-full" style={{ width: `${barW}%`, background: isFirst ? 'linear-gradient(90deg,#f59e0b,#fbbf24)' : index === 1 ? 'linear-gradient(90deg,#94a3b8,#cbd5e1)' : index === 2 ? '#b45309' : 'var(--border-strong)' }} />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className={`w-20 text-right font-mono font-black text-sm ${profit > 0 ? 'text-emerald-500' : profit < 0 ? 'text-red-500' : 'text-[var(--foreground-subtle)]'}`}>
-                                    {profit > 0 ? '+' : ''}{profit.toFixed(0)}€
-                                </div>
-                                <div className="w-16 text-right">
-                                    <span className={`inline-block font-black text-sm px-2 py-1 rounded-lg ${isFirst ? 'bg-amber-500/20 text-amber-500 border border-amber-500/30' : 'text-[var(--foreground)] bg-[var(--background-raised)] border border-[var(--border)]'}`}>
-                                        {points}
-                                    </span>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </div>
+        <LeaderboardView
+            currentUserId={user.id}
+            allTimeProfiles={profilesWithChampion}
+            seasons={seasons || []}
+            activeSeason={activeSeason}
+            displaySeason={displaySeason}
+            seasonStandings={seasonStandings.map(p => ({ ...p, isChampion: championIds.has(p.id) }))}
+            seasonAwardProfiles={seasonAwardProfiles.map(p => ({ ...p, isChampion: championIds.has(p.id) }))}
+            hasAnySeason={hasAnySeason}
+            seasonGamesPlayed={seasonGamesPlayed}
+            longestMatchAllTime={longestMatchAllTime}
+            longestMatchSeason={longestMatchSeason}
+        />
     )
 }

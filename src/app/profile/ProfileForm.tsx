@@ -142,6 +142,7 @@ export function ProfileForm({ initialName, initialAvatarUrl }: { initialName: st
                     <input
                         type="text"
                         value={name}
+                        maxLength={12}
                         onChange={(e) => setName(e.target.value)}
                         required
                         className="w-full bg-[var(--background)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3.5 text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all font-bold text-center text-xl shadow-inner"

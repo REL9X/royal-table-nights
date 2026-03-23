@@ -55,6 +55,7 @@ CREATE TABLE public.events (
   rebuy_amount NUMERIC NOT NULL,
   notes TEXT,
   status TEXT DEFAULT 'upcoming' CHECK (status IN ('upcoming', 'active', 'completed')),
+  started_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

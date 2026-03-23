@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Calendar, Users, Trophy, Edit3, Zap, ChevronLeft, Sword } from 'lucide-react'
+import { Calendar, Users, Trophy, Edit3, Zap, ChevronLeft, Sword, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function HistoryPage() {
@@ -13,9 +13,31 @@ export default async function HistoryPage() {
 
     const { data: events } = await supabase
         .from('events')
-        .select(`*, session_players(profit, placement)`)
+        .select(`*, session_players(player_id, profit, placement, points_earned), seasons(name, max_games)`)
         .eq('status', 'completed')
         .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+
+    // For game numbering in history, we need to know the index of each event in its season
+    const seasonIds = Array.from(new Set(events?.filter(e => e.season_id).map(e => e.season_id) || []))
+    const seasonEventIndices: Record<string, number> = {}
+
+    if (seasonIds.length > 0) {
+        for (const sId of seasonIds) {
+            const { data: sEvents } = await supabase
+                .from('events')
+                .select('id')
+                .eq('season_id', sId)
+                .order('date', { ascending: true })
+                .order('created_at', { ascending: true })
+
+            if (sEvents) {
+                sEvents.forEach((se, index) => {
+                    seasonEventIndices[se.id] = index + 1
+                })
+            }
+        }
+    }
 
     return (
         <div className="min-h-screen text-[var(--foreground)] font-sans pb-28 relative overflow-hidden" style={{ background: 'var(--background)' }}>
@@ -77,17 +99,38 @@ export default async function HistoryPage() {
 
                                     {/* Entire card is the link */}
                                     <Link href={`/history/${event.id}`} className="block p-4">
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1 min-w-0 pr-10">
-                                                <h3 className="font-black text-sm text-[var(--foreground)] group-hover:text-amber-500 transition-colors uppercase tracking-wide truncate">{event.title}</h3>
-                                                <div className="flex items-center gap-3 mt-1 text-xs text-[var(--foreground-muted)]">
-                                                    <span className="flex items-center gap-1"><Calendar size={10} className="text-amber-500" />{new Date(event.date).toLocaleDateString()}</span>
-                                                    <span className="flex items-center gap-1"><Users size={10} className="text-sky-400" />{playerCount} players</span>
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                                                    <h3 className="font-black text-sm text-[var(--foreground)] group-hover:text-amber-500 transition-colors uppercase tracking-wide truncate">{event.title}</h3>
+                                                    {event.season_id ? (
+                                                        <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 whitespace-nowrap">
+                                                            {event.seasons?.name} • Game {seasonEventIndices[event.id] || '?'}/{event.seasons?.max_games}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[9px] font-black text-sky-400 uppercase tracking-widest bg-sky-400/10 px-2 py-0.5 rounded border border-sky-400/20 whitespace-nowrap">
+                                                            Off-Season
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-3 text-[10px] text-[var(--foreground-muted)] flex-wrap">
+                                                    <span className="flex items-center gap-1 shrink-0"><Calendar size={10} className="text-amber-500" />{new Date(event.date).toLocaleDateString()}</span>
+                                                    <span className="opacity-30 self-center">•</span>
+                                                    <span className="flex items-center gap-1 shrink-0"><Users size={10} className="text-sky-400" />{playerCount} players</span>
+                                                    {event.session_players?.find((sp: any) => sp.player_id === user.id) && (
+                                                        <>
+                                                            <span className="opacity-30 self-center">•</span>
+                                                            <div className="flex items-center gap-1 font-bold text-amber-500 bg-amber-500/5 px-2 py-0.5 rounded-full border border-amber-500/10 whitespace-nowrap">
+                                                                <Zap size={10} />
+                                                                <span>+{event.session_players?.find((sp: any) => sp.player_id === user.id)?.points_earned || 0} PTS</span>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
-                                            <span className="flex items-center gap-1 text-amber-500 text-xs font-black shrink-0">
-                                                <Trophy size={12} /> View →
-                                            </span>
+                                            <div className="flex items-center gap-1 text-amber-500 text-[10px] font-black shrink-0 mt-1 uppercase tracking-tighter">
+                                                View <ChevronRight size={10} />
+                                            </div>
                                         </div>
                                     </Link>
                                 </div>

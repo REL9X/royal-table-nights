@@ -13,6 +13,7 @@ export async function updateProfile(formData: FormData) {
     const file = formData.get('avatar') as File | null
 
     if (!name || name.trim() === '') return { error: 'Name is required' }
+    if (name.trim().length > 12) return { error: 'Name must be 12 characters or less.' }
 
     let avatarUrl = undefined;
 

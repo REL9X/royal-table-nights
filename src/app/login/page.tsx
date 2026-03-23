@@ -138,6 +138,7 @@ function LoginContent() {
                                     <input
                                         name="name"
                                         type="text"
+                                        maxLength={12}
                                         required={!isLogin}
                                         className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-2xl px-5 py-4 text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
                                         placeholder="Username"

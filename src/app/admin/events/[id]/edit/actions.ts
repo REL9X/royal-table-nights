@@ -27,6 +27,29 @@ export async function updateEventDetails(eventId: string, formData: FormData) {
     const buy_in_amount = formData.get('buy_in_amount') as string
     const rebuy_amount = formData.get('rebuy_amount') as string
     const notes = formData.get('notes') as string
+    const season_id = formData.get('season_id') as string
+
+    // Tournament Point Rules
+    const pts_per_game = parseInt(formData.get('pts_per_game') as string) || 10
+    const pts_per_euro_profit = parseFloat(formData.get('pts_per_euro_profit') as string) || 1
+    const pts_1st_place = parseInt(formData.get('pts_1st_place') as string) || 10
+    const pts_2nd_place = parseInt(formData.get('pts_2nd_place') as string) || 5
+    const pts_3rd_place = parseInt(formData.get('pts_3rd_place') as string) || 0
+
+    // Validate if season was changed to a new one
+    if (season_id) {
+        // get current event to see if we are switching seasons
+        const { data: currentEvent } = await supabase.from('events').select('season_id').eq('id', eventId).single()
+
+        if (currentEvent && currentEvent.season_id !== season_id) {
+            const { data: season } = await supabase.from('seasons').select('max_games').eq('id', season_id).single()
+            const { count } = await supabase.from('events').select('*', { count: 'exact', head: true }).eq('season_id', season_id)
+
+            if (season && count !== null && count >= season.max_games) {
+                throw new Error(`Season max games reached (${season.max_games}). Cannot change event to this season.`)
+            }
+        }
+    }
 
     const { error } = await supabase
         .from('events')
@@ -37,7 +60,13 @@ export async function updateEventDetails(eventId: string, formData: FormData) {
             location,
             buy_in_amount,
             rebuy_amount,
-            notes
+            notes,
+            season_id: season_id || null,
+            pts_per_game,
+            pts_per_euro_profit,
+            pts_1st_place,
+            pts_2nd_place,
+            pts_3rd_place
         })
         .eq('id', eventId)
 

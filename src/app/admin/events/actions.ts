@@ -17,6 +17,24 @@ export async function createEvent(formData: FormData) {
     const buy_in_amount = Number(formData.get('buyInAmount')) || 0
     const rebuy_amount = Number(formData.get('rebuyAmount')) || 0
     const notes = formData.get('notes') as string
+    const season_id = formData.get('season_id') as string
+
+    // Tournament Point Rules (only apply if season_id is empty)
+    const pts_per_game = parseInt(formData.get('pts_per_game') as string) || 10
+    const pts_per_euro_profit = parseFloat(formData.get('pts_per_euro_profit') as string) || 1
+    const pts_1st_place = parseInt(formData.get('pts_1st_place') as string) || 10
+    const pts_2nd_place = parseInt(formData.get('pts_2nd_place') as string) || 5
+    const pts_3rd_place = parseInt(formData.get('pts_3rd_place') as string) || 0
+
+    // Validate max games if a season is selected
+    if (season_id) {
+        const { data: season } = await supabase.from('seasons').select('max_games').eq('id', season_id).single()
+        const { count } = await supabase.from('events').select('*', { count: 'exact', head: true }).eq('season_id', season_id)
+
+        if (season && count !== null && count >= season.max_games) {
+            return { error: `Season max games reached (${season.max_games}). Cannot add more.` } // In a real app we'd bubble this to UI
+        }
+    }
 
     const { error } = await supabase.from('events').insert({
         created_by: user.id,
@@ -27,7 +45,13 @@ export async function createEvent(formData: FormData) {
         buy_in_amount,
         rebuy_amount,
         notes,
-        status: 'upcoming'
+        season_id: season_id || null,
+        status: 'upcoming',
+        pts_per_game,
+        pts_per_euro_profit,
+        pts_1st_place,
+        pts_2nd_place,
+        pts_3rd_place
     })
 
     if (error) {
@@ -53,7 +77,10 @@ export async function startSession(eventId: string) {
     // Update event status to active
     const { error: eventUpdateError } = await supabase
         .from('events')
-        .update({ status: 'active' })
+        .update({
+            status: 'active',
+            started_at: new Date().toISOString()
+        })
         .eq('id', eventId)
 
     if (eventUpdateError) return { error: eventUpdateError.message }
@@ -64,6 +91,11 @@ export async function startSession(eventId: string) {
         .select('player_id')
         .eq('event_id', eventId)
         .eq('status', 'accepted')
+
+    // Enforce 14-player limit
+    if (rsvps && rsvps.length > 14) {
+        return { error: 'Event has more than 14 accepted players. Please remove players before starting the session.' }
+    }
 
     // Create session_players records
     if (rsvps && rsvps.length > 0) {

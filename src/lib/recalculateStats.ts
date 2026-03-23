@@ -55,7 +55,27 @@ export async function recalculatePlayerStats(playerId: string) {
         }
     }
 
-    // 3. Update the global profiles table with the perfectly clean recalculated data
+    // 3. Add Season Bonuses from championship_wins
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('championship_wins')
+        .eq('id', playerId)
+        .single()
+
+    const championshipWins = Array.isArray(profile?.championship_wins) ? profile.championship_wins : []
+
+    if (championshipWins.length > 0) {
+        const seasonIds = championshipWins.map((w: any) => w.seasonId)
+        const { data: seasonRules } = await supabase
+            .from('seasons')
+            .select('id, pts_season_1st')
+            .in('id', seasonIds)
+
+        const seasonPoints = seasonRules?.reduce((sum: number, s: any) => sum + (Number(s.pts_season_1st) || 0), 0) || 0
+        total_points += seasonPoints
+    }
+
+    // 4. Update the global profiles table with the perfectly clean recalculated data
     const { error: updateError } = await supabase
         .from('profiles')
         .update({

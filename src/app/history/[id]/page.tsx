@@ -15,14 +15,50 @@ export default async function SessionDetailsPage(props: { params: Promise<{ id: 
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
     const isAdmin = profile?.role === 'admin'
 
-    const { data: event } = await supabase.from('events').select('*').eq('id', eventId).single()
+    const { data: event } = await supabase.from('events').select('*, seasons(name, max_games)').eq('id', eventId).single()
     if (!event) return <div className="p-10 text-[var(--foreground)]">Event not found</div>
+
+    let gameNumber = null
+    if (event.season_id) {
+        const { count } = await supabase
+            .from('events')
+            .select('*', { count: 'exact', head: true })
+            .eq('season_id', event.season_id)
+            .lte('date', event.date)
+            .lte('created_at', event.created_at) // Tie breaker
+        gameNumber = count
+    }
 
     const { data: players } = await supabase
         .from('session_players')
-        .select(`*, profiles(name, avatar_url)`)
+        .select(`*, profiles(id, name, avatar_url)`)
         .eq('event_id', eventId)
         .order('placement', { ascending: true })
+
+    // Identify all previous champions
+    const { data: completedSeasons } = await supabase
+        .from('seasons')
+        .select('id')
+        .eq('status', 'completed')
+
+    const championIds = new Set<string>()
+    if (completedSeasons && completedSeasons.length > 0) {
+        for (const s of completedSeasons) {
+            const { data: sPointsData } = await supabase
+                .from('session_players')
+                .select('player_id, points_earned, events!inner(season_id, status)')
+                .eq('events.season_id', s.id)
+                .eq('events.status', 'completed')
+
+            const sMap: Record<string, number> = {}
+            sPointsData?.forEach((sp: any) => {
+                sMap[sp.player_id] = (sMap[sp.player_id] || 0) + (sp.points_earned || 0)
+            })
+
+            const winner = Object.entries(sMap).sort((a, b) => b[1] - a[1])[0]
+            if (winner) championIds.add(winner[0])
+        }
+    }
 
     const totalPot = players?.reduce((sum, p) => sum + Number(p.total_invested), 0) || 0
 
@@ -68,7 +104,18 @@ export default async function SessionDetailsPage(props: { params: Promise<{ id: 
                         </Link>
                         <div>
                             <h1 className="font-black text-2xl text-[var(--foreground)] uppercase tracking-wider">{event.title}</h1>
-                            <p className="text-[var(--foreground-muted)] text-xs font-medium">{new Date(event.date).toLocaleDateString()} · Battle Results</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                                <p className="text-[var(--foreground-muted)] text-[10px] font-bold uppercase tracking-wider">{new Date(event.date).toLocaleDateString()} · Battle Results</p>
+                                {event.season_id ? (
+                                    <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                                        {event.seasons?.name} — Game {gameNumber}/{event.seasons?.max_games}
+                                    </span>
+                                ) : (
+                                    <span className="text-[9px] font-black text-sky-400 uppercase tracking-widest bg-sky-400/10 px-1.5 py-0.5 rounded border border-sky-400/20">
+                                        Off-Season Tournament
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -126,21 +173,26 @@ export default async function SessionDetailsPage(props: { params: Promise<{ id: 
                     <div className="px-4 py-3 border-b border-[var(--border)] flex text-[10px] font-black text-[var(--foreground-subtle)] uppercase tracking-wider">
                         <div className="w-10 text-center">Rank</div>
                         <div className="flex-1 ml-3">Player</div>
-                        <div className="w-16 text-right">In</div>
-                        <div className="w-16 text-right">Out</div>
-                        <div className="w-20 text-right">Profit</div>
+                        <div className="w-14 text-right hidden sm:block">In</div>
+                        <div className="w-14 text-right hidden sm:block">Out</div>
+                        <div className="w-16 text-right">Profit</div>
+                        <div className="w-16 text-right">XP</div>
                     </div>
 
                     <div className="divide-y divide-[var(--border)]/40">
                         {players?.map((player, index) => {
                             const isMe = player.player_id === user.id
-                            const profit = Number(player.profit)
+                            const profit = Math.round(Number(player.profit) * 100) / 100
+                            const cashOut = Math.round(Number(player.cash_out) * 100) / 100
+                            const invested = Math.round(Number(player.total_invested) * 100) / 100
                             const isFirst = index === 0
+                            const isBust = player.is_eliminated && cashOut === 0
+                            const isCash = player.is_eliminated && cashOut > 0
 
                             return (
                                 <div key={player.id} className={`px-4 py-3.5 flex items-center transition-colors ${isMe ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : 'hover:bg-[var(--background-raised)]'}`}>
                                     <div className="w-10 text-center shrink-0">
-                                        {index < 3 ? (
+                                        {index < 3 && profit > 0 ? (
                                             <span className="text-lg">{medals[index]}</span>
                                         ) : (
                                             <span className="text-sm font-black text-[var(--foreground-subtle)]">{index + 1}</span>
@@ -153,21 +205,31 @@ export default async function SessionDetailsPage(props: { params: Promise<{ id: 
                                             {player.profiles?.avatar_url ? <img src={player.profiles.avatar_url} alt="" className="w-full h-full object-cover" /> : <span className="text-[var(--foreground-muted)]">{player.profiles?.name?.[0]?.toUpperCase()}</span>}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <div className="flex items-center gap-1.5">
-                                                <PlayerName user={{ ...player.profiles, id: player.player_id }} isClickable={true} className={`font-black text-sm truncate ${isFirst ? 'text-amber-500' : 'text-[var(--foreground)]'}`} />
-                                                {isMe && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded-full font-black shrink-0">YOU</span>}
+                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                <PlayerName user={{ ...player.profiles, id: player.player_id }} isChampion={championIds.has(player.player_id)} isClickable={true} className={`font-black text-sm truncate ${isFirst && profit > 0 ? 'text-amber-500' : 'text-[var(--foreground)]'}`} />
+                                                {isMe && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded-full font-black">YOU</span>}
+                                                {isBust && <span className="text-[9px] bg-red-500/20 text-red-500 px-1.5 py-0.5 rounded-full font-black">BUST</span>}
+                                                {isCash && <span className="text-[9px] bg-emerald-500/10 text-emerald-600 px-1.5 py-0.5 rounded-full font-black">CASH</span>}
                                             </div>
+                                            <p className="text-[10px] text-[var(--foreground-subtle)] mt-0.5">
+                                                {invested}€ in
+                                                {player.rebuys > 0 && ` · ${player.rebuys} RB`}
+                                                {cashOut > 0 && ` · Out: ${cashOut}€`}
+                                            </p>
                                         </div>
                                     </div>
 
-                                    <div className="w-16 text-right text-xs font-bold text-[var(--foreground-muted)]">
-                                        {player.total_invested}€
+                                    <div className="w-14 text-right text-xs font-bold text-[var(--foreground-muted)] hidden sm:block">
+                                        {invested}€
                                     </div>
-                                    <div className="w-16 text-right text-xs font-bold text-[var(--foreground-muted)]">
-                                        {player.cash_out}€
+                                    <div className="w-14 text-right text-xs font-bold text-[var(--foreground-muted)] hidden sm:block">
+                                        {cashOut > 0 ? `${cashOut}€` : '—'}
                                     </div>
-                                    <div className={`w-20 text-right font-mono font-black text-sm ${profit > 0 ? 'text-emerald-500' : profit < 0 ? 'text-red-500' : 'text-[var(--foreground-subtle)]'}`}>
-                                        {profit > 0 ? '+' : ''}{profit}€
+                                    <div className={`w-16 text-right font-mono font-black text-sm ${profit > 0 ? 'text-emerald-500' : profit < 0 ? 'text-red-500' : 'text-[var(--foreground-subtle)]'}`}>
+                                        {profit > 0 ? '+' : ''}{profit.toFixed(2)}€
+                                    </div>
+                                    <div className="w-16 text-right font-mono font-black text-sm text-amber-500 flex items-center justify-end gap-1">
+                                        <Zap size={10} />{player.points_earned || 0}
                                     </div>
                                 </div>
                             )

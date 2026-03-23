@@ -53,11 +53,10 @@ export async function finalizeSession(eventId: string) {
         }
     }
 
-    // Calculate placements (1st = highest profit)
-    // Fetch updated data to be safe
+    // Fetch updated data to be safe, including the season rules AND event-level tournament rules
     const { data: finalPlayers } = await supabase
         .from('session_players')
-        .select('*, events(buy_in_amount)')
+        .select('*, events(buy_in_amount, season_id, pts_per_game, pts_per_euro_profit, pts_1st_place, pts_2nd_place, pts_3rd_place, seasons(pts_per_game, pts_per_euro_profit, pts_1st_place, pts_2nd_place, pts_3rd_place))')
         .eq('event_id', eventId)
         .order('profit', { ascending: false })
 
@@ -65,45 +64,51 @@ export async function finalizeSession(eventId: string) {
         for (let i = 0; i < finalPlayers.length; i++) {
             const p = finalPlayers[i]
             const placement = i + 1
-
             const pProfit = Number(p.profit)
-            const pInvested = Number(p.total_invested)
 
-            // --- POINTS CALCULATION (V2 Gamification) ---
-            // 1. Base participation points
-            let pointsEarned = 10
-
-            // 2. Performance points (+1 point for every Euro of profit above 0)
-            if (pProfit > 0) {
-                pointsEarned += Math.floor(pProfit)
+            const pointRules = p.events?.seasons ?? p.events ?? {
+                pts_per_game: 10,
+                pts_per_euro_profit: 1,
+                pts_1st_place: 10,
+                pts_2nd_place: 5,
+                pts_3rd_place: 0
             }
 
-            // 3. Placement Bonus
-            if (placement === 1 && pProfit > 0) pointsEarned += 10
-            if (placement === 2 && pProfit > 0) pointsEarned += 5
+            let pointsEarned = pointRules.pts_per_game
 
-            // Update placement and points in session_players
+            if (pProfit > 0) {
+                pointsEarned += Math.round(pProfit * pointRules.pts_per_euro_profit)
+            }
+
+            if (placement === 1 && pProfit > 0) pointsEarned += pointRules.pts_1st_place
+            if (placement === 2 && pProfit > 0) pointsEarned += pointRules.pts_2nd_place
+            if (placement === 3 && pProfit > 0) pointsEarned += pointRules.pts_3rd_place
+
             await supabase
                 .from('session_players')
-                .update({
-                    placement: placement,
-                    points_earned: pointsEarned
-                })
+                .update({ placement, points_earned: pointsEarned })
                 .eq('id', p.id)
+        }
+    }
 
-            // Recalculate Player's Global Profile Stats from scratch for perfect accuracy
+    await supabase
+        .from('events')
+        .update({
+            status: 'completed',
+            ended_at: new Date().toISOString()
+        })
+        .eq('id', eventId)
+
+    // NOW recalculate stats — event is completed so it will be included
+    if (finalPlayers) {
+        for (const p of finalPlayers) {
             await recalculatePlayerStats(p.player_id)
         }
     }
 
-    // Update event status to completed
-    await supabase
-        .from('events')
-        .update({ status: 'completed' })
-        .eq('id', eventId)
-
     revalidatePath('/dashboard')
+    revalidatePath('/leaderboard')
     revalidatePath('/admin')
-    revalidatePath(`/history/${eventId}`) // we will create a history view
-    redirect('/dashboard') // redirect to dashboard or history page
+    revalidatePath(`/history/${eventId}`)
+    redirect('/dashboard')
 }

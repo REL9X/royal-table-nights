@@ -3,8 +3,11 @@ import { redirect } from 'next/navigation'
 import { ArrowLeft, Trash2, Edit3, Save, Database, Users, Calendar, Clock, MapPin, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 import { updateEventDetails } from './actions'
+import { getActiveSeasons } from '../../../seasons/actions'
 import PlayerEditCard from './PlayerEditCard'
 import DeleteEventButton from './DeleteEventButton'
+import EventEditForm from './EventEditForm'
+import { Sword } from 'lucide-react'
 
 export default async function AdminEditEventPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -24,6 +27,8 @@ export default async function AdminEditEventPage(props: { params: Promise<{ id: 
         .single()
 
     if (!event) return <div className="p-10 text-[var(--foreground)]">Event not found</div>
+
+    const seasons = await getActiveSeasons()
 
     const { data: players } = await supabase
         .from('session_players')
@@ -65,48 +70,7 @@ export default async function AdminEditEventPage(props: { params: Promise<{ id: 
                                 <h2 className="font-black text-xs uppercase tracking-widest text-[var(--foreground-muted)]">Event Metadata</h2>
                             </div>
 
-                            <form action={updateEventDetails.bind(null, eventId)} className="space-y-5">
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Title</label>
-                                    <input name="title" defaultValue={event.title} required className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-[var(--foreground)] font-bold transition-all outline-none" />
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Date</label>
-                                        <input name="date" type="date" defaultValue={event.date} required className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-[var(--foreground)] font-bold transition-all outline-none" />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Time</label>
-                                        <input name="time" type="time" defaultValue={event.time} required className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-[var(--foreground)] font-bold transition-all outline-none" />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Location</label>
-                                    <input name="location" defaultValue={event.location || ''} className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-[var(--foreground)] font-bold transition-all outline-none" />
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Buy-in (€)</label>
-                                        <input name="buy_in_amount" type="number" defaultValue={event.buy_in_amount} required className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-emerald-500 font-black transition-all outline-none" />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Rebuy (€)</label>
-                                        <input name="rebuy_amount" type="number" defaultValue={event.rebuy_amount} required className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-amber-500 font-black transition-all outline-none" />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1">Notes</label>
-                                    <textarea name="notes" rows={3} defaultValue={event.notes || ''} className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-amber-500/50 rounded-xl px-4 py-3 text-[var(--foreground)] font-bold transition-all outline-none resize-none" />
-                                </div>
-
-                                <button type="submit" className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black rounded-xl font-black shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs">
-                                    <Save size={16} /> Save Metadata
-                                </button>
-                            </form>
+                            <EventEditForm event={event} seasons={seasons} />
 
                             <div className="mt-8 pt-8 border-t border-[var(--border)]">
                                 <DeleteEventButton eventId={eventId} />

@@ -1,13 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Calendar, Clock, MapPin, DollarSign, Info, ArrowLeft, Sword } from 'lucide-react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import { createEvent } from '../actions'
+import { getActiveSeasons } from '../../seasons/actions'
 import { motion } from 'framer-motion'
 
 export default function NewEventPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [seasons, setSeasons] = useState<{ id: string, name: string }[]>([])
+    const [selectedSeason, setSelectedSeason] = useState<string>('')
+
+    useEffect(() => {
+        getActiveSeasons().then(setSeasons)
+    }, [])
 
     return (
         <div className="min-h-screen text-[var(--foreground)] font-sans pb-28 relative overflow-hidden" style={{ background: 'var(--background)' }}>
@@ -94,10 +102,10 @@ export default function NewEventPage() {
                                         <input
                                             name="buyInAmount"
                                             type="number"
-                                            min="0"
-                                            step="0.01"
+                                            min="1"
+                                            step="1"
                                             required
-                                            placeholder="10.00"
+                                            placeholder="10"
                                             className="w-full bg-emerald-500/5 border border-emerald-500/20 focus:border-emerald-500/50 rounded-2xl px-5 py-4 text-emerald-500 font-black transition-all outline-none"
                                         />
                                         <span className="absolute right-5 top-1/2 -translate-y-1/2 text-emerald-500/50 font-black">€</span>
@@ -111,16 +119,92 @@ export default function NewEventPage() {
                                         <input
                                             name="rebuyAmount"
                                             type="number"
-                                            min="0"
-                                            step="0.01"
+                                            min="1"
+                                            step="1"
                                             required
-                                            placeholder="10.00"
+                                            placeholder="10"
                                             className="w-full bg-amber-500/5 border border-amber-500/20 focus:border-amber-500/50 rounded-2xl px-5 py-4 text-amber-500 font-black transition-all outline-none"
                                         />
                                         <span className="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500/50 font-black">€</span>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Season Assignment */}
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-widest ml-1 flex items-center gap-1.5">
+                                    <Sword size={12} className="text-indigo-500" /> Season Assignment
+                                </label>
+                                <select
+                                    name="season_id"
+                                    value={selectedSeason}
+                                    onChange={(e) => setSelectedSeason(e.target.value)}
+                                    className={`w-full bg-[var(--background-raised)] border focus:border-amber-500/50 rounded-2xl px-5 py-4 font-bold transition-all outline-none appearance-none cursor-pointer ${selectedSeason ? 'border-amber-500/50 text-amber-500' : 'border-[var(--border)] text-[var(--foreground)]'}`}
+                                >
+                                    <option value="">⚡ None (Off-Season Tournament)</option>
+                                    {seasons.map(s => (
+                                        <option key={s.id} value={s.id}>🏆 {s.name}</option>
+                                    ))}
+                                </select>
+                                {selectedSeason ? (
+                                    <p className="text-[10px] text-amber-500/80 mt-1 ml-1 font-bold">
+                                        ⚠️ This event will count towards the season rankings and leaderboard.
+                                    </p>
+                                ) : (
+                                    <p className="text-[10px] text-[var(--foreground-subtle)] mt-1 ml-1">
+                                        Off-season events do not count towards seasonal leaderboards.
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Conditional Tournament Rules */}
+                            {selectedSeason === '' && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="p-5 rounded-2xl border border-indigo-500/30 bg-indigo-500/5 overflow-hidden"
+                                >
+                                    <h2 className="font-black text-xs uppercase tracking-widest text-indigo-400 mb-4 flex items-center gap-2">
+                                        <Sword size={14} /> Tournament Point Rules
+                                    </h2>
+
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-[10px] font-black text-[var(--foreground-muted)] mb-1.5 uppercase tracking-wider">Points per Game</label>
+                                                <input name="pts_per_game" type="number" required defaultValue="10" min="0"
+                                                    className="w-full bg-[var(--background-card)] border border-[var(--border)] focus:border-indigo-500/50 rounded-xl px-4 py-3 text-sm text-[var(--foreground)] font-bold outline-none transition-all" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-black text-[var(--foreground-muted)] mb-1.5 uppercase tracking-wider">Pts per 1€ Profit</label>
+                                                <input name="pts_per_euro_profit" type="number" required defaultValue="1" min="0" step="0.1"
+                                                    className="w-full bg-[var(--background-card)] border border-[var(--border)] focus:border-indigo-500/50 rounded-xl px-4 py-3 text-sm text-[var(--foreground)] font-bold outline-none transition-all" />
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-3 border-t border-indigo-500/20">
+                                            <label className="block text-[10px] font-black text-[var(--foreground-muted)] mb-3 uppercase tracking-wider">Game Rank Bonuses</label>
+                                            <div className="grid grid-cols-3 gap-3">
+                                                <div className="text-center">
+                                                    <div className="text-[10px] font-bold text-amber-500 mb-1">1st Place</div>
+                                                    <input name="pts_1st_place" type="number" required defaultValue="10" min="0"
+                                                        className="w-full bg-[var(--background-card)] border border-amber-500/30 focus:border-amber-500/50 rounded-xl px-2 py-2 text-center text-sm font-black text-[var(--foreground)] outline-none" />
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-[10px] font-bold text-slate-300 mb-1">2nd Place</div>
+                                                    <input name="pts_2nd_place" type="number" required defaultValue="5" min="0"
+                                                        className="w-full bg-[var(--background-card)] border border-slate-500/30 focus:border-slate-500/50 rounded-xl px-2 py-2 text-center text-sm font-black text-[var(--foreground)] outline-none" />
+                                                </div>
+                                                <div className="text-center">
+                                                    <div className="text-[10px] font-bold text-[#b87333] mb-1">3rd Place</div>
+                                                    <input name="pts_3rd_place" type="number" required defaultValue="0" min="0"
+                                                        className="w-full bg-[var(--background-card)] border border-[#b87333]/30 focus:border-[#b87333]/50 rounded-xl px-2 py-2 text-center text-sm font-black text-[var(--foreground)] outline-none" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
 
                             {/* Notes */}
                             <div className="space-y-1.5">

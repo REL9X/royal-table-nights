@@ -53,6 +53,10 @@ export async function signupWithPin(formData: FormData) {
         return { error: 'All fields are required' }
     }
 
+    if (name.trim().length > 12) {
+        return { error: 'Name must be 12 characters or less.' }
+    }
+
     const digits = rawPhone.replace(/\D/g, '')
     const phone = `+351${digits.slice(-9)}`
 
