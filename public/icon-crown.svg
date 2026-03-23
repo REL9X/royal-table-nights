@@ -1,0 +1,24 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="yellowGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFC500" />
+      <stop offset="100%" stop-color="#FF8A00" />
+    </linearGradient>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#19202D" />
+      <stop offset="100%" stop-color="#0A0C10" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bgGrad)" />
+  
+  <!-- Crown Container (Rounded Rect) -->
+  <rect x="64" y="64" width="384" height="384" rx="100" fill="url(#yellowGrad)" />
+  
+  <!-- Crown Icon (Scaled Up) -->
+  <g transform="translate(256, 256) scale(2.4) translate(-256, -256)">
+    <path d="M 206 170 L 216 110 L 243 140 L 256 95 L 269 140 L 296 110 L 306 170 Z" fill="none" stroke="#0A0C10" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+    <line x1="220" y1="195" x2="292" y2="195" stroke="#0A0C10" stroke-width="12" stroke-linecap="round"/>
+  </g>
+</svg>
