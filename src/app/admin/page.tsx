@@ -158,7 +158,7 @@ export default async function AdminPage({
                                 Mobile Deployment Invites
                                 <span className="bg-sky-500/20 text-sky-400 text-[10px] font-black px-2 py-0.5 rounded-full border border-sky-500/20">{allowedPhones?.length || 0}</span>
                             </h3>
-                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they automatically skip the pending list.</p>
+                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they will show up in your pending list for final approval.</p>
                             <div className="rounded-2xl border border-white/5 p-5 mb-6 bg-black/20 backdrop-blur-sm">
                                 <form action={async (formData) => { 'use server'; await addAllowedPhone(formData) }} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
