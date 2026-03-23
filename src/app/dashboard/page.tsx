@@ -14,38 +14,25 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 import RsvpButton from './RsvpButton'
 import RankUpNotifier from './RankUpNotifier'
 import EventRealtimeNotifier from './EventRealtimeNotifier'
-import fs from 'fs'
-
-const log = (msg: string) => {
-    try {
-        fs.appendFileSync('c:/Users/berna/.gemini/antigravity/scratch/royal-table-nights/dash_debug.log', `[${new Date().toISOString()}] ${msg}\n`)
-    } catch (e) { }
-}
 
 export const dynamic = 'force-dynamic'
 
 export default async function Dashboard() {
-    log('--- Dashboard Start ---')
     const supabase = await createClient()
-    log('Supabase client created')
 
     const { data: { user } } = await supabase.auth.getUser()
-    log(`User fetch: ${user?.id || 'no user'}`)
     if (!user) redirect('/login')
 
     try {
-        log('Fetching profile...')
         const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-        log(`Profile fetched: ${profile?.name || 'none'}`)
 
         if (!profile) return <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] p-8 flex items-center justify-center font-black uppercase tracking-widest text-sm italic">Profile not found...</div>
 
         if (!profile.is_approved && profile.role !== 'admin') {
-            log('User not approved, rendering approval screen')
             // ... (rest remains same)
         }
 
-        log('Starting parallel fetch...')
+        
         // Fetch core data in parallel
         const [
             { data: allSeasons },
@@ -56,23 +43,23 @@ export default async function Dashboard() {
             supabase.from('profiles').select('id, total_points').order('total_points', { ascending: false }),
             supabase.from('profiles').select('id, name, avatar_url, role').eq('is_approved', true)
         ])
-        log(`Parallel fetch done. Seasons: ${allSeasons?.length}, Profiles: ${profiles?.length}`)
+        
 
         const activeSeason = allSeasons?.find(s => s.status === 'active') || allSeasons?.[0] || null
-        log(`Active season: ${activeSeason?.name}`)
+        
 
         const myRank = (allProfilesForRank?.findIndex(p => p.id === user.id) ?? -1) + 1
         const completedSeasons = allSeasons?.filter(s => s.status === 'completed') || []
 
         // Helper to get season rankings for any season
         const getSeasonRankings = async (seasonId: string) => {
-            log(`Fetching rankings for ${seasonId}...`)
+            
             const { data: sPointsData } = await supabase
                 .from('session_players')
                 .select('player_id, points_earned, events!inner(season_id, status)')
                 .eq('events.season_id', seasonId)
                 .eq('events.status', 'completed')
-            log(`Rankings for ${seasonId} fetched. Rows: ${sPointsData?.length}`)
+            
 
             const sMap: Record<string, { points: number, games: number }> = {}
             sPointsData?.forEach((sp: any) => {
@@ -83,7 +70,7 @@ export default async function Dashboard() {
             return Object.entries(sMap).sort((a, b) => b[1].points - a[1].points)
         }
 
-        log('Calculating champions...')
+        
         // Champions calculation
         const champions: string[] = []
         if (completedSeasons.length > 0) {
@@ -93,7 +80,7 @@ export default async function Dashboard() {
             })
         }
         const isSeasonChampion = champions.includes(user.id)
-        log(`Champions calc done. Count: ${champions.length}`)
+        
 
         // Determine winner for current season if completed
         let seasonWinner = null
@@ -411,15 +398,15 @@ export default async function Dashboard() {
 }
 
 async function EventsList({ userId, userRole }: { userId: string, userRole?: string }) {
-    log('EventsList Start')
+    
     const supabase = await createClient()
-    log('EventsList: Client created')
+    
     const { data: events } = await supabase
         .from('events')
         .select(`*, event_responses (*), seasons (name, max_games)`)
         .in('status', ['upcoming', 'active'])
         .order('date', { ascending: true })
-    log(`EventsList: Events fetched. Count: ${events?.length}`)
+    
 
     // To determine the game number (e.g., 2/10), we need to count all events 
     // in that season that happened before or at the same time as this one.
