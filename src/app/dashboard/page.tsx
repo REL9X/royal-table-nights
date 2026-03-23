@@ -241,7 +241,7 @@ export default async function Dashboard() {
                     <RealtimeRefresher table="profiles" filter={`id=eq.${user.id}`} />
                     <RankUpNotifier 
                         currentPoints={profile.total_points || 0} 
-                        enabled={profile.notification_preferences?.rank_ups ?? true}
+                        enabled={(profile.notification_preferences?.all_enabled ?? true) && (profile.notification_preferences?.rank_ups ?? true)}
                     />
                     <EventRealtimeNotifier preferences={profile.notification_preferences} />
 

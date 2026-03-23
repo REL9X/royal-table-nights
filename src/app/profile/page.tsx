@@ -116,6 +116,7 @@ export default async function ProfilePage() {
                 <div className="mb-8">
                     <NotificationSettings 
                         initialPrefs={profile.notification_preferences || {
+                            all_enabled: true,
                             new_games: true,
                             season_results: true,
                             rank_ups: true,

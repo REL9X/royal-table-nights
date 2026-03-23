@@ -6,6 +6,7 @@ import { NotificationService } from '@/lib/notifications'
 
 interface EventRealtimeNotifierProps {
     preferences?: {
+        all_enabled: boolean
         new_games: boolean
         season_results: boolean
     }
@@ -15,8 +16,9 @@ export default function EventRealtimeNotifier({ preferences }: EventRealtimeNoti
     const supabase = createClient()
     
     // Default to true if not provided (fallback)
-    const canNotifyNewGames = preferences?.new_games ?? true
-    const canNotifySeasonResults = preferences?.season_results ?? true
+    const allEnabled = preferences?.all_enabled ?? true
+    const canNotifyNewGames = allEnabled && (preferences?.new_games ?? true)
+    const canNotifySeasonResults = allEnabled && (preferences?.season_results ?? true)
 
     useEffect(() => {
         const channel = supabase

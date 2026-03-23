@@ -237,6 +237,7 @@ export default async function AdminPage({
                         <div className="pt-4 border-t border-white/5">
                             <NotificationSettings 
                                 initialPrefs={profile.notification_preferences || {
+                                    all_enabled: true,
                                     new_games: true,
                                     season_results: true,
                                     rank_ups: true,
