@@ -4,7 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function finishSeason(seasonId: string) {
+export async function finishSeason(formData: FormData) {
+    const seasonId = formData.get('seasonId') as string
     console.log('--- START finishSeason ---', { seasonId })
     const supabase = await createClient()
 

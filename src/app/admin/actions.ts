@@ -3,7 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function approvePlayer(playerId: string) {
+export async function approvePlayer(formData: FormData) {
+    const playerId = formData.get('playerId') as string
     const supabase = await createClient()
 
     // Verify current user is admin
@@ -92,7 +93,8 @@ export async function addAllowedPhone(formData: FormData) {
     return { success: true }
 }
 
-export async function removeAllowedPhone(phone: string) {
+export async function removeAllowedPhone(formData: FormData) {
+    const phone = formData.get('phone') as string
     const supabase = await createClient()
 
     const { data: { user } } = await supabase.auth.getUser()
@@ -136,7 +138,8 @@ export async function sendBroadcast(title: string, message: string) {
     return { success: true }
 }
 
-export async function promoteToAdmin(playerId: string) {
+export async function promoteToAdmin(formData: FormData) {
+    const playerId = formData.get('playerId') as string
     const supabase = await createClient()
 
     // Verify current user is admin

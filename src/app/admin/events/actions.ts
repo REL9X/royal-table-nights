@@ -64,7 +64,8 @@ export async function createEvent(formData: FormData) {
     redirect('/admin')
 }
 
-export async function startSession(eventId: string) {
+export async function startSession(formData: FormData) {
+    const eventId = formData.get('eventId') as string
     const supabase = await createClient()
 
     // Verify admin

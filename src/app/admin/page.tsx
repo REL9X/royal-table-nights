@@ -124,7 +124,8 @@ export default async function AdminPage({
                                                 <PlayerName user={player} isClickable={true} className="font-black text-base text-[var(--foreground)] truncate block" />
                                                 <p className="text-[10px] font-bold text-amber-500/80 uppercase tracking-widest mt-0.5">Awaiting GM Action</p>
                                             </div>
-                                            <form action={approvePlayer.bind(null, player.id)}>
+                                            <form action={approvePlayer as any}>
+                                                <input type="hidden" name="playerId" value={player.id} />
                                                 <button type="submit" className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-black flex items-center justify-center transition-all border border-emerald-500/20 shadow-lg">
                                                     <Check size={20} />
                                                 </button>
@@ -167,7 +168,8 @@ export default async function AdminPage({
                                             </div>
                                             
                                             {player.role !== 'admin' && (
-                                                <form action={promoteToAdmin.bind(null, player.id)}>
+                                                <form action={promoteToAdmin as any}>
+                                                    <input type="hidden" name="playerId" value={player.id} />
                                                     <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
                                                         <ShieldPlus size={16} />
                                                         <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-black text-[8px] font-black uppercase text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/10">Make Admin</span>
@@ -192,7 +194,7 @@ export default async function AdminPage({
                             </h3>
                             <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they will show up in your pending list for final approval.</p>
                             <div className="rounded-2xl border border-white/5 p-5 mb-6 bg-black/20 backdrop-blur-sm">
-                                <form action={addAllowedPhone} className="space-y-4">
+                                <form action={addAllowedPhone as any} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input name="name" type="text" required placeholder="Agent Name"
                                             className="w-full bg-black/40 border border-white/5 focus:border-violet-500/50 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none transition-all font-bold" />
@@ -215,7 +217,8 @@ export default async function AdminPage({
                                             <p className="font-black text-xs text-white tracking-tight truncate">{person.name}</p>
                                             <p className="text-[9px] text-white/40 font-mono tracking-widest leading-none mt-1">{person.phone}</p>
                                         </div>
-                                        <form action={removeAllowedPhone.bind(null, person.phone)}>
+                                        <form action={removeAllowedPhone as any}>
+                                            <input type="hidden" name="phone" value={person.phone} />
                                             <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover:opacity-100">
                                                 <Trash2 size={14} />
                                             </button>
@@ -235,7 +238,8 @@ export default async function AdminPage({
                                                         <p className="font-black text-xs text-white tracking-tight truncate">{person.name}</p>
                                                         <p className="text-[9px] text-white/40 font-mono tracking-widest leading-none mt-1">{person.phone}</p>
                                                     </div>
-                                                    <form action={removeAllowedPhone.bind(null, person.phone)}>
+                                                    <form action={removeAllowedPhone as any}>
+                                                        <input type="hidden" name="phone" value={person.phone} />
                                                         <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover/row:opacity-100">
                                                             <Trash2 size={14} />
                                                         </button>
@@ -337,7 +341,8 @@ export default async function AdminPage({
                                         >
                                             <Edit3 size={14} /> Edit Rules
                                         </Link>
-                                        <form action={finishSeason.bind(null, s.id)}>
+                                        <form action={finishSeason as any}>
+                                            <input type="hidden" name="seasonId" value={s.id} />
                                             <button
                                                 type="submit"
                                                 className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-black rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-[0_5px_0_rgb(180,83,9)] flex items-center justify-center gap-2"
@@ -417,7 +422,8 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             FINISH
                         </Link>
                     ) : event.status === 'upcoming' ? (
-                        <form action={startSession.bind(null, event.id)}>
+                        <form action={startSession as any}>
+                            <input type="hidden" name="eventId" value={event.id} />
                             <button type="submit" className="px-3 h-7 rounded-lg bg-sky-500 text-black font-black text-[8px] uppercase tracking-widest flex items-center justify-center transition-all shadow-[0_2px_0_rgb(14,165,233)] hover:scale-105 active:scale-95">
                                 START
                             </button>
@@ -456,7 +462,8 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             FINISH
                         </Link>
                     ) : event.status === 'upcoming' ? (
-                        <form action={startSession.bind(null, event.id)}>
+                        <form action={startSession as any}>
+                            <input type="hidden" name="eventId" value={event.id} />
                             <button type="submit" className="px-4 h-8 rounded-lg bg-sky-500 text-black font-black text-[9px] uppercase tracking-widest flex items-center justify-center transition-all shadow-[0_3px_0_rgb(14,165,233)] hover:scale-105 active:scale-95">
                                 START
                             </button>
