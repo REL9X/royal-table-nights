@@ -239,8 +239,11 @@ export default async function Dashboard() {
                 <div className="max-w-md mx-auto relative z-10 px-4 pt-6">
                     <RealtimeRefresher table="events" />
                     <RealtimeRefresher table="profiles" filter={`id=eq.${user.id}`} />
-                    <RankUpNotifier currentPoints={profile.total_points || 0} />
-                    <EventRealtimeNotifier />
+                    <RankUpNotifier 
+                        currentPoints={profile.total_points || 0} 
+                        enabled={profile.notification_preferences?.rank_ups ?? true}
+                    />
+                    <EventRealtimeNotifier preferences={profile.notification_preferences} />
 
                     {/* ── TOP NAV ── */}
                     <div className="flex justify-between items-center mb-6">

@@ -4,8 +4,19 @@ import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { NotificationService } from '@/lib/notifications'
 
-export default function EventRealtimeNotifier() {
+interface EventRealtimeNotifierProps {
+    preferences?: {
+        new_games: boolean
+        season_results: boolean
+    }
+}
+
+export default function EventRealtimeNotifier({ preferences }: EventRealtimeNotifierProps) {
     const supabase = createClient()
+    
+    // Default to true if not provided (fallback)
+    const canNotifyNewGames = preferences?.new_games ?? true
+    const canNotifySeasonResults = preferences?.season_results ?? true
 
     useEffect(() => {
         const channel = supabase
@@ -18,6 +29,7 @@ export default function EventRealtimeNotifier() {
                     table: 'events'
                 },
                 (payload) => {
+                    if (!canNotifyNewGames) return
                     const newEvent = payload.new
                     NotificationService.notifyAchievement(
                         'New Battle Scheduled! 🔥',
@@ -37,6 +49,7 @@ export default function EventRealtimeNotifier() {
                     const newStatus = payload.new.status
                     
                     if (oldStatus !== 'completed' && newStatus === 'completed') {
+                        if (!canNotifySeasonResults) return
                         NotificationService.notifyAchievement(
                             'Battle Results are In! 🏆',
                             `The session "${payload.new.title}" has been finalized. Check the new rankings!`

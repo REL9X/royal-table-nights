@@ -51,9 +51,27 @@ export async function updateProfile(formData: FormData) {
         .eq('id', user.id)
 
     if (error) return { error: error.message }
-
+    
     revalidatePath('/dashboard')
     revalidatePath('/profile')
     revalidatePath('/leaderboard')
+    return { success: true }
+}
+
+export async function updateNotificationPrefs(prefs: any) {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Not authorized' }
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ notification_preferences: prefs })
+        .eq('id', user.id)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/dashboard')
+    revalidatePath('/profile')
     return { success: true }
 }
