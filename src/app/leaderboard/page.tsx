@@ -18,20 +18,11 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
         .eq('is_approved', true)
         .order('total_points', { ascending: false })
 
-    if (!rawProfiles || rawProfiles.length === 0) {
-        return (
-            <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
-                <div className="text-[var(--foreground)] text-center mb-6 font-black uppercase tracking-widest">No players found</div>
-                <Link href="/dashboard" className="px-6 py-3 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
-                    <ChevronLeft size={16} /> Go to Dashboard
-                </Link>
-            </div>
-        )
-    }
+    const safeProfiles = rawProfiles || []
 
     // Initialize all-time timing agg objects
     const allTimeAgg: Record<string, any> = {}
-    rawProfiles.forEach(p => {
+    safeProfiles.forEach(p => {
         allTimeAgg[p.id] = { fastest_bust_min: Infinity, fastest_rebuy_min: Infinity }
     })
 
@@ -60,7 +51,7 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
         }
     })
 
-    const profiles = rawProfiles.map(p => ({ ...p, ...allTimeAgg[p.id] }))
+    const profiles = safeProfiles.map(p => ({ ...p, ...allTimeAgg[p.id] }))
 
 
     // Fetch all seasons, most recent first
