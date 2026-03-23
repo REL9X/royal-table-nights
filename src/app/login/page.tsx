@@ -192,9 +192,9 @@ function LoginContent() {
 
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.4 }}
+                    animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
-                    className="flex flex-col items-center gap-6 mt-10"
+                    className="flex flex-col items-center gap-6 mt-10 relative z-20"
                 >
                     <p className="text-center text-[var(--foreground-subtle)] text-[10px] font-bold uppercase tracking-widest px-8 leading-relaxed italic">
                         "The card player must learn that once he has made a bet, it is no longer his."
