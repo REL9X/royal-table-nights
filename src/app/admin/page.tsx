@@ -24,6 +24,7 @@ export default async function AdminPage({
     if (profile?.role !== 'admin') redirect('/dashboard')
 
     const { data: pendingPlayers } = await supabase.from('profiles').select('*').eq('is_approved', false).neq('role', 'admin').order('created_at', { ascending: false })
+    const { data: approvedPlayers } = await supabase.from('profiles').select('*').eq('is_approved', true).neq('role', 'admin').order('created_at', { ascending: false })
     const { data: events } = await supabase.from('events').select('*, event_responses(id)').order('date', { ascending: false }).order('created_at', { ascending: false })
     const { data: allowedPhones } = await supabase.from('allowed_phones').select('*').order('created_at', { ascending: false })
     const { data: allSeasons } = await supabase.from('seasons').select('*').order('created_at', { ascending: false })
@@ -81,12 +82,13 @@ export default async function AdminPage({
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                         {/* Pending Approvals */}
                         <div className="mb-10">
-                            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-4 flex items-center gap-2 px-1">
-                                Pending Requests
+                            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-1 flex items-center gap-2 px-1">
+                                Pending Registration Approvals
                                 {(pendingPlayers?.length ?? 0) > 0 && (
                                     <span className="bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full">{pendingPlayers?.length}</span>
                                 )}
                             </h3>
+                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">Players who registered manually and need you to approve their access.</p>
 
                             {pendingPlayers && pendingPlayers.length > 0 ? (
                                 <div className="space-y-3">
@@ -115,9 +117,48 @@ export default async function AdminPage({
                             )}
                         </div>
 
+                        {/* Registered Players */}
+                        <div className="mb-10">
+                            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-1 px-1 flex items-center gap-2">
+                                Platform Members
+                                <span className="bg-emerald-500/20 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">{approvedPlayers?.length || 0}</span>
+                            </h3>
+                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">Players who successfully registered and are active on the platform.</p>
+                            
+                            {approvedPlayers && approvedPlayers.length > 0 ? (
+                                <details className="group">
+                                    <summary className="p-3 rounded-xl border border-white/5 bg-white/5 text-[10px] font-black uppercase tracking-widest text-[#a1a1aa] cursor-pointer list-none hover:bg-white/10 transition-colors flex items-center justify-between">
+                                        <span>View all registered players</span>
+                                        <ChevronRight size={14} className="group-open:rotate-90 transition-transform" />
+                                    </summary>
+                                    <div className="space-y-2 mt-2 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
+                                        {approvedPlayers.map((player) => (
+                                            <div key={player.id} className="flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-black/20">
+                                                <div className="w-8 h-8 rounded-lg bg-[var(--background-raised)] flex items-center justify-center font-black text-sm text-[var(--foreground)] shrink-0 overflow-hidden">
+                                                    {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{player.name}</p>
+                                                    <p className="text-[9px] text-emerald-400/80 font-bold uppercase tracking-widest mt-0.5">Active</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ) : (
+                                <div className="rounded-xl border border-dashed border-white/5 p-6 text-center bg-black/10">
+                                    <p className="text-[10px] text-[var(--foreground-muted)] font-black uppercase tracking-[0.3em]">No registered players yet</p>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Player Invites Form */}
                         <div className="mb-10">
-                            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-4 px-1">Mobile Deployment</h3>
+                            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-1 px-1 flex items-center gap-2">
+                                Mobile Deployment Invites
+                                <span className="bg-sky-500/20 text-sky-400 text-[10px] font-black px-2 py-0.5 rounded-full border border-sky-500/20">{allowedPhones?.length || 0}</span>
+                            </h3>
+                            <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they automatically skip the pending list.</p>
                             <div className="rounded-2xl border border-white/5 p-5 mb-6 bg-black/20 backdrop-blur-sm">
                                 <form action={async (formData) => { 'use server'; await addAllowedPhone(formData) }} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -150,7 +191,27 @@ export default async function AdminPage({
                                     </div>
                                 ))}
                                 {allowedPhones && allowedPhones.length > 5 && (
-                                    <p className="text-center text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest pt-2">+{allowedPhones.length - 5} More Active Invites</p>
+                                    <details className="group">
+                                        <summary className="text-center text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest pt-2 cursor-pointer list-none hover:text-[var(--foreground)] transition-colors py-2">
+                                            <span className="group-open:hidden">+{allowedPhones.length - 5} More Active Invites</span>
+                                            <span className="hidden group-open:inline">Hide Active Invites</span>
+                                        </summary>
+                                        <div className="space-y-2 mt-2 border-t border-white/5 pt-2">
+                                            {allowedPhones.slice(5).map(person => (
+                                                <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-white/5 bg-white/5 group/row transition-all hover:bg-white/10">
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-black text-xs text-white tracking-tight truncate">{person.name}</p>
+                                                        <p className="text-[9px] text-white/40 font-mono tracking-widest leading-none mt-1">{person.phone}</p>
+                                                    </div>
+                                                    <form action={async () => { 'use server'; await removeAllowedPhone(person.phone) }}>
+                                                        <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover/row:opacity-100">
+                                                            <Trash2 size={14} />
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </details>
                                 )}
                             </div>
                         </div>
