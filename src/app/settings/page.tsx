@@ -33,6 +33,7 @@ export default async function SettingsPage() {
                 </div>
 
                 <div className="space-y-8">
+                    <NotificationSettings 
                         initialPrefs={profile.notification_preferences || {
                             all_enabled: true,
                             new_games: true,
@@ -40,6 +41,7 @@ export default async function SettingsPage() {
                             rank_ups: true,
                             reminders: true
                         }} 
+                    />
                 </div>
             </div>
         </div>
