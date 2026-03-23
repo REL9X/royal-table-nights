@@ -4,6 +4,7 @@ import { Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit
 import { approvePlayer, addAllowedPhone, removeAllowedPhone } from './actions'
 import { startSession } from './events/actions'
 import { finishSeason } from './seasons/actions'
+import { NotificationService } from '@/lib/notifications'
 import Link from 'next/link'
 import PlayerName from '@/components/PlayerName'
 
@@ -218,6 +219,33 @@ export default async function AdminPage({
                     </div>
                 ) : (
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        {/* System Testing Tools */}
+                        <div className="mb-8 p-6 rounded-[2.5rem] border border-sky-500/20 bg-sky-500/5 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                                <Zap size={80} className="text-sky-500" />
+                            </div>
+                            <h3 className="text-lg font-black text-white mb-2 uppercase tracking-tight">System Testing</h3>
+                            <p className="text-xs text-white/50 mb-6 max-w-xs">Verify your PWA settings and notification permissions.</p>
+                            
+                            <button 
+                                onClick={async () => {
+                                    const granted = await NotificationService.requestPermissions();
+                                    if (granted) {
+                                        await NotificationService.notifyAchievement(
+                                            'Royal Table Service 🔔',
+                                            'Notifications are working correctly! Get ready for the next battle.'
+                                        );
+                                    } else {
+                                        alert('Notification permission denied. Please check your browser settings.');
+                                    }
+                                }}
+                                className="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-black rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-sky-500/20 active:scale-95 transition-all flex items-center gap-2"
+                            >
+                                <Zap size={14} />
+                                Test Push Notification
+                            </button>
+                        </div>
+
                         {/* Quick Action Header */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
                             <Link href="/admin/seasons/new" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
@@ -278,7 +306,8 @@ export default async function AdminPage({
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
                                         <Link
                                             href={`/admin/seasons/${s.id}/edit`}
                                             className="flex items-center justify-center gap-2 py-4 bg-white/5 border border-white/10 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-lg"

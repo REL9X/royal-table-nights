@@ -3,7 +3,14 @@ import { Capacitor } from '@capacitor/core';
 
 export const NotificationService = {
     async requestPermissions() {
-        if (!Capacitor.isNativePlatform()) return true;
+        if (!Capacitor.isNativePlatform()) {
+            if (!('Notification' in window)) {
+                console.log('This browser does not support notifications.');
+                return false;
+            }
+            const permission = await Notification.requestPermission();
+            return permission === 'granted';
+        }
         
         try {
             const permission = await LocalNotifications.requestPermissions();
@@ -67,8 +74,15 @@ export const NotificationService = {
 
     async notifyAchievement(title: string, message: string) {
         if (!Capacitor.isNativePlatform()) {
-            // Fallback for web: simplified alert or toast
+            // Fallback for web: use Browser Notification API if granted
             console.log(`Web Notification: ${title} - ${message}`);
+            
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: message,
+                    icon: '/icon-192x192.png' // Use PWA icon
+                });
+            }
             return;
         }
 
