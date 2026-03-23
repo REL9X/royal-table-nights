@@ -47,8 +47,8 @@ export default async function AdminPage({
         <div className="min-h-screen text-[var(--foreground)] font-sans pb-28 relative overflow-hidden" style={{ background: 'var(--background)' }}>
             {/* Background orbs */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-5%] left-[20%] w-[60%] h-[50%] rounded-full blur-[120px] opacity-20" style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
-                <div className="absolute bottom-[5%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[100px] opacity-15" style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+                <div className="absolute top-[-5%] left-[20%] w-[60%] h-[50%] rounded-full blur-[120px] opacity-[0.08] dark:opacity-20" style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
+                <div className="absolute bottom-[5%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[100px] opacity-[0.05] dark:opacity-15" style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
             </div>
 
             <div className="max-w-xl mx-auto px-4 pt-6 relative z-10">
@@ -70,11 +70,11 @@ export default async function AdminPage({
                 </div>
 
                 {/* Main Navigation - Tabbed Style */}
-                <div className="flex gap-1 mb-8 p-1 bg-black/20 rounded-xl border border-white/5 backdrop-blur-sm">
+                <div className="flex gap-1 mb-8 p-1 bg-[var(--background-raised)]/30 rounded-xl border border-[var(--border)] backdrop-blur-sm">
                     <Link
                         href="/admin?tab=events"
                         className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'events'
-                            ? 'text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 shadow-lg'
+                            ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-lg'
                             : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
                             }`}
                     >
@@ -83,7 +83,7 @@ export default async function AdminPage({
                     <Link
                         href="/admin?tab=players"
                         className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'players'
-                            ? 'text-violet-400 bg-violet-400/10 border border-violet-400/20 shadow-lg'
+                            ? 'text-violet-600 dark:text-violet-400 bg-violet-500/10 border border-violet-500/20 shadow-lg'
                             : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
                             }`}
                     >
@@ -92,7 +92,7 @@ export default async function AdminPage({
                     <Link
                         href="/admin?tab=notifications"
                         className={`flex-1 py-2.5 text-center rounded-lg font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'notifications'
-                            ? 'text-sky-400 bg-sky-400/10 border border-sky-400/20 shadow-lg'
+                            ? 'text-sky-600 dark:text-sky-400 bg-sky-500/10 border border-sky-500/20 shadow-lg'
                             : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
                             }`}
                     >
@@ -116,8 +116,8 @@ export default async function AdminPage({
                             {pendingPlayers && pendingPlayers.length > 0 ? (
                                 <div className="space-y-3">
                                     {pendingPlayers.map((player) => (
-                                        <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-[var(--border)] bg-[var(--background-card)] shadow-md transition-all hover:border-violet-500/30">
-                                            <div className="w-12 h-12 rounded-2xl border-2 border-white/5 bg-[var(--background-raised)] flex items-center justify-center font-black text-xl text-violet-400 shrink-0">
+                                        <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-[var(--border)] bg-[var(--background-card)] shadow-sm transition-all hover:border-violet-500/30">
+                                            <div className="w-12 h-12 rounded-2xl border border-[var(--border)] bg-[var(--background-raised)] flex items-center justify-center font-black text-xl text-violet-500 shrink-0">
                                                 {(player.name || '?')[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -134,8 +134,8 @@ export default async function AdminPage({
                                     ))}
                                 </div>
                             ) : (
-                                <div className="rounded-3xl border border-dashed border-white/5 p-10 text-center bg-black/10">
-                                    <Shield size={32} className="text-white/10 mx-auto mb-3" />
+                                <div className="rounded-3xl border-2 border-dashed border-[var(--border)] p-10 text-center bg-[var(--background-raised)]/30">
+                                    <Shield size={32} className="text-[var(--foreground-subtle)] opacity-20 mx-auto mb-3" />
                                     <p className="text-[10px] text-[var(--foreground-muted)] font-black uppercase tracking-[0.3em]">Clear records</p>
                                 </div>
                             )}
@@ -152,8 +152,8 @@ export default async function AdminPage({
                             {allApprovedPlayers && allApprovedPlayers.length > 0 ? (
                                 <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
                                     {allApprovedPlayers.map((player: Profile) => (
-                                        <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-white/5 bg-black/20 group hover:border-violet-500/30 transition-all">
-                                            <div className="w-10 h-10 rounded-xl bg-[var(--background-raised)] flex items-center justify-center font-black text-xs text-[var(--foreground)] shrink-0 overflow-hidden border border-white/5">
+                                        <div key={player.id} className="flex items-center gap-4 p-4 rounded-2xl border border-[var(--border)] bg-[var(--background-card)] group hover:border-violet-500/30 transition-all shadow-sm">
+                                            <div className="w-10 h-10 rounded-xl bg-[var(--background-raised)] flex items-center justify-center font-black text-xs text-[var(--foreground)] shrink-0 overflow-hidden border border-[var(--border)]">
                                                 {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -170,9 +170,9 @@ export default async function AdminPage({
                                             {player.role !== 'admin' && (
                                                 <form action={promoteToAdmin as any}>
                                                     <input type="hidden" name="playerId" value={player.id} />
-                                                    <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
+                                                    <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
                                                         <ShieldPlus size={16} />
-                                                        <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-black text-[8px] font-black uppercase text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/10">Make Admin</span>
+                                                        <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[var(--background-card)] text-[8px] font-black uppercase text-[var(--foreground)] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-[var(--border)]">Make Admin</span>
                                                     </button>
                                                 </form>
                                             )}
@@ -180,7 +180,7 @@ export default async function AdminPage({
                                     ))}
                                 </div>
                             ) : (
-                                <div className="rounded-xl border border-dashed border-white/5 p-6 text-center bg-black/10">
+                                <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-center bg-[var(--background-raised)]/30">
                                     <p className="text-[10px] text-[var(--foreground-muted)] font-black uppercase tracking-[0.3em]">No registered players yet</p>
                                 </div>
                             )}
@@ -193,15 +193,15 @@ export default async function AdminPage({
                                 <span className="bg-sky-500/20 text-sky-400 text-[10px] font-black px-2 py-0.5 rounded-full border border-sky-500/20">{allowedPhones?.length || 0}</span>
                             </h3>
                             <p className="text-[10px] text-[var(--foreground-muted)] px-1 mb-4">You can pre-approve phone numbers here. When these players sign up, they will show up in your pending list for final approval.</p>
-                            <div className="rounded-2xl border border-white/5 p-5 mb-6 bg-black/20 backdrop-blur-sm">
+                            <div className="rounded-2xl border border-[var(--border)] p-5 mb-6 bg-[var(--background-card)] backdrop-blur-sm shadow-sm">
                                 <form action={addAllowedPhone as any} className="space-y-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input name="name" type="text" required placeholder="Agent Name"
-                                            className="w-full bg-black/40 border border-white/5 focus:border-violet-500/50 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none transition-all font-bold" />
-                                        <div className="flex bg-black/40 border border-white/5 rounded-xl focus-within:border-violet-500/50 overflow-hidden transition-all">
-                                            <div className="px-3 py-3 text-[10px] text-white/40 font-mono border-r border-white/5 bg-black/20 flex items-center">+351</div>
+                                            className="w-full bg-[var(--background-raised)] border border-[var(--border)] focus:border-violet-500/50 rounded-xl px-4 py-3 text-sm text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none transition-all font-bold" />
+                                        <div className="flex bg-[var(--background-raised)] border border-[var(--border)] rounded-xl focus-within:border-violet-500/50 overflow-hidden transition-all">
+                                            <div className="px-3 py-3 text-[10px] text-[var(--foreground-muted)] font-mono border-r border-[var(--border)] bg-[var(--background-card)]/30 flex items-center">+351</div>
                                             <input name="phone" type="tel" required pattern="[0-9]{9}" maxLength={9} placeholder="9XX XXX XXX"
-                                                className="flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder-white/20 focus:outline-none font-mono tracking-widest" />
+                                                className="flex-1 bg-transparent px-3 py-3 text-sm text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none font-mono tracking-widest" />
                                         </div>
                                     </div>
                                     <button suppressHydrationWarning type="submit" className="w-full py-3 bg-violet-500 hover:bg-violet-400 text-black rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_4px_0_rgb(109,40,217)]">
@@ -212,10 +212,10 @@ export default async function AdminPage({
 
                             <div className="space-y-2">
                                 {allowedPhones && allowedPhones.slice(0, 5).map(person => (
-                                    <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-white/5 bg-white/5 group transition-all hover:bg-white/10">
+                                    <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-[var(--border)] bg-[var(--background-card)] group transition-all hover:bg-[var(--background-raised)] shadow-sm">
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-black text-xs text-white tracking-tight truncate">{person.name}</p>
-                                            <p className="text-[9px] text-white/40 font-mono tracking-widest leading-none mt-1">{person.phone}</p>
+                                            <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{person.name}</p>
+                                            <p className="text-[9px] text-[var(--foreground-muted)] font-mono tracking-widest leading-none mt-1">{person.phone}</p>
                                         </div>
                                         <form action={removeAllowedPhone as any}>
                                             <input type="hidden" name="phone" value={person.phone} />
@@ -231,12 +231,12 @@ export default async function AdminPage({
                                             <span className="group-open:hidden">+{allowedPhones.length - 5} More Active Invites</span>
                                             <span className="hidden group-open:inline">Hide Active Invites</span>
                                         </summary>
-                                        <div className="space-y-2 mt-2 border-t border-white/5 pt-2">
+                                        <div className="space-y-2 mt-2 border-t border-[var(--border)] pt-2">
                                             {allowedPhones.slice(5).map(person => (
-                                                <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-white/5 bg-white/5 group/row transition-all hover:bg-white/10">
+                                                <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-[var(--border)] bg-[var(--background-card)] group/row transition-all hover:bg-[var(--background-raised)] shadow-sm">
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="font-black text-xs text-white tracking-tight truncate">{person.name}</p>
-                                                        <p className="text-[9px] text-white/40 font-mono tracking-widest leading-none mt-1">{person.phone}</p>
+                                                        <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{person.name}</p>
+                                                        <p className="text-[9px] text-[var(--foreground-muted)] font-mono tracking-widest leading-none mt-1">{person.phone}</p>
                                                     </div>
                                                     <form action={removeAllowedPhone as any}>
                                                         <input type="hidden" name="phone" value={person.phone} />
@@ -258,7 +258,7 @@ export default async function AdminPage({
                         <SystemTesting />
 
                         {/* Admin's Personal Preferences */}
-                        <div className="pt-4 border-t border-white/5">
+                        <div className="pt-4 border-t border-[var(--border)]">
                             <NotificationSettings 
                                 initialPrefs={profile.notification_preferences || {
                                     all_enabled: true,
@@ -275,36 +275,36 @@ export default async function AdminPage({
 
                         {/* Quick Action Header */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-                            <Link href="/admin/seasons/new" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
+                            <Link href="/admin/seasons/new" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-sm bg-[var(--background-card)]">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-amber-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.3)] shrink-0">
                                         <Crown size={20} />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
-                                        <h4 className="font-black text-sm text-white group-hover:text-amber-500 transition-colors uppercase tracking-tight leading-none">Initialize Season</h4>
-                                        <p className="text-[9px] text-white/30 uppercase tracking-widest font-bold mt-1.5 truncate">Season Ops</p>
+                                        <h4 className="font-black text-sm text-[var(--foreground)] group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors uppercase tracking-tight leading-none">Initialize Season</h4>
+                                        <p className="text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest font-bold mt-1.5 truncate">Season Ops</p>
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/admin/seasons" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-lg">
+                            <Link href="/admin/seasons" className="p-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all group shadow-sm bg-[var(--background-card)]">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-amber-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.3)] shrink-0">
                                         <Shield size={20} />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
-                                        <h4 className="font-black text-sm text-white group-hover:text-amber-500 transition-colors uppercase tracking-tight leading-none">Seasons</h4>
-                                        <p className="text-[9px] text-white/30 uppercase tracking-widest font-bold mt-1.5 truncate">Browse Archive</p>
+                                        <h4 className="font-black text-sm text-[var(--foreground)] group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors uppercase tracking-tight leading-none">Seasons</h4>
+                                        <p className="text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest font-bold mt-1.5 truncate">Browse Archive</p>
                                     </div>
                                 </div>
                             </Link>
-                            <Link href="/admin/events/new" className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group shadow-lg">
+                            <Link href="/admin/events/new" className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all group shadow-sm bg-[var(--background-card)]">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-xl bg-emerald-500 text-black flex items-center justify-center font-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.3)] shrink-0">
                                         <Plus size={20} />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
-                                        <h4 className="font-black text-sm text-white group-hover:text-emerald-500 transition-colors uppercase tracking-tight leading-none">New Game</h4>
-                                        <p className="text-[9px] text-white/30 uppercase tracking-widest font-bold mt-1.5 truncate">Deploy Battle</p>
+                                        <h4 className="font-black text-sm text-[var(--foreground)] group-hover:text-emerald-600 dark:group-hover:text-emerald-500 transition-colors uppercase tracking-tight leading-none">New Game</h4>
+                                        <p className="text-[9px] text-[var(--foreground-muted)] uppercase tracking-widest font-bold mt-1.5 truncate">Deploy Battle</p>
                                     </div>
                                 </div>
                             </Link>
@@ -316,9 +316,9 @@ export default async function AdminPage({
                                 <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-[var(--foreground-muted)] mb-4 px-1 flex items-center gap-2">
                                     <Shield size={12} className="text-amber-500" /> Season Management
                                 </h3>
-                                <div className="p-6 rounded-[2rem] border border-amber-500/30 bg-gradient-to-br from-amber-500/15 to-transparent shadow-2xl backdrop-blur-md relative overflow-hidden group">
+                                <div className="p-6 rounded-[2rem] border border-amber-500/30 bg-gradient-to-br from-amber-500/15 to-transparent shadow-xl backdrop-blur-md relative overflow-hidden group">
                                     {/* Glass reflection */}
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[var(--foreground)]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
                                     <div className="flex items-center gap-4 mb-6 relative z-10">
                                         <div className="w-14 h-14 rounded-2xl bg-amber-500 text-black flex items-center justify-center font-black shadow-[0_0_20px_rgba(245,158,11,0.4)] shrink-0">
@@ -329,7 +329,7 @@ export default async function AdminPage({
                                                 <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                                                 <h4 className="font-black text-xl text-amber-500 uppercase tracking-widest truncate leading-none">{s.name}</h4>
                                             </div>
-                                            <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Active War Campaign</p>
+                                            <p className="text-[10px] font-black text-[var(--foreground-muted)] uppercase tracking-[0.2em]">Active War Campaign</p>
                                         </div>
                                     </div>
 
@@ -337,7 +337,7 @@ export default async function AdminPage({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
                                         <Link
                                             href={`/admin/seasons/${s.id}/edit`}
-                                            className="flex items-center justify-center gap-2 py-4 bg-white/5 border border-white/10 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-lg"
+                                            className="flex items-center justify-center gap-2 py-4 bg-[var(--background-raised)]/50 border border-[var(--border)] rounded-2xl font-black text-[10px] uppercase tracking-widest text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-raised)] transition-all active:scale-95 shadow-sm"
                                         >
                                             <Edit3 size={14} /> Edit Rules
                                         </Link>
@@ -351,7 +351,7 @@ export default async function AdminPage({
                                             </button>
                                         </form>
                                     </div>
-                                    <p className="mt-4 text-[9px] font-black text-white/20 uppercase tracking-[0.2em] text-center italic">
+                                    <p className="mt-4 text-[9px] font-black text-[var(--foreground-subtle)] uppercase tracking-[0.2em] text-center italic">
                                         Ending season will distribute points and badges to all participants.
                                     </p>
                                 </div>
@@ -381,7 +381,7 @@ export default async function AdminPage({
                         </div>
 
                         <div className="text-center pt-4">
-                            <Link href="/admin/seasons" className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] hover:text-white transition-colors">
+                            <Link href="/admin/seasons" className="text-[10px] font-black text-[var(--foreground-subtle)] uppercase tracking-[0.3em] hover:text-[var(--foreground)] transition-colors">
                                 Browse Archive <ChevronRight size={12} className="inline ml-1" />
                             </Link>
                         </div>
@@ -396,25 +396,25 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
     const statusConfig = {
         upcoming: { label: 'Upcoming', className: 'bg-sky-500/20 text-sky-400 border border-sky-500/20' },
         active: { label: '● LIVE', className: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse' },
-        completed: { label: 'Ended', className: 'bg-white/5 text-white/30 border border-white/5' },
+        completed: { label: 'Ended', className: 'bg-[var(--background-raised)]/20 text-[var(--foreground-subtle)] border border-[var(--border)]' },
     }
     const sc = statusConfig[event.status as keyof typeof statusConfig] ?? statusConfig.upcoming
 
     if (compact) {
         return (
-            <div className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/5 transition-colors group">
+            <div className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-[var(--background-raised)]/30 transition-colors group">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                        <h3 className="font-black text-xs text-white truncate uppercase tracking-tight italic group-hover:text-emerald-400 transition-colors leading-none">{event.title}</h3>
+                        <h3 className="font-black text-xs text-[var(--foreground)] truncate uppercase tracking-tight italic group-hover:text-emerald-500 transition-colors leading-none">{event.title}</h3>
                         <span className={`text-[7px] font-black px-1.5 py-0.5 rounded-full shrink-0 ${sc.className} uppercase tracking-widest`}>{sc.label}</span>
                     </div>
-                    <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-0.5 flex items-center gap-1">
+                    <p className="text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest mt-0.5 flex items-center gap-1">
                         <CalendarIcon size={9} /> {new Date(event.date).toLocaleDateString()}
-                        <span className="text-sky-400/50 ml-2 flex items-center gap-1"><Users size={9} /> {event.event_responses?.length || 0}</span>
+                        <span className="text-sky-500/50 ml-2 flex items-center gap-1"><Users size={9} /> {event.event_responses?.length || 0}</span>
                     </p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                    <Link href={`/admin/events/${event.id}/edit`} className="w-7 h-7 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 flex items-center justify-center transition-all">
+                    <Link href={`/admin/events/${event.id}/edit`} className="w-7 h-7 rounded-lg bg-[var(--background-card)] border border-[var(--border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-raised)] flex items-center justify-center transition-all">
                         <Edit3 size={12} />
                     </Link>
                     {event.status === 'active' ? (
@@ -429,7 +429,7 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             </button>
                         </form>
                     ) : (
-                        <Link href={`/history/${event.id}`} className="w-7 h-7 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 flex items-center justify-center transition-all">
+                        <Link href={`/history/${event.id}`} className="w-7 h-7 rounded-lg bg-[var(--background-card)] border border-[var(--border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-raised)] flex items-center justify-center transition-all">
                             <ChevronRight size={12} />
                         </Link>
                     )}
@@ -439,22 +439,22 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
     }
 
     return (
-        <div className="rounded-2xl border border-white/5 p-4 transition-all bg-white/5 hover:bg-white/10 group backdrop-blur-sm">
+        <div className="rounded-2xl border border-[var(--border)] p-4 transition-all bg-[var(--background-card)] hover:bg-[var(--background-raised)] group backdrop-blur-sm shadow-sm">
             <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
-                        <h3 className="font-black text-sm text-white truncate uppercase tracking-tight italic group-hover:text-emerald-400 transition-colors leading-none">{event.title}</h3>
+                        <h3 className="font-black text-sm text-[var(--foreground)] truncate uppercase tracking-tight italic group-hover:text-emerald-500 transition-colors leading-none">{event.title}</h3>
                         <span className={`text-[7px] font-black px-1.5 py-0.5 rounded-full shrink-0 ${sc.className} uppercase tracking-widest`}>{sc.label}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[9px] font-black text-white/30 uppercase tracking-widest leading-none">
+                    <div className="flex items-center gap-3 text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest leading-none">
                         <span className="flex items-center gap-1"><CalendarIcon size={10} /> {new Date(event.date).toLocaleDateString()}</span>
-                        <span className="flex items-center gap-1 text-sky-400/50">
+                        <span className="flex items-center gap-1 text-sky-500/50">
                             <Users size={10} /> {event.event_responses?.length || 0} RSVPs
                         </span>
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                    <Link href={`/admin/events/${event.id}/edit`} className="w-8 h-8 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 flex items-center justify-center transition-all">
+                    <Link href={`/admin/events/${event.id}/edit`} className="w-8 h-8 rounded-lg bg-[var(--background-raised)] border border-[var(--border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-card)] flex items-center justify-center transition-all shadow-sm">
                         <Edit3 size={14} />
                     </Link>
                     {event.status === 'active' ? (
@@ -469,7 +469,7 @@ function EventRow({ event, startSession, compact }: { event: any, startSession: 
                             </button>
                         </form>
                     ) : (
-                        <Link href={`/history/${event.id}`} className="w-8 h-8 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 flex items-center justify-center transition-all">
+                        <Link href={`/history/${event.id}`} className="w-8 h-8 rounded-lg bg-[var(--background-raised)] border border-[var(--border)] text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--background-card)] flex items-center justify-center transition-all shadow-sm">
                             <ChevronRight size={14} />
                         </Link>
                     )}

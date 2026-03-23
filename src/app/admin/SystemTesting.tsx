@@ -67,15 +67,15 @@ export default function SystemTesting() {
             {/* Toast stack */}
             <div className="fixed top-4 right-4 z-50 space-y-2 max-w-xs w-full pointer-events-none">
                 {toasts.map(t => (
-                    <div key={t.id} className="pointer-events-auto bg-[#1a1a2e] border border-sky-500/30 rounded-2xl p-4 shadow-2xl shadow-black/60 flex items-start gap-3 animate-in slide-in-from-top-2 duration-300">
+                    <div key={t.id} className="pointer-events-auto bg-[var(--background-card)] border border-sky-500/30 rounded-2xl p-4 shadow-2xl shadow-black/20 flex items-start gap-3 animate-in slide-in-from-top-2 duration-300">
                         <div className="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
                             <Bell size={14} />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="font-black text-xs text-white uppercase tracking-tight leading-none mb-1">{t.title}</p>
-                            <p className="text-[10px] text-white/50 leading-tight">{t.message}</p>
+                            <p className="font-black text-xs text-[var(--foreground)] uppercase tracking-tight leading-none mb-1">{t.title}</p>
+                            <p className="text-[10px] text-[var(--foreground-muted)] leading-tight">{t.message}</p>
                         </div>
-                        <button onClick={() => setToasts(prev => prev.filter(x => x.id !== t.id))} className="text-white/20 hover:text-white transition-colors">
+                        <button onClick={() => setToasts(prev => prev.filter(x => x.id !== t.id))} className="text-[var(--foreground-subtle)] hover:text-[var(--foreground)] transition-colors">
                             <X size={12} />
                         </button>
                     </div>
@@ -89,10 +89,10 @@ export default function SystemTesting() {
                 
                 <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
-                        <Bell size={16} className="text-sky-400" />
-                        <h3 className="text-lg font-black text-white uppercase tracking-tight">Send Notification</h3>
+                        <Bell size={16} className="text-sky-500 dark:text-sky-400" />
+                        <h3 className="text-lg font-black text-[var(--foreground)] uppercase tracking-tight">Send Notification</h3>
                     </div>
-                    <p className="text-xs text-white/50 mb-6 max-w-xs">Manage PWA permissions and trigger global alerts.</p>
+                    <p className="text-xs text-[var(--foreground-muted)] mb-6 max-w-xs">Manage PWA permissions and trigger global alerts.</p>
                     
                     <div className="space-y-4">
                         <button 
@@ -103,22 +103,22 @@ export default function SystemTesting() {
                             Personal Push
                         </button>
 
-                        <div className="pt-4 border-t border-white/5 space-y-3">
-                            <p className="text-[10px] font-black text-sky-400/60 uppercase tracking-widest mb-1 flex items-center gap-2">
+                        <div className="pt-4 border-t border-[var(--border)] space-y-3">
+                            <p className="text-[10px] font-black text-sky-600 dark:text-sky-400/60 uppercase tracking-widest mb-1 flex items-center gap-2">
                                 <Send size={10} /> Global Broadcast
                             </p>
-                            <input 
+                             <input 
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="Alert Title (e.g. Table is Open!)"
-                                className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-2 text-xs text-white placeholder-white/20 focus:outline-none focus:border-sky-500/50 transition-all font-bold"
+                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold"
                             />
-                            <textarea 
+                             <textarea 
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Message for all players..."
                                 rows={2}
-                                className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-2 text-xs text-white placeholder-white/20 focus:outline-none focus:border-sky-500/50 transition-all font-bold resize-none"
+                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold resize-none"
                             />
                             <button 
                                 onClick={handleBroadcast}
