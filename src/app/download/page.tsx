@@ -57,14 +57,14 @@ export default function DownloadPage() {
 
             <div className="max-w-2xl w-full relative z-10 flex flex-col items-center">
                 {/* Header Section */}
-                <div className="absolute top-6 right-6 z-50">
-                    <ThemeToggle />
-                </div>
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
+                    <div className="flex justify-center mb-10">
+                        <ThemeToggle />
+                    </div>
                     <Link href="/login" className="inline-flex items-center gap-2 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors mb-8 group">
                         <div className="w-8 h-8 rounded-lg bg-[var(--background-raised)] flex items-center justify-center border border-[var(--border)] group-hover:bg-[var(--border)] transition-all">
                             <ChevronLeft size={16} />

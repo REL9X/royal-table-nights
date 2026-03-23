@@ -70,17 +70,10 @@ function LoginContent() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full blur-[140px] opacity-20" style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
             </div>
 
-            <div className="absolute top-6 right-6 z-50">
-                <ThemeToggle />
-            </div>
-
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="z-10 w-full max-w-sm"
-            >
                 <div className="flex flex-col items-center mb-10">
+                    <div className="mb-8">
+                        <ThemeToggle />
+                    </div>
                     <div className="relative mb-6">
                         <div className="absolute inset-0 bg-amber-500 blur-2xl opacity-20 animate-pulse" />
                         <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-4 rounded-[2rem] shadow-2xl rotate-3 transform">
