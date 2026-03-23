@@ -78,6 +78,8 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
     const [debugLogs, setDebugLogs] = useState<string[]>([])
+    const [isIOS, setIsIOS] = useState(false)
+    const [isStandalone, setIsStandalone] = useState(false)
 
     const addLog = (msg: string) => {
         console.log('RTN-PUSH:', msg)
@@ -86,14 +88,25 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
 
     // Register for push on mount if notifications are already enabled
     useEffect(() => {
+        const ios = /iPad|iPhone|iPod/.test(navigator.userAgent)
+        const standalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
+        setIsIOS(ios)
+        setIsStandalone(!!standalone)
+
+        if (ios && !standalone) {
+            addLog('iOS Warning: Add to Home Screen required for Push.')
+        }
+
         if (typeof window !== 'undefined' && !window.Notification) {
-            addLog('Error: window.Notification is missing. On iOS, you MUST use "Add to Home Screen".')
+            addLog('Error: window.Notification is missing.')
         }
         if (userId && prefs.all_enabled) {
-            Notification.requestPermission().then(permission => {
-                addLog(`Mount Check Permission: ${permission}`)
-                if (permission === 'granted') registerPush(userId, addLog)
-            })
+            if (window.Notification) {
+                Notification.requestPermission().then(permission => {
+                    addLog(`Mount Check Permission: ${permission}`)
+                    if (permission === 'granted') registerPush(userId, addLog)
+                })
+            }
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -106,7 +119,7 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
         // If user just turned notifications ON, register for push
         if (key === 'all_enabled' && nextPrefs.all_enabled && userId) {
             if (!window.Notification) {
-                addLog('Error: Notification API blocked. Are you on iOS Safari (not PWA)?')
+                addLog('Error: Notification API missing.')
                 return
             }
             addLog('Requesting permission...')
@@ -150,6 +163,21 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
             </div>
 
             <div className="space-y-3">
+                {/* iOS PWA Warning */}
+                {isIOS && !isStandalone && (
+                    <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 mb-2">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center shrink-0">
+                                <Zap size={16} />
+                            </div>
+                            <h4 className="font-black text-xs text-amber-500 uppercase tracking-tight">iOS Setup Required</h4>
+                        </div>
+                        <p className="text-[10px] text-[var(--foreground-muted)] leading-tight font-bold italic">
+                            To receive alerts on iPhone, click <span className="text-[var(--foreground)] underline decoration-amber-500 underline-offset-2">Share → Add to Home Screen</span>.
+                        </p>
+                    </div>
+                )}
+
                 {/* Global Toggle */}
                 <button
                     onClick={() => handleToggle('all_enabled')}
@@ -227,7 +255,7 @@ export default function NotificationSettings({ initialPrefs, userId }: Notificat
                 <div className="space-y-1">
                     {debugLogs.length === 0 && <span className="text-white/10 italic">No activity yet...</span>}
                     {debugLogs.map((log, i) => (
-                        <div key={i} className={`truncate ${log.startsWith('Error') || log.startsWith('FAILED') ? 'text-red-400' : log.startsWith('SUCCESS') ? 'text-emerald-400' : 'text-white/40'}`}>
+                        <div key={i} className={`truncate ${log.startsWith('Error') || log.startsWith('FAILED') || log.startsWith('iOS Warning') ? 'text-amber-400' : log.startsWith('SUCCESS') ? 'text-emerald-400' : 'text-white/40'}`}>
                             {`> ${log}`}
                         </div>
                     ))}
