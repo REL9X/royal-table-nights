@@ -7,7 +7,7 @@ import { Crown, AlertCircle, Spade, Heart, Club, Diamond, Smartphone } from 'luc
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useFormStatus } from 'react-dom'
-import ThemeToggle from '@/components/ThemeToggle'
+
 
 function SubmitButton({ pendingText, text }: { pendingText: string, text: string }) {
     const { pending } = useFormStatus()
@@ -77,9 +77,7 @@ function LoginContent() {
                 className="z-10 w-full max-w-sm"
             >
                 <div className="flex flex-col items-center mb-10">
-                    <div className="mb-8">
-                        <ThemeToggle />
-                    </div>
+
                     <div className="relative mb-6">
                         <div className="absolute inset-0 bg-amber-500 blur-2xl opacity-20 animate-pulse" />
                         <div className="relative bg-gradient-to-br from-amber-400 to-amber-600 p-4 rounded-[2rem] shadow-2xl rotate-3 transform">
