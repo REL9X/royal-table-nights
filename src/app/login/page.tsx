@@ -7,6 +7,7 @@ import { Crown, AlertCircle, Spade, Heart, Club, Diamond, Smartphone } from 'luc
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useFormStatus } from 'react-dom'
+import ThemeToggle from '@/components/ThemeToggle'
 
 function SubmitButton({ pendingText, text }: { pendingText: string, text: string }) {
     const { pending } = useFormStatus()
@@ -67,6 +68,10 @@ function LoginContent() {
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[60%] rounded-full blur-[140px] opacity-25" style={{ background: 'radial-gradient(circle, #0ea5e9 0%, transparent 70%)' }} />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full blur-[140px] opacity-20" style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
+            </div>
+
+            <div className="absolute top-6 right-6 z-50">
+                <ThemeToggle />
             </div>
 
             <motion.div

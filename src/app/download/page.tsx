@@ -4,6 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Crown, Smartphone, Apple, Download, ChevronLeft, ShieldCheck, Zap, Bell } from 'lucide-react'
 import Link from 'next/link'
+import ThemeToggle from '@/components/ThemeToggle'
 
 export default function DownloadPage() {
     const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null)
@@ -56,6 +57,9 @@ export default function DownloadPage() {
 
             <div className="max-w-2xl w-full relative z-10 flex flex-col items-center">
                 {/* Header Section */}
+                <div className="absolute top-6 right-6 z-50">
+                    <ThemeToggle />
+                </div>
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
