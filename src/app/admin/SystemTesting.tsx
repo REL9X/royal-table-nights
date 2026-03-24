@@ -3,13 +3,14 @@
 import { Zap, Bell, Send, Loader2, X } from 'lucide-react'
 import { NotificationService } from '@/lib/notifications'
 import { useState, useEffect } from 'react'
-import { sendBroadcast } from './actions'
+import { sendBroadcast, sendSelfTestPush } from './actions'
 import { createClient } from '@/lib/supabase/client'
 
 interface Toast { id: number; title: string; message: string }
 
 export default function SystemTesting() {
     const [sending, setSending] = useState(false)
+    const [testing, setTesting] = useState(false)
     const [title, setTitle] = useState('')
     const [message, setMessage] = useState('')
     const [toasts, setToasts] = useState<Toast[]>([])
@@ -33,14 +34,26 @@ export default function SystemTesting() {
     }, [])
 
     const handleTest = async () => {
-        const granted = await NotificationService.requestPermissions()
-        addToast('Royal Table Service 🔔', 'Your device is configured correctly!')
-        if (granted) {
-            await NotificationService.notifyAchievement(
-                'Royal Table Service 🔔',
-                'Your PWA notifications are configured correctly! Ready for the next battle.'
-            )
+        setTesting(true)
+        try {
+            const granted = await NotificationService.requestPermissions()
+            if (!granted) {
+                addToast('Permission Denied', 'Please enable notifications in your browser settings.')
+                setTesting(false)
+                return
+            }
+
+            const res = await sendSelfTestPush()
+            if (res.success) {
+                addToast('Test Sent! 🔔', 'Check your device for a push notification.')
+            } else {
+                addToast('Test Failed', res.error || 'Unknown error')
+            }
+        } catch (e) {
+            console.error(e)
+            addToast('Error', 'Failed to trigger test.')
         }
+        setTesting(false)
     }
 
     const handleBroadcast = async () => {
@@ -126,9 +139,10 @@ export default function SystemTesting() {
                             </p>
                             <button 
                                 onClick={handleTest}
+                                disabled={testing}
                                 className="w-full py-3 bg-[var(--background-raised)] border border-[var(--border)] hover:border-sky-500/30 text-[var(--foreground-muted)] hover:text-[var(--foreground)] rounded-xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-2"
                             >
-                                <Zap size={14} className="text-amber-500" />
+                                {testing ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} className="text-amber-500" />}
                                 Run Self-Test (Your Phone Only)
                             </button>
                         </div>

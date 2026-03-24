@@ -1,7 +1,7 @@
 import webpush from 'web-push'
 import { createClient } from '@/lib/supabase/server'
 
-export async function sendPushPayload(title: string, message: string) {
+export async function sendPushPayload(title: string, message: string, userId?: string) {
     if (!process.env.VAPID_SUBJECT || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
         console.error('Push missing VAPID configuration.')
         return { sent: 0, error: 'Push missing VAPID configuration.' }
@@ -19,7 +19,12 @@ export async function sendPushPayload(title: string, message: string) {
 
     const supabase = await createClient()
 
-    const { data: subs } = await supabase.from('push_subscriptions').select('*')
+    let query = supabase.from('push_subscriptions').select('*')
+    if (userId) {
+        query = query.eq('user_id', userId)
+    }
+    
+    const { data: subs } = await query
     if (!subs || subs.length === 0) return { sent: 0 }
 
     const payload = JSON.stringify({ title, body: message })

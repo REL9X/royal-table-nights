@@ -163,3 +163,27 @@ export async function promoteToAdmin(formData: FormData) {
     revalidatePath('/admin')
     return { success: true }
 }
+
+export async function sendSelfTestPush() {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Not authorized' }
+
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'admin') return { error: 'Admin access required' }
+
+    // Send the actual background push notification payload specifically for this user
+    const { sendPushPayload } = await import('@/lib/push')
+    const result = await sendPushPayload(
+        'Royal Table Self-Test 🎲', 
+        'Your push notifications are configured correctly! You will receive future battle alerts here.',
+        user.id
+    )
+
+    if (result.sent === 0) {
+        return { error: 'No active push subscription found for your device. Run manual setup first.' }
+    }
+
+    return { success: true }
+}
