@@ -137,9 +137,9 @@ export async function sendBroadcast(title: string, message: string) {
 
     // Send the actual background push notification payload
     const { sendPushPayload } = await import('@/lib/push')
-    await sendPushPayload(title, message)
+    const result = await sendPushPayload(title, message)
 
-    return { success: true }
+    return { success: true, sent: result.sent }
 }
 
 export async function promoteToAdmin(formData: FormData) {
@@ -185,5 +185,5 @@ export async function sendSelfTestPush() {
         return { error: 'No active push subscription found for your device. Run manual setup first.' }
     }
 
-    return { success: true }
+    return { success: true, sent: result.sent }
 }

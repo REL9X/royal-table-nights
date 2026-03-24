@@ -45,7 +45,7 @@ export default function SystemTesting() {
 
             const res = await sendSelfTestPush()
             if (res.success) {
-                addToast('Test Sent! 🔔', 'Check your device for a push notification.')
+                addToast('Test Sent! 🔔', `Check your device for a push notification. (${res.sent} device)`)
             } else {
                 addToast('Test Failed', res.error || 'Unknown error')
             }
@@ -64,7 +64,7 @@ export default function SystemTesting() {
             // Note: sendBroadcast now automatically fires the background Web-Push payload internally
             setTitle('')
             setMessage('')
-            addToast('Broadcast Sent', 'Notification dispatched to all players.')
+            addToast('Broadcast Sent', `Notification dispatched to ${res.sent} device(s).`)
         } else {
             alert('Error: ' + res.error)
         }
