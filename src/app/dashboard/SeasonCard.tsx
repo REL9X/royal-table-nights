@@ -150,7 +150,7 @@ export default function SeasonCard({
                                     `}</style>
 
                                     {/* Header Row */}
-                                    <div className="flex justify-between items-start mb-4">
+                                    <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-3">
                                             <div className="p-3 bg-amber-500/10 rounded-2xl border border-amber-500/20 shadow-inner">
                                                 <Trophy size={22} className="text-amber-500" />
@@ -165,15 +165,15 @@ export default function SeasonCard({
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="bg-[var(--background-raised)] px-3 py-1.5 rounded-xl border border-[var(--border)] flex flex-col items-end">
-                                            <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest leading-none mb-1">Progress</span>
-                                            <span className="text-xs font-black text-[var(--foreground)] italic">{seasonGamesPlayed} / {activeSeason.max_games} GAMES</span>
-                                        </div>
                                     </div>
 
-                                    {/* Tactical Progress Bar */}
-                                    <div className="mb-3">
-                                        <div className="h-3 rounded-full bg-[var(--background-raised)] border border-[var(--border)] p-0.5 overflow-hidden shadow-inner uppercase font-black text-[6px]">
+                                    {/* Tactical Progress Bar & Text (Horizontal Above Note) */}
+                                    <div className="mb-4">
+                                        <div className="flex justify-between items-center mb-1.5 px-1">
+                                            <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest leading-none">Season Progress</span>
+                                            <span className="text-[10px] font-black text-[var(--foreground)] italic tracking-widest">{seasonGamesPlayed} / {activeSeason.max_games} GAMES</span>
+                                        </div>
+                                        <div className="h-3 rounded-full bg-[var(--background-raised)] border border-[var(--border)] p-0.5 overflow-hidden shadow-inner font-black">
                                             <div
                                                 className="h-full rounded-full bg-gradient-to-r from-amber-600 via-amber-400 to-emerald-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all duration-1000"
                                                 style={{ width: `${progressPercent}%` }}
@@ -197,7 +197,7 @@ export default function SeasonCard({
                                     )}
 
                                     {/* Top 3 Contenders Grid */}
-                                    <div className="mb-4 grid grid-cols-1 gap-1">
+                                    <div className="mb-6 grid grid-cols-1 gap-1">
                                         <p className="text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest px-1">Top Contenders</p>
                                         <div className="bg-[var(--background-raised)] rounded-2xl border border-[var(--border)] p-2.5 flex items-center justify-between">
                                             <div className="flex -space-x-2.5">
@@ -240,30 +240,6 @@ export default function SeasonCard({
                                         </div>
                                     </div>
 
-                                    {/* Average Stats Grid */}
-                                    <div className="grid grid-cols-3 gap-2 mb-4">
-                                        <div className="bg-[var(--background-raised)] p-1.5 rounded-2xl border border-[var(--border)] flex flex-col items-center">
-                                            <div className="p-1 px-2 mb-1.5 bg-emerald-500/10 rounded-lg text-emerald-400 border border-emerald-500/20">
-                                                <Zap size={12} />
-                                            </div>
-                                            <span className="text-[7px] font-black text-[var(--foreground-muted)] uppercase tracking-widest leading-none mb-1">Avg Pot</span>
-                                            <span className="text-xs font-black text-emerald-400">{avgPot}€</span>
-                                        </div>
-                                        <div className="bg-[var(--background-raised)] p-1.5 rounded-2xl border border-[var(--border)] flex flex-col items-center">
-                                            <div className="p-1 px-2 mb-1.5 bg-sky-500/10 rounded-lg text-sky-400 border border-sky-500/20">
-                                                <Clock size={12} />
-                                            </div>
-                                            <span className="text-[7px] font-black text-[var(--foreground-muted)] uppercase tracking-widest leading-none mb-1">Avg Time</span>
-                                            <span className="text-xs font-black text-sky-400">{avgDuration}m</span>
-                                        </div>
-                                        <div className="bg-[var(--background-raised)] p-1.5 rounded-2xl border border-[var(--border)] flex flex-col items-center">
-                                            <div className="p-1 px-2 mb-1.5 bg-violet-500/10 rounded-lg text-violet-400 border border-violet-500/20">
-                                                <TrendingUp size={12} />
-                                            </div>
-                                            <span className="text-[7px] font-black text-[var(--foreground-muted)] uppercase tracking-widest leading-none mb-1">Avg Rebuys</span>
-                                            <span className="text-xs font-black text-violet-400">{avgRebuys}</span>
-                                        </div>
-                                    </div>
 
                                     {/* Footer Participation */}
                                     <div className="flex items-center justify-between px-1">
