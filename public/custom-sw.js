@@ -10,8 +10,8 @@ self.addEventListener('push', (event) => {
     const title = data.title || 'Royal Table Nights 👑'
     const options = {
         body: data.body || data.message || '',
-        icon: '/icon-192x192.png',
-        badge: '/icon-192x192.png',
+        icon: '/logo.png',
+        badge: '/logo.png',
         vibrate: [200, 100, 200],
         tag: 'royal-table-broadcast',
         renotify: true,
