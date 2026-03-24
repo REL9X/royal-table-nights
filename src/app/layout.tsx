@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import IOSInstallPrompt from "@/components/IOSInstallPrompt";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-heading' });
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased min-h-screen`} style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
         <ThemeProvider>
           {children}
+          <IOSInstallPrompt />
         </ThemeProvider>
       </body>
     </html>
