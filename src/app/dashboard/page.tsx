@@ -34,72 +34,65 @@ export default async function Dashboard() {
         }
 
         
-        // Fetch core data in parallel
+        // ── PHASE 1: Parallel Fetch Core Data ──
         const [
             { data: allSeasons },
-            { data: allProfilesForRank },
-            { data: profiles }
+            { data: profiles },
+            { data: upcomingEvents }
         ] = await Promise.all([
             supabase.from('seasons').select('*').order('created_at', { ascending: false }),
-            supabase.from('profiles').select('id, total_points').order('total_points', { ascending: false }),
-            supabase.from('profiles').select('id, name, avatar_url, role, championship_badges_count, championship_wins').eq('is_approved', true)
+            supabase.from('profiles')
+                .select('id, name, avatar_url, role, total_points, championship_badges_count, championship_wins, notification_preferences')
+                .eq('is_approved', true)
+                .order('total_points', { ascending: false }),
+            supabase.from('events')
+                .select('*, event_responses (*), seasons (name, max_games)')
+                .in('status', ['upcoming', 'active'])
+                .order('date', { ascending: true })
         ])
-        
 
         const activeSeason = allSeasons?.find(s => s.status === 'active') || allSeasons?.[0] || null
         
+        // ── PHASE 2: Parallel Fetch Season Details & Form ──
+        // Only if we have an active season, we fetch its full player history once
+        const [
+            { data: seasonHistory },
+            { data: recentSessions }
+        ] = await Promise.all([
+            activeSeason 
+                ? supabase.from('session_players')
+                    .select('player_id, points_earned, rebuys, total_invested, events!inner(id, season_id, status, started_at, ended_at)')
+                    .eq('events.season_id', activeSeason.id)
+                    .eq('events.status', 'completed')
+                : Promise.resolve({ data: [] }),
+            supabase.from('session_players')
+                .select('placement, profit, events!inner(date, status)')
+                .eq('player_id', user.id)
+                .eq('events.status', 'completed')
+                .order('events(date)', { ascending: false })
+                .limit(5)
+        ])
 
-        const myRank = (allProfilesForRank?.findIndex(p => p.id === user.id) ?? -1) + 1
+        const myRank = (profiles?.findIndex(p => p.id === user.id) ?? -1) + 1
         const completedSeasons = allSeasons?.filter(s => s.status === 'completed') || []
-
-        // ── PERFORMANCE OPTIMIZATION: USE PRE-CALCULATED CHAMPION DATA ──
         const isSeasonChampion = (profile.championship_badges_count || 0) > 0 || (Array.isArray(profile.championship_wins) && profile.championship_wins.length > 0)
         
-        // Winner announcement for just the ACTIVE season (if it was recently completed)
+        // Standings & Winner Calculation (One Pass)
         let seasonWinner = null
-        if (activeSeason?.status === 'completed') {
-            const { data: sPointsData } = await supabase
-                .from('session_players')
-                .select('player_id, points_earned, events!inner(season_id, status)')
-                .eq('events.season_id', activeSeason.id)
-                .eq('events.status', 'completed')
-
-            const sMap: Record<string, number> = {}
-            sPointsData?.forEach((sp: any) => {
-                sMap[sp.player_id] = (sMap[sp.player_id] || 0) + (sp.points_earned || 0)
-            })
-            const sorted = Object.entries(sMap).sort((a, b) => b[1] - a[1])
-            
-            if (sorted[0]) {
-                const winnerProfile = profiles?.find(p => p.id === sorted[0][0])
-                if (winnerProfile) {
-                    seasonWinner = {
-                        ...winnerProfile,
-                        seasonStats: { points: sorted[0][1], games: sPointsData?.filter(p => p.player_id === sorted[0][0]).length || 0 }
-                    }
-                }
-            }
-        }
-
-        // Standings calculation
         let leaderboardPlayers: any[] = []
         let maxPoints = 1
         let leaderboardTitle = "All-Time Standings"
         let mySeasonRank: number | null = null
-
         const championsSet = new Set(profiles?.filter(p => (p.championship_badges_count || 0) > 0).map(p => p.id) || [])
 
-        if (activeSeason) {
+        if (activeSeason && seasonHistory) {
             leaderboardTitle = `${activeSeason.name} Standings`
-            const { data: seasonPointsData } = await supabase
-                .from('session_players')
-                .select('player_id, points_earned, events!inner(season_id, status)')
-                .eq('events.season_id', activeSeason.id)
-                .eq('events.status', 'completed')
-
             const pointsMap: Record<string, number> = {}
-            seasonPointsData?.forEach((sp: any) => {
+            const gamesMap: Record<string, number> = {}
+            
+            seasonHistory.forEach((sp: any) => {
                 pointsMap[sp.player_id] = (pointsMap[sp.player_id] || 0) + (sp.points_earned || 0)
+                gamesMap[sp.player_id] = (gamesMap[sp.player_id] || 0) + 1
             })
 
             const seasonalStandings = (profiles || [])
@@ -112,79 +105,74 @@ export default async function Dashboard() {
 
             leaderboardPlayers = seasonalStandings.slice(0, 3)
             maxPoints = Math.max(...(Object.values(pointsMap) as number[]).map(v => Number(v)), 1)
-
+            
             const sIdx = seasonalStandings.findIndex(p => p.id === user.id)
             if (sIdx !== -1) mySeasonRank = sIdx + 1
+
+            // Determine winner if season recently completed
+            if (activeSeason.status === 'completed' && seasonalStandings[0]) {
+                seasonWinner = {
+                    ...seasonalStandings[0],
+                    seasonStats: { 
+                        points: seasonalStandings[0].display_points, 
+                        games: gamesMap[seasonalStandings[0].id] || 0 
+                    }
+                }
+            }
         } else {
             leaderboardPlayers = (profiles || [])
-                .sort((a, b) => {
-                    const pA = allProfilesForRank?.find(p => p.id === a.id)?.total_points || 0
-                    const pB = allProfilesForRank?.find(p => p.id === b.id)?.total_points || 0
-                    return pB - pA
-                })
                 .slice(0, 3)
                 .map(p => ({
                     ...p,
-                    display_points: allProfilesForRank?.find(pr => pr.id === p.id)?.total_points || 0,
+                    display_points: p.total_points || 0,
                     isChampion: championsSet.has(p.id)
                 }))
             maxPoints = leaderboardPlayers[0]?.display_points || 1
         }
 
-        // Metrics for the Season Card
+        // Metrics (Calculated from seasonHistory)
         let seasonGamesPlayed = 0
         let avgAttendance = 0
         let attendanceRate = 0
         let avgPot = 0
         let avgDuration = 0
         let avgRebuys = 0
-        const profileCount = profiles?.length || 1
 
-        if (activeSeason) {
-            const { data: sEvents, count: sCount } = await supabase
-                .from('events')
-                .select('id, started_at, ended_at, session_players(player_id, rebuys, total_invested)', { count: 'exact' })
-                .eq('season_id', activeSeason.id)
-                .eq('status', 'completed')
-
-            seasonGamesPlayed = sCount || 0
+        if (activeSeason && seasonHistory) {
+            const uniqueEvents = Array.from(new Set(seasonHistory.map(sh => (sh.events as any).id)))
+            seasonGamesPlayed = uniqueEvents.length
+            
             if (seasonGamesPlayed > 0) {
-                const totalAttendance = sEvents?.reduce((sum, e) => sum + (Array.isArray(e.session_players) ? e.session_players.length : 0), 0) || 0
-                avgAttendance = totalAttendance / seasonGamesPlayed
-                attendanceRate = Math.round((avgAttendance / (profileCount || 1)) * 100)
+                avgAttendance = seasonHistory.length / seasonGamesPlayed
+                attendanceRate = Math.round((avgAttendance / (profiles?.length || 1)) * 100)
 
-                // Pot, Duration, Rebuys
                 let totalPot = 0
-                let totalDurationMs = 0
                 let totalRebuys = 0
+                let totalDurationMs = 0
                 let eventsWithDuration = 0
+                const processedEvents = new Set()
 
-                sEvents?.forEach(e => {
-                    const sps = Array.isArray(e.session_players) ? e.session_players : []
-                    totalPot += sps.reduce((sum, sp) => sum + (sp.total_invested || 0), 0)
-                    totalRebuys += sps.reduce((sum, sp) => sum + (sp.rebuys || 0), 0)
-
-                    if (e.started_at && e.ended_at) {
-                        totalDurationMs += new Date(e.ended_at).getTime() - new Date(e.started_at).getTime()
-                        eventsWithDuration++
+                seasonHistory.forEach(sh => {
+                    totalPot += (sh.total_invested || 0)
+                    totalRebuys += (sh.rebuys || 0)
+                    
+                    const e = sh.events as any
+                    if (!processedEvents.has(e.id)) {
+                        if (e.started_at && e.ended_at) {
+                            totalDurationMs += new Date(e.ended_at).getTime() - new Date(e.started_at).getTime()
+                            eventsWithDuration++
+                        }
+                        processedEvents.add(e.id)
                     }
                 })
 
                 avgPot = Math.round(totalPot / seasonGamesPlayed)
                 avgRebuys = Number((totalRebuys / seasonGamesPlayed).toFixed(1))
                 if (eventsWithDuration > 0) {
-                    avgDuration = Math.round(totalDurationMs / eventsWithDuration / (1000 * 60)) // average minutes
+                    avgDuration = Math.round(totalDurationMs / eventsWithDuration / (1000 * 60))
                 }
             }
         }
-
-        const { data: recentSessions } = await supabase
-            .from('session_players')
-            .select('placement, profit, events!inner(date, status)')
-            .eq('player_id', user.id)
-            .eq('events.status', 'completed')
-            .order('events(date)', { ascending: false })
-            .limit(5)
 
         const recentForm = (recentSessions || []).map((s: any) => {
             if (s.placement === 1) return '🥇'
@@ -332,7 +320,7 @@ export default async function Dashboard() {
                             profile={profile}
                             seasonGamesPlayed={seasonGamesPlayed}
                             seasonWinner={seasonWinner}
-                            profileCount={profileCount}
+                            profileCount={profiles?.length || 1}
                             attendanceRate={attendanceRate}
                             topThree={leaderboardPlayers}
                             avgPot={avgPot}
@@ -344,7 +332,11 @@ export default async function Dashboard() {
 
                     {/* ── NEXT EVENT ── */}
                     <div className="mb-5">
-                        <EventsList userId={user.id} userRole={profile.role} />
+                        <EventsList 
+                            userId={user.id} 
+                            userRole={profile.role} 
+                            initialEvents={upcomingEvents || []} 
+                        />
                     </div>
 
                     {/* ── QUICK LINKS ── */}
@@ -387,16 +379,9 @@ export default async function Dashboard() {
     }
 }
 
-async function EventsList({ userId, userRole }: { userId: string, userRole?: string }) {
-    
+async function EventsList({ userId, userRole, initialEvents }: { userId: string, userRole?: string, initialEvents: any[] }) {
+    const events = initialEvents
     const supabase = await createClient()
-    
-    const { data: events } = await supabase
-        .from('events')
-        .select(`*, event_responses (*), seasons (name, max_games)`)
-        .in('status', ['upcoming', 'active'])
-        .order('date', { ascending: true })
-    
 
     // To determine the game number (e.g., 2/10), we need to count all events 
     // in that season that happened before or at the same time as this one.
