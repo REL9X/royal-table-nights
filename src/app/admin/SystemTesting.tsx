@@ -34,7 +34,7 @@ export default function SystemTesting() {
 
     const handleTest = async () => {
         const granted = await NotificationService.requestPermissions()
-        addToast('Royal Table Service 🔔', 'Your PWA notifications are configured correctly!')
+        addToast('Royal Table Service 🔔', 'Your device is configured correctly!')
         if (granted) {
             await NotificationService.notifyAchievement(
                 'Royal Table Service 🔔',
@@ -48,14 +48,10 @@ export default function SystemTesting() {
         setSending(true)
         const res = await sendBroadcast(title, message)
         if (res.success) {
-            // Also fire real Web Push to all subscribed devices (background notifications)
-            await fetch('/api/send-push', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, message })
-            })
+            // Note: sendBroadcast now automatically fires the background Web-Push payload internally
             setTitle('')
             setMessage('')
+            addToast('Broadcast Sent', 'Notification dispatched to all players.')
         } else {
             alert('Error: ' + res.error)
         }
@@ -82,51 +78,58 @@ export default function SystemTesting() {
                 ))}
             </div>
 
-            <div className="mb-8 p-6 rounded-[2.5rem] border border-sky-500/20 bg-sky-500/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                    <Zap size={80} className="text-sky-500" />
+            <div className="mb-8 p-6 rounded-[2.5rem] border border-sky-500/20 bg-[var(--background-card)] shadow-lg relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] dark:opacity-10 group-hover:scale-110 transition-transform duration-500 pointer-events-none">
+                    <Zap size={120} className="text-sky-500" />
                 </div>
                 
                 <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
-                        <Bell size={16} className="text-sky-500 dark:text-sky-400" />
-                        <h3 className="text-lg font-black text-[var(--foreground)] uppercase tracking-tight">Send Notification</h3>
+                        <Bell size={16} className="text-sky-500" />
+                        <h3 className="text-lg font-black text-[var(--foreground)] uppercase tracking-tight">Notification Center</h3>
                     </div>
-                    <p className="text-xs text-[var(--foreground-muted)] mb-6 max-w-xs">Manage PWA permissions and trigger global alerts.</p>
+                    <p className="text-xs text-[var(--foreground-muted)] mb-6 max-w-xs">Send global alerts to all registered devices or test your own setup.</p>
                     
-                    <div className="space-y-4">
-                        <button 
-                            onClick={handleTest}
-                            className="px-6 py-3 bg-sky-500/10 border border-sky-500/30 hover:bg-sky-500 hover:text-black text-sky-400 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center gap-2"
-                        >
-                            <Zap size={14} />
-                            Personal Push
-                        </button>
-
-                        <div className="pt-4 border-t border-[var(--border)] space-y-3">
-                            <p className="text-[10px] font-black text-sky-600 dark:text-sky-400/60 uppercase tracking-widest mb-1 flex items-center gap-2">
-                                <Send size={10} /> Global Broadcast
+                    <div className="space-y-6">
+                        {/* Global Broadcast Form */}
+                        <div className="space-y-3">
+                            <p className="text-[10px] font-black text-sky-600 dark:text-sky-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <Send size={12} /> Global Broadcast (To Everyone)
                             </p>
                              <input 
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="Alert Title (e.g. Table is Open!)"
-                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold"
+                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold"
                             />
                              <textarea 
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Message for all players..."
-                                rows={2}
-                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-2 text-xs text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold resize-none"
+                                rows={3}
+                                className="w-full bg-[var(--background-raised)] border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--foreground)] placeholder-[var(--foreground-subtle)] focus:outline-none focus:border-sky-500/50 transition-all font-bold resize-none"
                             />
                             <button 
                                 onClick={handleBroadcast}
-                                disabled={sending}
-                                className="w-full py-3 bg-sky-500 hover:bg-sky-400 text-black rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-sky-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                disabled={sending || !title || !message}
+                                className="w-full py-3.5 bg-sky-500 hover:bg-sky-400 disabled:bg-[var(--background-raised)] disabled:text-[var(--foreground-subtle)] text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-sky-500/20 disabled:shadow-none active:scale-95 transition-all flex items-center justify-center gap-2"
                             >
-                                {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                                Broadcast to All Players
+                                {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                                Send to All Phones 🔔
+                            </button>
+                        </div>
+                        
+                        {/* Self Test */}
+                        <div className="pt-5 border-t border-[var(--border)] space-y-3">
+                            <p className="text-[10px] font-black text-[var(--foreground-subtle)] uppercase tracking-[0.2em] mb-1">
+                                Troubleshooting
+                            </p>
+                            <button 
+                                onClick={handleTest}
+                                className="w-full py-3 bg-[var(--background-raised)] border border-[var(--border)] hover:border-sky-500/30 text-[var(--foreground-muted)] hover:text-[var(--foreground)] rounded-xl font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Zap size={14} className="text-amber-500" />
+                                Run Self-Test (Your Phone Only)
                             </button>
                         </div>
                     </div>
