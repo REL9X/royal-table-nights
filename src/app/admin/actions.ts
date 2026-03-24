@@ -135,6 +135,10 @@ export async function sendBroadcast(title: string, message: string) {
 
     if (error) return { error: error.message }
 
+    // Send the actual background push notification payload
+    const { sendPushPayload } = await import('@/lib/push')
+    await sendPushPayload(title, message)
+
     return { success: true }
 }
 

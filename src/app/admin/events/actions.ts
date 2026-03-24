@@ -59,6 +59,13 @@ export async function createEvent(formData: FormData) {
         return { error: error.message }
     }
 
+    // Send push notification to all devices
+    const { sendPushPayload } = await import('@/lib/push')
+    await sendPushPayload(
+        'New Royal Table Event! 🃏',
+        `${title} has been scheduled for ${date} at ${time}. Confirm your seat now!`
+    )
+
     revalidatePath('/admin')
     revalidatePath('/dashboard')
     redirect('/admin')

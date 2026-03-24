@@ -23,29 +23,11 @@ export async function POST(req: Request) {
 
     const { title, message } = await req.json()
 
-    const { data: subs } = await supabase.from('push_subscriptions').select('*')
-    if (!subs || subs.length === 0) return NextResponse.json({ sent: 0 })
+    const { sendPushPayload } = await import('@/lib/push')
+    const { sent, error } = await sendPushPayload(title, message)
 
-    const payload = JSON.stringify({ title, body: message })
-    let sent = 0
-    const dead: string[] = []
-
-    await Promise.allSettled(subs.map(async (sub) => {
-        try {
-            await webpush.sendNotification(
-                { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-                payload
-            )
-            sent++
-        } catch (err: any) {
-            if (err.statusCode === 410 || err.statusCode === 404) {
-                dead.push(sub.id)
-            }
-        }
-    }))
-
-    if (dead.length > 0) {
-        await supabase.from('push_subscriptions').delete().in('id', dead)
+    if (error) {
+        return NextResponse.json({ error }, { status: 500 })
     }
 
     return NextResponse.json({ sent })
