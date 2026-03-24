@@ -11,6 +11,35 @@ export const metadata: Metadata = {
   title: "Royal Table Nights",
   description: "Exclusive Poker Tracker App",
   manifest: "/manifest.json",
+  openGraph: {
+    title: "Royal Table Nights",
+    description: "Exclusive Poker Tracker App",
+    url: "https://www.royaltable.pt",
+    siteName: "Royal Table Nights",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "Royal Table Nights Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Royal Table Nights",
+    description: "Exclusive Poker Tracker App",
+    images: ["/logo.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "256x256" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    apple: "/logo.png",
+  },
 };
 
 export const viewport = {
@@ -28,9 +57,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} dark`} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/logo.svg?v=1" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/logo.png?v=1" />
-
         {/* Prevent flash — respects saved preference, falls back to system */}
         <script
           dangerouslySetInnerHTML={{
