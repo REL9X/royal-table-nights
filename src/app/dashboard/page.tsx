@@ -42,7 +42,7 @@ export default async function Dashboard() {
         ] = await Promise.all([
             supabase.from('seasons').select('*').order('created_at', { ascending: false }),
             supabase.from('profiles').select('id, total_points').order('total_points', { ascending: false }),
-            supabase.from('profiles').select('id, name, avatar_url, role').eq('is_approved', true)
+            supabase.from('profiles').select('id, name, avatar_url, role, championship_badges_count, championship_wins').eq('is_approved', true)
         ])
         
 
@@ -52,47 +52,30 @@ export default async function Dashboard() {
         const myRank = (allProfilesForRank?.findIndex(p => p.id === user.id) ?? -1) + 1
         const completedSeasons = allSeasons?.filter(s => s.status === 'completed') || []
 
-        // Helper to get season rankings for any season
-        const getSeasonRankings = async (seasonId: string) => {
-            
+        // ── PERFORMANCE OPTIMIZATION: USE PRE-CALCULATED CHAMPION DATA ──
+        const isSeasonChampion = (profile.championship_badges_count || 0) > 0 || (Array.isArray(profile.championship_wins) && profile.championship_wins.length > 0)
+        
+        // Winner announcement for just the ACTIVE season (if it was recently completed)
+        let seasonWinner = null
+        if (activeSeason?.status === 'completed') {
             const { data: sPointsData } = await supabase
                 .from('session_players')
                 .select('player_id, points_earned, events!inner(season_id, status)')
-                .eq('events.season_id', seasonId)
+                .eq('events.season_id', activeSeason.id)
                 .eq('events.status', 'completed')
-            
 
-            const sMap: Record<string, { points: number, games: number }> = {}
+            const sMap: Record<string, number> = {}
             sPointsData?.forEach((sp: any) => {
-                if (!sMap[sp.player_id]) sMap[sp.player_id] = { points: 0, games: 0 }
-                sMap[sp.player_id].points += (sp.points_earned || 0)
-                sMap[sp.player_id].games += 1
+                sMap[sp.player_id] = (sMap[sp.player_id] || 0) + (sp.points_earned || 0)
             })
-            return Object.entries(sMap).sort((a, b) => b[1].points - a[1].points)
-        }
-
-        
-        // Champions calculation
-        const champions: string[] = []
-        if (completedSeasons.length > 0) {
-            const allRankings = await Promise.all(completedSeasons.map(s => getSeasonRankings(s.id)))
-            allRankings.forEach(rankings => {
-                if (rankings[0]) champions.push(rankings[0][0])
-            })
-        }
-        const isSeasonChampion = champions.includes(user.id)
-        
-
-        // Determine winner for current season if completed
-        let seasonWinner = null
-        if (activeSeason?.status === 'completed') {
-            const rankings = await getSeasonRankings(activeSeason.id)
-            if (rankings[0]) {
-                const winnerProfile = profiles?.find(p => p.id === rankings[0][0])
+            const sorted = Object.entries(sMap).sort((a, b) => b[1] - a[1])
+            
+            if (sorted[0]) {
+                const winnerProfile = profiles?.find(p => p.id === sorted[0][0])
                 if (winnerProfile) {
                     seasonWinner = {
                         ...winnerProfile,
-                        seasonStats: rankings[0][1] // { points, games }
+                        seasonStats: { points: sorted[0][1], games: sPointsData?.filter(p => p.player_id === sorted[0][0]).length || 0 }
                     }
                 }
             }
@@ -103,6 +86,8 @@ export default async function Dashboard() {
         let maxPoints = 1
         let leaderboardTitle = "All-Time Standings"
         let mySeasonRank: number | null = null
+
+        const championsSet = new Set(profiles?.filter(p => (p.championship_badges_count || 0) > 0).map(p => p.id) || [])
 
         if (activeSeason) {
             leaderboardTitle = `${activeSeason.name} Standings`
@@ -121,7 +106,7 @@ export default async function Dashboard() {
                 .map(p => ({
                     ...p,
                     display_points: pointsMap[p.id] || 0,
-                    isChampion: champions.includes(p.id)
+                    isChampion: championsSet.has(p.id)
                 }))
                 .sort((a, b) => b.display_points - a.display_points)
 
@@ -141,7 +126,7 @@ export default async function Dashboard() {
                 .map(p => ({
                     ...p,
                     display_points: allProfilesForRank?.find(pr => pr.id === p.id)?.total_points || 0,
-                    isChampion: champions.includes(p.id)
+                    isChampion: championsSet.has(p.id)
                 }))
             maxPoints = leaderboardPlayers[0]?.display_points || 1
         }
@@ -214,14 +199,12 @@ export default async function Dashboard() {
             <div className="min-h-screen text-[var(--foreground)] font-sans pb-28 relative overflow-hidden"
                 style={{ background: 'var(--background)' }}>
 
-                {/* Animated background blobs */}
+                {/* Optimized background blobs for mobile GPU */}
                 <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                    <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[60%] rounded-full blur-[120px] opacity-30"
+                    <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full blur-[60px] opacity-20"
                         style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }} />
-                    <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[100px] opacity-20"
+                    <div className="absolute bottom-[15%] right-[-5%] w-[40%] h-[40%] rounded-full blur-[50px] opacity-15"
                         style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)' }} />
-                    <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full blur-[100px] opacity-15"
-                        style={{ background: 'radial-gradient(circle, #0ea5e9 0%, transparent 70%)' }} />
                 </div>
 
                 <div className="max-w-md mx-auto relative z-10 px-4 pt-6">
@@ -244,16 +227,16 @@ export default async function Dashboard() {
                         </div>
                         <div className="flex items-center gap-2">
                             <ThemeToggle />
-                            <Link href="/settings" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-colors shadow-sm">
+                            <Link href="/settings" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-all shadow-sm active:scale-90">
                                 <Settings size={16} />
                             </Link>
                             {profile.role === 'admin' && (
-                                <Link href="/admin" className="p-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-amber-500 hover:bg-amber-500/10 transition-all shadow-sm active:scale-95">
+                                <Link href="/admin" className="p-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-amber-500 hover:bg-amber-500/10 transition-all shadow-sm active:scale-90">
                                     <Shield size={16} />
                                 </Link>
                             )}
                             <form action={async () => { 'use server'; const s = await createClient(); await s.auth.signOut(); redirect('/login') }}>
-                                <button type="submit" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">
+                                <button type="submit" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-all active:scale-90">
                                     <LogOut size={16} />
                                 </button>
                             </form>
@@ -261,7 +244,7 @@ export default async function Dashboard() {
                     </div>
 
                     {/* ── PLAYER CARD ── */}
-                    <Link href="/profile" className="block mb-5 group">
+                    <Link href="/profile" className="block mb-5 group active:scale-[0.98] transition-all">
                         <div className="relative rounded-3xl overflow-hidden border-2 border-amber-500/30 group-hover:border-amber-500/60 transition-all shadow-[0_4px_32px_rgba(0,0,0,0.3)]"
                             style={{ background: 'var(--background-card)' }}>
                             {/* Gold shimmer top bar */}
@@ -371,7 +354,7 @@ export default async function Dashboard() {
                             { href: '/history', icon: Star, label: 'History', color: 'from-sky-500/20 to-sky-700/10', border: 'border-sky-500/20', iconColor: 'text-sky-400' },
                             { href: '/profile', icon: Shield, label: 'Profile', color: 'from-slate-500/20 to-slate-700/10', border: 'border-slate-500/20', iconColor: 'text-slate-400' },
                         ].map(({ href, icon: Icon, label, color, border, iconColor }) => (
-                            <Link key={href} href={href} className={`flex flex-col items-center gap-2.5 py-5 px-2 rounded-2xl border bg-gradient-to-b ${color} ${border} hover:scale-105 transition-all active:scale-95`}>
+                            <Link key={href} href={href} className={`flex flex-col items-center gap-2.5 py-5 px-2 rounded-2xl border bg-gradient-to-b ${color} ${border} hover:scale-105 transition-all active:scale-90`}>
                                 <Icon size={26} className={iconColor} />
                                 <span className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-wide text-center leading-tight">{label}</span>
                             </Link>
@@ -518,14 +501,14 @@ async function EventsList({ userId, userRole }: { userId: string, userRole?: str
 
                             <div className="flex gap-2">
                                 {isActive ? (
-                                    <Link href={`/session/${event.id}`} className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_16_rgba(16,185,129,0.4)]">
+                                    <Link href={`/session/${event.id}`} className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-[0.97] shadow-[0_0_16_rgba(16,185,129,0.4)]">
                                         <Crown size={15} /> Enter Table
                                     </Link>
                                 ) : (
                                     <>
                                         {userRole === 'admin' && event.status === 'upcoming' && (
                                             <form action={async () => { 'use server'; await startSession(event.id) }} className="flex-1">
-                                                <button type="submit" className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_16px_rgba(16,185,129,0.3)] border border-emerald-400/20">
+                                                <button type="submit" className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-[0.97] shadow-[0_0_16px_rgba(16,185,129,0.3)] border border-emerald-400/20">
                                                     <Zap size={15} /> Go Live
                                                 </button>
                                             </form>
