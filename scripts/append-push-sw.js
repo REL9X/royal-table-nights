@@ -5,7 +5,7 @@ const path = require('path')
 const swPath = path.join(__dirname, '..', 'public', 'sw.js')
 const pushHandler = `
 
-// ── Web Push handler (v1.0.3 - appended by postbuild) ──
+// ── Web Push handler (v1.0.4 - appended by postbuild) ──
 self.addEventListener('push', function(event) {
     if (!event.data) return;
     var data = {};
@@ -13,8 +13,8 @@ self.addEventListener('push', function(event) {
     var title = data.title || 'Royal Table Nights';
     var options = {
         body: data.body || data.message || '',
-        icon: '/icon-192x192.png',
-        badge: '/icon-192x192.png',
+        icon: '/logo-push.png',
+        badge: '/logo-push.png',
         vibrate: [200, 100, 200],
         tag: 'royal-broadcast',
         renotify: true,
@@ -32,11 +32,13 @@ self.addEventListener('notificationclick', function(event) {
 
 if (fs.existsSync(swPath)) {
     const current = fs.readFileSync(swPath, 'utf8')
-    if (!current.includes('Web Push handler')) {
-        fs.appendFileSync(swPath, pushHandler)
-        console.log('[push-sw] Push handler appended to sw.js')
+    if (!current.includes('v1.0.4')) {
+        // Remove old handler if exists (simplistic check)
+        const cleaned = current.split('// ── Web Push handler')[0]
+        fs.writeFileSync(swPath, cleaned + pushHandler)
+        console.log('[push-sw] Push handler (v1.0.4) updated in sw.js')
     } else {
-        console.log('[push-sw] Push handler already present, skipping')
+        console.log('[push-sw] Push handler (v1.0.4) already present, skipping')
     }
 } else {
     console.warn('[push-sw] sw.js not found — skipping')
