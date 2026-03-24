@@ -73,13 +73,30 @@ export default async function PublicProfilePage(props: { params: Promise<{ id: s
 
             <div className="max-w-xl mx-auto px-4 pt-6 relative z-10">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                    <Link href="/leaderboard" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">
-                        <ArrowLeft size={18} />
-                    </Link>
-                    <div>
-                        <h1 className="font-black text-2xl text-[var(--foreground)] uppercase tracking-wider">Player</h1>
-                        <p className="text-[var(--foreground-muted)] text-xs font-medium">Public Records</p>
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <Link href="/leaderboard" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors">
+                            <ArrowLeft size={18} />
+                        </Link>
+                        <div>
+                            <h1 className="font-black text-xl text-[var(--foreground)] uppercase tracking-wider leading-none">Player</h1>
+                            <p className="text-[var(--foreground-muted)] text-[10px] uppercase font-bold tracking-widest mt-1">Public Records</p>
+                        </div>
+                    </div>
+                    
+                    {/* Rank Indicator Top Right */}
+                    <div className="shrink-0">
+                        <Link href="/ranks" className="block bg-[var(--background-card)] border border-[var(--border)] rounded-2xl p-1.5 pr-3 shadow-md relative group transition-all hover:border-amber-500/30 cursor-pointer">
+                            <div className="flex items-center gap-2">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-900/40 border border-amber-500/20 flex items-center justify-center text-xl shadow-inner relative overflow-hidden group-hover:scale-110 transition-transform">
+                                    <span className="relative z-10 drop-shadow-md">{currentRank.icon}</span>
+                                </div>
+                                <div className="flex flex-col items-start pr-1">
+                                    <span className="text-[8px] font-black text-amber-500 uppercase tracking-widest leading-none mb-0.5 opacity-90">Rank</span>
+                                    <span className="text-xs font-black text-[var(--foreground)] uppercase leading-none tracking-tight italic">{currentRank.title}</span>
+                                </div>
+                            </div>
+                        </Link>
                     </div>
                 </div>
 
@@ -89,42 +106,25 @@ export default async function PublicProfilePage(props: { params: Promise<{ id: s
                     <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
 
                     <div className="relative p-6 z-10">
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-5">
-                                <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-black overflow-hidden shrink-0 border-2 border-amber-500/50 shadow-[0_0_20px_rgba(245,158,11,0.2)] bg-gradient-to-br from-amber-500/10 to-amber-500/5">
-                                    {profile.avatar_url ? (
-                                        <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className="text-amber-500">
-                                            {profile.name?.[0]?.toUpperCase()}
-                                        </span>
-                                    )}
-                                </div>
-                                <div>
-                                    <PlayerName
-                                        user={profile}
-                                        isChampion={isChampion}
-                                        championshipWins={profile.championship_wins}
-                                        className="text-3xl font-black block text-[var(--foreground)] tracking-tight italic"
-                                        showBadges={true}
-                                    />
-                                </div>
+                        <div className="flex items-center mb-5 gap-5">
+                            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-black overflow-hidden shrink-0 border-2 border-amber-500/50 shadow-[0_0_20px_rgba(245,158,11,0.2)] bg-gradient-to-br from-amber-500/10 to-amber-500/5">
+                                {profile.avatar_url ? (
+                                    <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-amber-500">
+                                        {profile.name?.[0]?.toUpperCase()}
+                                    </span>
+                                )}
                             </div>
-
-                            <div className="shrink-0">
-                                <Link href="/ranks" className="block bg-white/[0.03] border border-amber-500/10 rounded-[1.5rem] p-3 shadow-xl backdrop-blur-md relative group transition-all hover:border-amber-500/30 cursor-pointer">
-                                    <div className="flex items-center gap-3 pr-2">
-                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-900/40 border border-amber-500/20 flex items-center justify-center text-2xl shadow-lg relative overflow-hidden group-hover:scale-110 transition-transform">
-                                            <span className="relative z-10 drop-shadow-md">{currentRank.icon}</span>
-                                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(245,158,11,0.1)_0%,_transparent_70%)]" />
-                                        </div>
-                                        <div className="flex flex-col items-start">
-                                            <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest leading-none mb-1 opacity-70">Rank</span>
-                                            <span className="text-sm font-black text-[var(--foreground)] uppercase leading-none mb-1 tracking-tighter italic">{currentRank.title}</span>
-                                            <span className="text-[10px] font-bold text-[var(--foreground-muted)] uppercase tracking-widest leading-none">{profile.total_points || 0} XP</span>
-                                        </div>
-                                    </div>
-                                </Link>
+                            <div className="flex-1 min-w-0">
+                                <PlayerName
+                                    user={profile}
+                                    isChampion={isChampion}
+                                    championshipWins={profile.championship_wins}
+                                    className="text-3xl font-black block text-[var(--foreground)] tracking-tight italic truncate"
+                                    showBadges={true}
+                                />
+                                <p className="text-xs font-bold text-amber-500 mt-1 uppercase tracking-widest">{profile.total_points || 0} XP</p>
                             </div>
                         </div>
 
