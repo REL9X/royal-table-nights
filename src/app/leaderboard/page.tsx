@@ -68,30 +68,14 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
         ? seasons?.find(s => s.id === selectedSeasonId) || seasons?.[0] || null
         : activeSeason || seasons?.[0] || null
 
-    // Identify all previous champions
-    const completedSeasons = seasons?.filter(s => s.status === 'completed') || []
-    const championIds = new Set<string>()
-
-    for (const s of completedSeasons) {
-        const { data: sPointsData } = await supabase
-            .from('session_players')
-            .select('player_id, points_earned, events!inner(season_id, status)')
-            .eq('events.season_id', s.id)
-            .eq('events.status', 'completed')
-
-        const sMap: Record<string, number> = {}
-        sPointsData?.forEach((sp: any) => {
-            sMap[sp.player_id] = (sMap[sp.player_id] || 0) + (sp.points_earned || 0)
-        })
-
-        const winner = Object.entries(sMap).sort((a, b) => b[1] - a[1])[0]
-        if (winner) championIds.add(winner[0])
-    }
-
+    // ── PERFORMANCE OPTIMIZATION: USE PRE-CALCULATED CHAMPION DATA ──
     const profilesWithChampion = profiles.map(p => ({
         ...p,
-        isChampion: championIds.has(p.id)
+        isChampion: (p.championship_badges_count || 0) > 0 || (Array.isArray(p.championship_wins) && p.championship_wins.length > 0)
     }))
+
+    // Keep track of champion IDs for other parts of the page
+    const championIds = new Set(profilesWithChampion.filter(p => p.isChampion).map(p => p.id))
 
     // Compute season standings + awards for the displaySeason
     let seasonStandings: any[] = []

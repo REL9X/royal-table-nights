@@ -227,16 +227,16 @@ export default async function Dashboard() {
                         </div>
                         <div className="flex items-center gap-2">
                             <ThemeToggle />
-                            <Link href="/settings" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-all shadow-sm active:scale-90">
+                            <Link href="/settings" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-amber-500 transition-all shadow-sm active:scale-[0.98]">
                                 <Settings size={16} />
                             </Link>
                             {profile.role === 'admin' && (
-                                <Link href="/admin" className="p-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-amber-500 hover:bg-amber-500/10 transition-all shadow-sm active:scale-90">
+                                <Link href="/admin" className="p-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-amber-500 hover:bg-amber-500/10 transition-all shadow-sm active:scale-[0.98]">
                                     <Shield size={16} />
                                 </Link>
                             )}
                             <form action={async () => { 'use server'; const s = await createClient(); await s.auth.signOut(); redirect('/login') }}>
-                                <button type="submit" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-all active:scale-90">
+                                <button type="submit" className="p-2 bg-[var(--background-card)] border border-[var(--border)] rounded-xl text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-all active:scale-[0.98]">
                                     <LogOut size={16} />
                                 </button>
                             </form>
@@ -354,7 +354,7 @@ export default async function Dashboard() {
                             { href: '/history', icon: Star, label: 'History', color: 'from-sky-500/20 to-sky-700/10', border: 'border-sky-500/20', iconColor: 'text-sky-400' },
                             { href: '/profile', icon: Shield, label: 'Profile', color: 'from-slate-500/20 to-slate-700/10', border: 'border-slate-500/20', iconColor: 'text-slate-400' },
                         ].map(({ href, icon: Icon, label, color, border, iconColor }) => (
-                            <Link key={href} href={href} className={`flex flex-col items-center gap-2.5 py-5 px-2 rounded-2xl border bg-gradient-to-b ${color} ${border} hover:scale-105 transition-all active:scale-90`}>
+                            <Link key={href} href={href} className={`flex flex-col items-center gap-2.5 py-5 px-2 rounded-2xl border bg-gradient-to-b ${color} ${border} hover:scale-105 transition-all active:scale-95`}>
                                 <Icon size={26} className={iconColor} />
                                 <span className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-wide text-center leading-tight">{label}</span>
                             </Link>

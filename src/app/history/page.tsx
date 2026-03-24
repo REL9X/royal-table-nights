@@ -23,19 +23,20 @@ export default async function HistoryPage() {
     const seasonEventIndices: Record<string, number> = {}
 
     if (seasonIds.length > 0) {
-        for (const sId of seasonIds) {
-            const { data: sEvents } = await supabase
-                .from('events')
-                .select('id')
-                .eq('season_id', sId)
-                .order('date', { ascending: true })
-                .order('created_at', { ascending: true })
+        const { data: allSeasonEvents } = await supabase
+            .from('events')
+            .select('id, season_id')
+            .in('season_id', seasonIds)
+            .order('date', { ascending: true })
+            .order('created_at', { ascending: true })
 
-            if (sEvents) {
-                sEvents.forEach((se, index) => {
-                    seasonEventIndices[se.id] = index + 1
-                })
-            }
+        if (allSeasonEvents) {
+            const counts: Record<string, number> = {}
+            allSeasonEvents.forEach(se => {
+                if (!se.season_id) return
+                counts[se.season_id] = (counts[se.season_id] || 0) + 1
+                seasonEventIndices[se.id] = counts[se.season_id]
+            })
         }
     }
 
