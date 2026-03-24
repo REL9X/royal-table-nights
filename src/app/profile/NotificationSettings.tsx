@@ -38,8 +38,17 @@ async function registerPush(userId: string, addLog: (m: string) => void) {
         return
     }
     try {
-        const reg = await navigator.serviceWorker.ready
-        addLog(`SW Ready: ${reg.scope}`)
+        let reg = await navigator.serviceWorker.getRegistration()
+        if (!reg) {
+            addLog('Registering SW manually...')
+            reg = await navigator.serviceWorker.register('/sw.js')
+        }
+        await navigator.serviceWorker.ready
+        addLog(`SW Ready: ${reg?.scope || 'unknown'}`)
+        
+        reg = await navigator.serviceWorker.getRegistration()
+        if (!reg) throw new Error('SW registration physically failed.')
+        
         const existing = await reg.pushManager.getSubscription()
         if (existing) addLog('Existing sub found.')
         
