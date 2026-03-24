@@ -80,7 +80,7 @@ export const NotificationService = {
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification(title, {
                     body: message,
-                    icon: '/logo.png' // Use PWA icon
+                    icon: '/logo-push.png' // Use optimized PWA icon
                 });
             }
             return;

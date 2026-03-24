@@ -14,6 +14,7 @@ import BattleRegistry from './BattleRegistry'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import SystemTesting from './SystemTesting'
 import NotificationSettings from '../profile/NotificationSettings'
+import ConfirmForm from './ConfirmForm'
 
 interface Profile {
     id: string
@@ -168,13 +169,13 @@ export default async function AdminPage({
                                             </div>
                                             
                                             {player.role !== 'admin' && (
-                                                <form action={promoteToAdmin as any}>
+                                                <ConfirmForm action={promoteToAdmin as any} message={`Are you sure you want to promote ${player.name} to Grand Master?`}>
                                                     <input type="hidden" name="playerId" value={player.id} />
                                                     <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
                                                         <ShieldPlus size={16} />
                                                         <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[var(--background-card)] text-[8px] font-black uppercase text-[var(--foreground)] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-[var(--border)]">Make Admin</span>
                                                     </button>
-                                                </form>
+                                                </ConfirmForm>
                                             )}
                                         </div>
                                     ))}
@@ -210,44 +211,26 @@ export default async function AdminPage({
                                 </form>
                             </div>
 
-                            <div className="space-y-2">
-                                {allowedPhones && allowedPhones.slice(0, 5).map(person => (
-                                    <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-[var(--border)] bg-[var(--background-card)] group transition-all hover:bg-[var(--background-raised)] shadow-sm">
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{person.name}</p>
-                                            <p className="text-[9px] text-[var(--foreground-muted)] font-mono tracking-widest leading-none mt-1">{person.phone}</p>
+                            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                                {allowedPhones && allowedPhones.length > 0 ? (
+                                    allowedPhones.map(person => (
+                                        <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-[var(--border)] bg-[var(--background-card)] group transition-all hover:bg-[var(--background-raised)] shadow-sm">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{person.name}</p>
+                                                <p className="text-[9px] text-[var(--foreground-muted)] font-mono tracking-widest leading-none mt-1">{person.phone}</p>
+                                            </div>
+                                            <ConfirmForm action={removeAllowedPhone as any} message={`Remove invite for ${person.name}?`}>
+                                                <input type="hidden" name="phone" value={person.phone} />
+                                                <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover:opacity-100">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </ConfirmForm>
                                         </div>
-                                        <form action={removeAllowedPhone as any}>
-                                            <input type="hidden" name="phone" value={person.phone} />
-                                            <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover:opacity-100">
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </form>
+                                    ))
+                                ) : (
+                                    <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-center bg-[var(--background-raised)]/30">
+                                        <p className="text-[10px] text-[var(--foreground-muted)] font-black uppercase tracking-[0.3em]">No active invites</p>
                                     </div>
-                                ))}
-                                {allowedPhones && allowedPhones.length > 5 && (
-                                    <details className="group">
-                                        <summary className="text-center text-[9px] font-black text-[var(--foreground-muted)] uppercase tracking-widest pt-2 cursor-pointer list-none hover:text-[var(--foreground)] transition-colors py-2">
-                                            <span className="group-open:hidden">+{allowedPhones.length - 5} More Active Invites</span>
-                                            <span className="hidden group-open:inline">Hide Active Invites</span>
-                                        </summary>
-                                        <div className="space-y-2 mt-2 border-t border-[var(--border)] pt-2">
-                                            {allowedPhones.slice(5).map(person => (
-                                                <div key={person.phone} className="flex items-center justify-between p-3 px-4 rounded-xl border border-[var(--border)] bg-[var(--background-card)] group/row transition-all hover:bg-[var(--background-raised)] shadow-sm">
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="font-black text-xs text-[var(--foreground)] tracking-tight truncate">{person.name}</p>
-                                                        <p className="text-[9px] text-[var(--foreground-muted)] font-mono tracking-widest leading-none mt-1">{person.phone}</p>
-                                                    </div>
-                                                    <form action={removeAllowedPhone as any}>
-                                                        <input type="hidden" name="phone" value={person.phone} />
-                                                        <button type="submit" className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all opacity-40 group-hover/row:opacity-100">
-                                                            <Trash2 size={14} />
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </details>
                                 )}
                             </div>
                         </div>
