@@ -9,37 +9,39 @@ export default function PushSubscriber({ userId }: { userId: string }) {
         if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) return
 
         async function subscribe() {
-            window.console.log('Push: subscribe starting...')
             try {
-                if (!navigator.serviceWorker.controller) {
-                    window.console.log('Push: No SW controller yet, waiting for registration...')
+                // ── ENSURE SW IS REGISTERED (Global Repair) ──
+                let reg = await navigator.serviceWorker.getRegistration()
+                if (!reg) {
+                    console.log('RTN-PUSH: Auto-registering SW...')
+                    reg = await navigator.serviceWorker.register('/sw.js')
                 }
-                const registration = await navigator.serviceWorker.ready
-                window.console.log('Push: SW ready at scope:', registration.scope)
                 
-                const existing = await registration.pushManager.getSubscription()
+                // Wait for the SW to be active
+                await navigator.serviceWorker.ready
+                
+                // ── CHECK EXISTING SUBSCRIPTION ──
+                const existing = await reg.pushManager.getSubscription()
                 if (existing) {
-                    window.console.log('Push: Existing subscription found, ensuring DB is synced...')
+                    // SILENT UPDATE: If they already have it, just make sure DB is synced
                     await saveSubscription(existing, userId)
                     return
                 }
 
-                window.console.log('Push: No subscription found, requesting permission...')
-                const permission = await Notification.requestPermission()
-                window.console.log('Push: Permission result:', permission)
-                if (permission !== 'granted') return
-
-                window.console.log('Push: Subscribing with VAPID key...')
-                const sub = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
-                })
-
-                window.console.log('Push: Subscription successful, saving to DB...')
-                await saveSubscription(sub, userId)
-                window.console.log('Push: Subscription saved successfully.')
+                // ── NEW SUBSCRIPTION ──
+                // If they've already granted permission (maybe in a previous version), 
+                // we can subscribe silently now.
+                if (Notification.permission === 'granted') {
+                    const sub = await reg.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!)
+                    })
+                    await saveSubscription(sub, userId)
+                } 
+                // Note: We don't call requestPermission() here to avoid a popup every dashboard visit.
+                // We leave that to the NotificationSettings/Settings page where it's expected.
             } catch (e) {
-                window.console.error('Push subscription failed:', e)
+                console.error('Push auto-subscription failed:', e)
             }
         }
 
