@@ -11,7 +11,6 @@ self.addEventListener('push', (event) => {
     const options = {
         body: data.body || data.message || '',
         icon: '/logo.png',
-        badge: '/logo.png',
         vibrate: [200, 100, 200],
         tag: 'royal-table-broadcast',
         renotify: true,
