@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Trophy } from 'lucide-react'
+import { Trophy, FlaskConical } from 'lucide-react'
 import { getPlayerRank } from '@/lib/playerRanks'
 
 interface PlayerNameProps {
@@ -8,6 +8,7 @@ interface PlayerNameProps {
         id?: string
         name?: string
         role?: string
+        is_test_account?: boolean
     } | null | undefined
     totalPoints?: number | null
     className?: string
@@ -34,13 +35,19 @@ export default function PlayerName({
         return <span className={className}>-</span>
     }
 
-    const { id, name, role } = user
+    const { id, name, role, is_test_account } = user
 
     // Remove "GM " prefix if the user manually added it, so we don't duplicate it.
     let baseName = name
     if (baseName?.startsWith('GM ')) {
         baseName = baseName.substring(3).trim()
     }
+
+    const testBadge = is_test_account ? (
+        <span className="ml-1.5 bg-sky-500/20 text-sky-400 text-[8px] px-1 py-[1px] rounded uppercase tracking-widest border border-sky-500/20 inline-flex items-center gap-0.5 align-middle">
+            <FlaskConical size={8} /> TEST
+        </span>
+    ) : null;
 
     const rank = getPlayerRank(totalPoints)
 
@@ -79,6 +86,7 @@ export default function PlayerName({
         <span className="inline-flex items-center">
             {iconElement}
             <span className="text-sky-400 font-semibold mr-1">GM</span> {baseName}
+            {testBadge}
             {championBadges}
             {titleElement}
         </span>
@@ -86,6 +94,7 @@ export default function PlayerName({
         <span className="inline-flex items-center">
             {iconElement}
             {baseName}
+            {testBadge}
             {championBadges}
             {titleElement}
         </span>
