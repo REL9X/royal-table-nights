@@ -2,9 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { 
     Check, Users, Play, Calendar as CalendarIcon, Phone, Trash2, Plus, Edit3, 
-    ChevronLeft, Crown, Shield, Zap, ChevronRight, Bell, UserPlus, ShieldPlus, ArrowUpCircle 
+    ChevronLeft, Crown, Shield, Zap, ChevronRight, Bell, UserPlus, ShieldPlus, ArrowUpCircle, FlaskConical 
 } from 'lucide-react'
-import { approvePlayer, addAllowedPhone, removeAllowedPhone, promoteToAdmin } from './actions'
+import { approvePlayer, addAllowedPhone, removeAllowedPhone, promoteToAdmin, toggleTestAccount } from './actions'
 import { startSession } from './events/actions'
 import { finishSeason } from './seasons/actions'
 import Link from 'next/link'
@@ -22,6 +22,7 @@ interface Profile {
     avatar_url: string | null
     role: string
     is_approved: boolean
+    is_test_account?: boolean
     notification_preferences?: any
 }
 
@@ -158,7 +159,10 @@ export default async function AdminPage({
                                                 {player.avatar_url ? <img src={player.avatar_url} alt="" className="w-full h-full object-cover" /> : player.name?.[0]?.toUpperCase()}
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-black text-sm text-[var(--foreground)] tracking-tight truncate uppercase">{player.name || 'Unknown Player'}</p>
+                                                <p className="font-black text-sm text-[var(--foreground)] tracking-tight truncate uppercase">
+                                                    {player.name || 'Unknown Player'}
+                                                    {player.is_test_account && <span className="ml-2 bg-sky-500/20 text-sky-400 text-[8px] px-1.5 py-0.5 rounded uppercase tracking-widest border border-sky-500/20 inline-flex items-center gap-1 align-middle"><FlaskConical size={8} /> TEST</span>}
+                                                </p>
                                                 <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5 flex items-center gap-1">
                                                     {player.role === 'admin' ? (
                                                         <span className="text-amber-500 flex items-center gap-1"><ShieldPlus size={10} /> Grand Master</span>
@@ -168,15 +172,26 @@ export default async function AdminPage({
                                                 </p>
                                             </div>
                                             
-                                            {player.role !== 'admin' && (
-                                                <ConfirmForm action={promoteToAdmin as any} message={`Are you sure you want to promote ${player.name} to Grand Master?`}>
+                                            <div className="flex gap-2 shrink-0">
+                                                <form action={toggleTestAccount as any}>
                                                     <input type="hidden" name="playerId" value={player.id} />
-                                                    <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
-                                                        <ShieldPlus size={16} />
-                                                        <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[var(--background-card)] text-[8px] font-black uppercase text-[var(--foreground)] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-[var(--border)]">Make Admin</span>
+                                                    <input type="hidden" name="currentStatus" value={String(!!player.is_test_account)} />
+                                                    <button type="submit" className={`p-2.5 rounded-xl border flex items-center justify-center transition-all group relative ${player.is_test_account ? 'bg-sky-500/10 border-sky-500/30 text-sky-500 hover:bg-sky-500/20 shadow-[0_0_10px_rgba(14,165,233,0.2)]' : 'bg-[var(--background-raised)] border-[var(--border)] text-[var(--foreground-muted)] hover:text-sky-500 hover:border-sky-500/30'} active:scale-95`}>
+                                                        <FlaskConical size={16} />
+                                                        <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[var(--background-card)] text-[8px] font-black uppercase text-[var(--foreground)] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-[var(--border)]">{player.is_test_account ? 'Remove Test' : 'Mark Test'}</span>
                                                     </button>
-                                                </ConfirmForm>
-                                            )}
+                                                </form>
+
+                                                {player.role !== 'admin' && (
+                                                    <ConfirmForm action={promoteToAdmin as any} message={`Are you sure you want to promote ${player.name} to Grand Master?`}>
+                                                        <input type="hidden" name="playerId" value={player.id} />
+                                                        <button type="submit" className="p-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-xl hover:bg-amber-500 hover:text-black shadow-lg shadow-amber-500/10 active:scale-95 transition-all group relative">
+                                                            <ShieldPlus size={16} />
+                                                            <span className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-[var(--background-card)] text-[8px] font-black uppercase text-[var(--foreground)] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-[var(--border)]">Make Admin</span>
+                                                        </button>
+                                                    </ConfirmForm>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

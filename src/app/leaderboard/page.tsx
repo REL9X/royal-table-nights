@@ -11,6 +11,13 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) redirect('/login')
 
+    // Fetch current user scope to check admin
+    const { data: userProfile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
     // Fetch all approved profiles (for All-Time leaderboard)
     const { data: rawProfiles } = await supabase
         .from('profiles')
@@ -18,7 +25,12 @@ export default async function LeaderboardPage(props: { searchParams: Promise<{ s
         .eq('is_approved', true)
         .order('total_points', { ascending: false })
 
-    const safeProfiles = rawProfiles || []
+    let safeProfiles = rawProfiles || []
+    
+    // Hide test accounts for non-admins
+    if (userProfile?.role !== 'admin') {
+        safeProfiles = safeProfiles.filter(p => !p.is_test_account)
+    }
 
     // Initialize all-time timing agg objects
     const allTimeAgg: Record<string, any> = {}

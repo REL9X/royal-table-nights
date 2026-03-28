@@ -37,12 +37,12 @@ export default async function Dashboard() {
         // ── PHASE 1: Parallel Fetch Core Data ──
         const [
             { data: allSeasons },
-            { data: profiles },
+            { data: rawProfiles },
             { data: upcomingEvents }
         ] = await Promise.all([
             supabase.from('seasons').select('*').order('created_at', { ascending: false }),
             supabase.from('profiles')
-                .select('id, name, avatar_url, role, total_points, championship_badges_count, championship_wins, notification_preferences')
+                .select('id, name, avatar_url, role, is_test_account, total_points, championship_badges_count, championship_wins, notification_preferences')
                 .eq('is_approved', true)
                 .order('total_points', { ascending: false }),
             supabase.from('events')
@@ -50,6 +50,11 @@ export default async function Dashboard() {
                 .in('status', ['upcoming', 'active'])
                 .order('date', { ascending: true })
         ])
+
+        // Hide test accounts from non-admins
+        const profiles = profile.role === 'admin' 
+            ? rawProfiles 
+            : rawProfiles?.filter(p => !p.is_test_account)
 
         const activeSeason = allSeasons?.find(s => s.status === 'active') || allSeasons?.[0] || null
         

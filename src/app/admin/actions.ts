@@ -164,6 +164,29 @@ export async function promoteToAdmin(formData: FormData) {
     return { success: true }
 }
 
+export async function toggleTestAccount(formData: FormData) {
+    const playerId = formData.get('playerId') as string
+    const currentStatus = formData.get('currentStatus') === 'true'
+    const supabase = await createClient()
+
+    // Verify current user is admin
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Not authorized' }
+
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'admin') return { error: 'Admin access required' }
+
+    const { error } = await supabase
+        .from('profiles')
+        .update({ is_test_account: !currentStatus })
+        .eq('id', playerId)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/admin')
+    return { success: true }
+}
+
 export async function sendSelfTestPush() {
     const supabase = await createClient()
 
