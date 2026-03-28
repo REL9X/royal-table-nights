@@ -246,7 +246,6 @@ export default function LeaderboardView({
                         const isMe = player.id === currentUserId
                         const points = isSeasonView ? (player.season_points || 0) : (player.total_points || 0)
                         const isFirst = index === 0
-                        const barW = maxPoints > 0 ? Math.round((points / maxPoints) * 100) : 0
 
                         return (
                             <div key={player.id} className={`px-4 py-3.5 flex items-center border-b border-[var(--border)] last:border-0 transition-colors ${isMe ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : 'hover:bg-[var(--background-raised)]'} ${isFirst ? 'bg-amber-500/3' : ''}`}>
@@ -271,9 +270,6 @@ export default function LeaderboardView({
                                                 className={`font-black text-sm truncate ${isFirst ? 'text-amber-500' : 'text-[var(--foreground)]'}`}
                                             />
                                             {isMe && <span className="text-[9px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded-full font-black shrink-0">YOU</span>}
-                                        </div>
-                                        <div className="mt-0.5 h-1 rounded-full bg-[var(--border)] overflow-hidden w-full">
-                                            <div className="h-full rounded-full" style={{ width: `${barW}%`, background: isFirst ? 'linear-gradient(90deg,#f59e0b,#fbbf24)' : index === 1 ? 'linear-gradient(90deg,#94a3b8,#cbd5e1)' : index === 2 ? '#b45309' : 'var(--border-strong)' }} />
                                         </div>
                                     </div>
                                 </div>
