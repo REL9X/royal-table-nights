@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { ChevronLeft, Crown, CheckCircle, DollarSign, Users, AlertTriangle, PlusCircle, RotateCcw, Skull } from 'lucide-react'
 import Link from 'next/link'
-import { addRebuy, submitCashout, eliminatePlayer, undoCashout } from './actions'
+import { addRebuy, undoRebuy, submitCashout, eliminatePlayer, undoCashout } from './actions'
 import PlayerName from '@/components/PlayerName'
 import LiveTimer from '@/components/LiveTimer'
 import PokerTable from './PokerTable'
@@ -64,7 +64,7 @@ export default async function SessionPage(props: { params: Promise<{ id: string 
     }
 
     const mySessionData = sessionPlayers?.find(p => p.player_id === user.id)
-    const totalPot = Math.round((sessionPlayers?.reduce((acc, p) => acc + Number(p.total_invested), 0) || 0) * 100) / 100
+    const totalPot = Number((sessionPlayers?.reduce((acc, p) => acc + Number(p.total_invested), 0) || 0).toFixed(1))
     const isLive = event.status === 'active'
     const isCompleted = event.status === 'completed'
 
@@ -200,70 +200,83 @@ export default async function SessionPage(props: { params: Promise<{ id: string 
                                                     {player.profiles?.role === 'admin' && <span className="text-[8px] bg-violet-500/20 text-violet-400 px-1 py-0.5 rounded font-black shrink-0">GM</span>}
                                                 </div>
                                                 <p className="text-[10px] text-[var(--foreground-subtle)]">
-                                                    {Math.round(Number(player.total_invested) * 100) / 100}€ in · {player.buy_ins} BI{player.rebuys > 0 ? ` + ${player.rebuys} RB` : ''}
-                                                    {isElim && ` · Out: ${Math.round(Number(player.cash_out) * 100) / 100}€`}
+                                                    {Number(player.total_invested).toFixed(1)}€ in · {player.buy_ins} BI{player.rebuys > 0 ? ` + ${player.rebuys} RB` : ''}
+                                                    {isElim && ` · Out: ${Number(player.cash_out).toFixed(1)}€`}
                                                 </p>
                                             </div>
 
                                             <div className="text-right shrink-0">
                                                 <p className={`font-black text-base ${profit > 0 ? 'text-emerald-500' : profit < 0 ? 'text-red-500' : 'text-[var(--foreground-muted)]'}`}>
-                                                    {profit > 0 ? '+' : ''}{(Math.round(profit * 100) / 100).toFixed(2)}€
+                                                    {profit > 0 ? '+' : ''}{profit.toFixed(1)}€
                                                 </p>
                                             </div>
                                         </div>
 
                                         {canAct && !alreadyCashedOut && (
-                                            <div className="px-3 pb-3 grid grid-cols-3 gap-2">
-                                                <form action={async () => {
-                                                    'use server'
-                                                    await addRebuy(eventId, player.player_id)
-                                                }} className="col-span-1">
-                                                    <button type="submit" className="w-full py-2 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 text-[10px] font-black rounded-xl transition-all flex justify-center items-center gap-1 border border-violet-500/20">
-                                                        <RotateCcw size={11} /> +RB
-                                                    </button>
-                                                </form>
+                                            <div className="px-3 pb-3 space-y-2">
+                                                <div className="grid grid-cols-3 gap-2">
+                                                    <form action={async () => {
+                                                        'use server'
+                                                        await addRebuy(eventId, player.player_id)
+                                                    }} className="col-span-1">
+                                                        <button type="submit" className="w-full py-2 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 text-[10px] font-black rounded-xl transition-all flex justify-center items-center gap-1 border border-violet-500/20">
+                                                            <RotateCcw size={11} /> +RB
+                                                        </button>
+                                                    </form>
 
-                                                <form action={async (formData) => {
-                                                    'use server'
-                                                    const amount = Number(formData.get('amount')) || 0
-                                                    await submitCashout(eventId, player.player_id, amount)
-                                                }} className="col-span-1 flex gap-1">
-                                                    <input
-                                                        name="amount"
-                                                        type="number"
-                                                        step="1"
-                                                        min="1"
-                                                        required
-                                                        className="w-full bg-[var(--background-raised)] border border-emerald-500/30 focus:border-emerald-500/60 rounded-xl px-2 py-2 text-[var(--foreground)] font-black text-xs text-center outline-none"
-                                                        placeholder="€"
-                                                    />
-                                                    <button type="submit" className="shrink-0 px-2.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-[10px] transition-all flex items-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-                                                        <CheckCircle size={12} />
-                                                    </button>
-                                                </form>
+                                                    <form action={async (formData) => {
+                                                        'use server'
+                                                        const amount = Number(formData.get('amount')) || 0
+                                                        await submitCashout(eventId, player.player_id, amount)
+                                                    }} className="col-span-1 flex gap-1">
+                                                        <input
+                                                            name="amount"
+                                                            type="number"
+                                                            step="0.1"
+                                                            min="0.1"
+                                                            required
+                                                            className="w-full bg-[var(--background-raised)] border border-emerald-500/30 focus:border-emerald-500/60 rounded-xl px-2 py-2 text-[var(--foreground)] font-black text-xs text-center outline-none"
+                                                            placeholder="€"
+                                                        />
+                                                        <button type="submit" className="shrink-0 px-2.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-[10px] transition-all flex items-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                                                            <CheckCircle size={12} />
+                                                        </button>
+                                                    </form>
 
-                                                <form action={async () => {
-                                                    'use server'
-                                                    await eliminatePlayer(eventId, player.player_id)
-                                                }} className="col-span-1">
-                                                    <button type="submit" className="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-[10px] font-black rounded-xl transition-all flex justify-center items-center gap-1 border border-red-500/20">
-                                                        <Skull size={11} /> Bust
-                                                    </button>
-                                                </form>
+                                                    <form action={async () => {
+                                                        'use server'
+                                                        await eliminatePlayer(eventId, player.player_id)
+                                                    }} className="col-span-1">
+                                                        <button type="submit" className="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-[10px] font-black rounded-xl transition-all flex justify-center items-center gap-1 border border-red-500/20">
+                                                            <Skull size={11} /> Bust
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                                {player.rebuys > 0 && (
+                                                    <form action={async () => {
+                                                        'use server'
+                                                        await undoRebuy(eventId, player.player_id)
+                                                    }}>
+                                                        <button type="submit" className="w-full py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] font-black rounded-xl border border-amber-500/20 transition-all flex justify-center items-center gap-1">
+                                                            ↩ Undo Last Rebuy ({player.rebuys} RB)
+                                                        </button>
+                                                    </form>
+                                                )}
                                             </div>
                                         )}
 
                                         {canAct && alreadyCashedOut && (
                                             <div className="px-3 pb-3 flex items-center gap-2">
                                                 <p className="flex-1 text-[10px] text-center text-[var(--foreground-subtle)] font-bold py-1.5 bg-[var(--background-raised)] rounded-xl border border-[var(--border)]">
-                                                    ✓ Cashed out {player.cash_out}€
+                                                    {Number(player.cash_out) > 0 ? `✓ Cashed out ${Number(player.cash_out).toFixed(1)}€` : '💀 Busted'}
                                                 </p>
                                                 <form action={async () => {
                                                     'use server'
                                                     await undoCashout(eventId, player.player_id)
                                                 }}>
                                                     <button type="submit" className="py-1.5 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 text-[10px] font-black rounded-xl border border-amber-500/20 transition-all whitespace-nowrap">
-                                                        ↩ Undo
+                                                        ↩ Undo {Number(player.cash_out) > 0 ? 'Cashout' : 'Bust'}
                                                     </button>
                                                 </form>
                                             </div>

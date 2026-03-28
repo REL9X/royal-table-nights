@@ -492,7 +492,8 @@ async function EventsList({ userId, userRole, initialEvents }: { userId: string,
                                 ) : (
                                     <>
                                         {userRole === 'admin' && event.status === 'upcoming' && (
-                                            <form action={async () => { 'use server'; await startSession(event.id) }} className="flex-1">
+                                            <form action={startSession as any} className="flex-1">
+                                                <input type="hidden" name="eventId" value={event.id} />
                                                 <button type="submit" className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl font-black text-sm text-center flex items-center justify-center gap-2 transition-all active:scale-[0.97] shadow-[0_0_16px_rgba(16,185,129,0.3)] border border-emerald-400/20">
                                                     <Zap size={15} /> Go Live
                                                 </button>

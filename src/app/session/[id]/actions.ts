@@ -125,6 +125,45 @@ export async function undoCashout(eventId: string, playerId: string) {
     return { success: true }
 }
 
+// Undo a rebuy — reverse the last rebuy
+export async function undoRebuy(eventId: string, playerId: string) {
+    const { supabase, error } = await getAdminOrSelf(playerId)
+    if (error || !supabase) return { error }
+
+    const { data: event } = await supabase.from('events').select('rebuy_amount').eq('id', eventId).single()
+    if (!event) return { error: 'Event not found' }
+
+    const { data: sp } = await supabase
+        .from('session_players')
+        .select('rebuys, total_invested, profit, is_eliminated')
+        .eq('event_id', eventId).eq('player_id', playerId).single()
+
+    if (!sp) return { error: 'Player not in session' }
+    if (sp.rebuys <= 0) return { error: 'No rebuys to undo' }
+    if (sp.is_eliminated) return { error: 'Player already eliminated' }
+
+    const updateData: any = {
+        rebuys: sp.rebuys - 1,
+        total_invested: round2(Number(sp.total_invested) - Number(event.rebuy_amount)),
+        profit: round2(Number(sp.profit) + Number(event.rebuy_amount))
+    }
+
+    // Clear first_rebuy_at if going back to 0 rebuys
+    if (sp.rebuys - 1 === 0) {
+        updateData.first_rebuy_at = null
+    }
+
+    const { error: updateError } = await supabase
+        .from('session_players')
+        .update(updateData)
+        .eq('event_id', eventId).eq('player_id', playerId)
+
+    if (updateError) return { error: updateError.message }
+
+    revalidatePath(`/session/${eventId}`)
+    return { success: true }
+}
+
 // Add a player mid-session (admin only)
 export async function addPlayerToSession(eventId: string, playerId: string) {
     const supabase = await createClient()
